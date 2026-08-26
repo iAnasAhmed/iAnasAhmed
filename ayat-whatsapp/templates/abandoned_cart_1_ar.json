@@ -1,0 +1,33 @@
+{
+  "_comment": "POST https://graph.facebook.com/v23.0/{WABA_ID}/message_templates  (Authorization: Bearer {SYSTEM_USER_TOKEN}). Reproduces the RicRac message: image header, Arabic body, STOP footer, one URL button. Replace HEADER_HANDLE with the handle returned by the resumable upload API.",
+  "name": "abandoned_cart_1_ar",
+  "language": "ar",
+  "category": "MARKETING",
+  "components": [
+    {
+      "type": "HEADER",
+      "format": "IMAGE",
+      "example": { "header_handle": ["HEADER_HANDLE"] }
+    },
+    {
+      "type": "BODY",
+      "text": "أهلًا {{1}} 👋\nحابين نطمنك إن اختياراتك ما زالت محفوظة في السلة، ولو محتاجة أي توضيح أو مساعدة في اختيار الأنسب ليكي إحنا موجودين.",
+      "example": { "body_text": [["دعاء"]] }
+    },
+    {
+      "type": "FOOTER",
+      "text": "Type STOP to unsubscribe"
+    },
+    {
+      "type": "BUTTONS",
+      "buttons": [
+        {
+          "type": "URL",
+          "text": "إتمام الطلب",
+          "url": "https://ayatfahiem.com/{{1}}",
+          "example": ["https://ayatfahiem.com/cart/c/abc123?utm_source=whatsapp&utm_medium=crm&utm_campaign=abandoned_cart_1"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{%- comment -%}
+  ayat-points: customer points balance + redeem button.
+  Drop into a page template or the customer account page, then add the section
+  to the theme. Reads/writes through the Shopify App Proxy at /apps/points, so
+  the Worker (not the browser) decides who owns which points.
+
+  Design pass comes later - this is deliberately unstyled scaffolding.
+{%- endcomment -%}
+
+{%- if customer -%}
+<div id="ayat-points" class="ayat-points" dir="rtl" data-loading="true">
+  <p class="ayat-points__loading">جارٍ تحميل نقاطك…</p>
+</div>
+
+<script>
+(function () {
+  var root = document.getElementById('ayat-points');
+  if (!root) return;
+
+  function render(data) {
+    var value = (data.balance * data.redeem.value_per_point).toFixed(0);
+    root.dataset.loading = 'false';
+    root.innerHTML =
+      '<div class="ayat-points__balance"><strong>' + data.balance + '</strong> نقطة</div>' +
+      '<div class="ayat-points__value">تساوي ' + value + ' ' + data.currency + '</div>' +
+      (data.balance >= data.redeem.min_points
+        ? '<button type="button" class="ayat-points__redeem">استبدال ' + data.redeem.min_points + ' نقطة</button>'
+        : '<div class="ayat-points__hint">تحتاج ' + (data.redeem.min_points - data.balance) + ' نقطة إضافية للاستبدال</div>') +
+      '<div class="ayat-points__result" role="status"></div>';
+
+    var button = root.querySelector('.ayat-points__redeem');
+    if (button) button.addEventListener('click', function () { redeem(button, data.redeem.min_points); });
+  }
+
+  function redeem(button, points) {
+    button.disabled = true;
+    fetch('/apps/points/redeem', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ points: points })
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        var out = root.querySelector('.ayat-points__result');
+        out.textContent = data.code
+          ? 'كود الخصم: ' + data.code + ' (' + data.value + ' ' + data.currency + ')'
+          : (data.error || 'حدث خطأ، حاولي مرة أخرى');
+        if (data.code) button.remove();
+        else button.disabled = false;
+      })
+      .catch(function () { button.disabled = false; });
+  }
+
+  fetch('/apps/points', { headers: { accept: 'application/json' } })
+    .then(function (r) { return r.json(); })
+    .then(render)
+    .catch(function () { root.dataset.loading = 'false'; root.textContent = ''; });
+})();
+</script>
+{%- endif -%}

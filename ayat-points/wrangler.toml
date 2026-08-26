@@ -1,0 +1,44 @@
+name = "ayat-points"
+main = "src/index.ts"
+compatibility_date = "2026-08-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "ayat-points"
+database_id = "REPLACE_AFTER_d1_create"
+
+[vars]
+SHOPIFY_SHOP_DOMAIN = "6x4bcd-rk.myshopify.com"
+SHOPIFY_API_VERSION = "2026-07"
+JUDGEME_SHOP_DOMAIN = "6x4bcd-rk.myshopify.com"
+STORE_CURRENCY = "EGP"
+
+# --- Earning rules ---------------------------------------------------------
+# Highest matching review tier wins (not additive).
+REVIEW_TEXT_POINTS   = "50"
+REVIEW_PHOTO_POINTS  = "100"
+REVIEW_VIDEO_POINTS  = "150"
+REVIEW_MIN_BODY_CHARS = "15"
+# Points per 1 EGP spent (0.05 => 1000 EGP order earns 50 points).
+ORDER_POINTS_PER_CURRENCY = "0.05"
+# Verified-buyer gate. "paid"      => order must be financially paid (COD collected).
+#                     "fulfilled"  => order must be fulfilled (Bosta shipped).
+VERIFIED_BUYER_RULE = "paid"
+# Only reward a review if the reviewer bought THAT product (not just any order).
+REQUIRE_SAME_PRODUCT = "true"
+
+# --- Redemption rules ------------------------------------------------------
+REDEEM_MIN_POINTS = "200"
+REDEEM_STEP_POINTS = "100"
+REDEEM_EGP_PER_POINT = "0.25"
+REDEEM_CODE_PREFIX = "AYAT"
+REDEEM_CODE_TTL_DAYS = "60"
+# Cart subtotal must be at least this multiple of the discount value.
+REDEEM_MIN_SUBTOTAL_MULTIPLIER = "2"
+
+# Secrets (set with `wrangler secret put <NAME>`), never committed:
+#   SHOPIFY_ADMIN_TOKEN     - Admin API access token of the custom app
+#   SHOPIFY_API_SECRET      - custom app API secret, verifies App Proxy signatures
+#   SHOPIFY_WEBHOOK_SECRET  - Shopify webhook signing secret
+#   JUDGEME_API_TOKEN       - Judge.me API token
+#   JUDGEME_WEBHOOK_SECRET  - Judge.me OAuth app secret (JUDGEME-HMAC-SHA256)
