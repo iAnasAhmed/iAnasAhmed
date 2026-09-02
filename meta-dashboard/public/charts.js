@@ -208,8 +208,11 @@ export function barChart(container, { bars = [], height = null, valueFormat = fm
   const width = container.clientWidth || 640;
   const rowH = 30;
   const gap = 6;
-  const labelW = Math.min(200, Math.max(110, width * 0.3));
-  const valueW = 96;
+  const labelW = Math.min(280, Math.max(120, width * 0.28));
+  const valueW = 104;
+  // Truncate to what the label column can actually show, rather than a fixed
+  // character count that clips short on wide cards and overflows on narrow ones.
+  const maxChars = Math.max(12, Math.floor(labelW / 6.6));
   const h = height || bars.length * (rowH + gap);
   const plotW = Math.max(20, width - labelW - valueW - 8);
   const max = maxValue ?? niceMax(Math.max(...bars.map((b) => Math.abs(b.value)), 1));
@@ -223,7 +226,7 @@ export function barChart(container, { bars = [], height = null, valueFormat = fm
     g.appendChild(el('rect', { x: labelW, y: y + 5, width: plotW, height: rowH - 10, rx: 4, fill: p.grid, opacity: 0.55 }));
     g.appendChild(el('rect', { x: labelW, y: y + 5, width: w, height: rowH - 10, rx: 4, fill: colour }));
     const name = el('text', { x: labelW - 10, y: y + rowH / 2 + 4, 'text-anchor': 'end', class: 'bar-label' });
-    name.textContent = b.label.length > 28 ? `${b.label.slice(0, 27)}…` : b.label;
+    name.textContent = b.label.length > maxChars ? `${b.label.slice(0, maxChars - 1)}…` : b.label;
     g.appendChild(name);
     const val = el('text', { x: width - 4, y: y + rowH / 2 + 4, 'text-anchor': 'end', class: 'bar-value' });
     val.textContent = valueFormat(b.value);
@@ -264,7 +267,7 @@ export function calendarHeatmap(container, { days = [], currency = 'EGP' } = {})
 
   const svg = el('svg', {
     viewBox: `0 0 ${width} ${height}`, width: '100%', height, class: 'plot calendar',
-    preserveAspectRatio: 'xMinYMid meet', style: `max-width:${width}px`,
+    preserveAspectRatio: 'xMinYMid meet', style: `width:${width}px;max-width:100%`,
   });
   const defs = el('defs');
   const hatch = el('pattern', { id: 'gapHatch', width: 6, height: 6, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' });
@@ -332,7 +335,7 @@ export function scatterPlot(container, { points = [], height = 260, breakEven = 
   container.innerHTML = '';
   if (!points.length) { container.innerHTML = '<p class="chart-empty">No campaigns with spend in this window.</p>'; return; }
   const width = container.clientWidth || 720;
-  const pad = { top: 14, right: 18, bottom: 38, left: 52 };
+  const pad = { top: 14, right: 18, bottom: 48, left: 52 };
   const plotW = Math.max(10, width - pad.left - pad.right);
   const plotH = Math.max(10, height - pad.top - pad.bottom);
 
@@ -360,11 +363,11 @@ export function scatterPlot(container, { points = [], height = 260, breakEven = 
   }
   for (let i = 0; i <= 3; i += 1) {
     const v = (maxX / 3) * i;
-    const t = el('text', { x: xAt(v), y: height - 12, 'text-anchor': 'middle', class: 'axis-label' });
+    const t = el('text', { x: xAt(v), y: height - 26, 'text-anchor': 'middle', class: 'axis-label' });
     t.textContent = fmt.compact(v);
     svg.appendChild(t);
   }
-  const xTitle = el('text', { x: pad.left + plotW / 2, y: height - 1, 'text-anchor': 'middle', class: 'axis-title' });
+  const xTitle = el('text', { x: pad.left + plotW / 2, y: height - 6, 'text-anchor': 'middle', class: 'axis-title' });
   xTitle.textContent = `Spend (${currency}) →`;
   svg.appendChild(xTitle);
 
@@ -390,6 +393,25 @@ export function scatterPlot(container, { points = [], height = 260, breakEven = 
     svg.appendChild(c);
   }
   container.appendChild(svg);
+}
+
+/**
+ * Decorative filled trend used as a stat-tile backdrop. Stretched to the tile,
+ * so it carries shape only - the tile's own number and delta carry the value.
+ */
+export function sparkArea(values, { color = null, height = 40 } = {}) {
+  const p = palette();
+  const nums = values.map((v) => (Number.isFinite(v) ? v : 0));
+  if (nums.length < 2) return '';
+  const max = Math.max(...nums);
+  const min = Math.min(...nums);
+  const span = max - min || 1;
+  const w = 100;
+  const pt = (v, i) => `${((i / (nums.length - 1)) * w).toFixed(2)},${(height - ((v - min) / span) * (height - 4) - 2).toFixed(2)}`;
+  const line = nums.map((v, i) => `${i === 0 ? 'M' : 'L'}${pt(v, i)}`).join(' ');
+  return `<svg viewBox="0 0 ${w} ${height}" preserveAspectRatio="none" aria-hidden="true">
+    <path d="${line} L${w},${height} L0,${height} Z" fill="${color || p.series[0]}"/>
+  </svg>`;
 }
 
 /** Tiny inline trend line for table rows. */

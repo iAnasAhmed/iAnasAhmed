@@ -159,9 +159,17 @@ export function overview({ days = 28 } = {}) {
     live: {
       campaigns: ctx.campaigns.filter((c) => c.effective_status === 'ACTIVE').length,
       adsets: liveAdsets.length,
-      adsetNames: liveAdsets.map((a) => a.name),
       totalCampaigns: ctx.campaigns.length,
       totalAdsets: ctx.adsets.length,
+      // Enough per-ad-set detail to judge the live delivery without leaving Pulse.
+      adsetDetail: liveAdsets.map((a) => ({
+        id: a.id, name: a.name, optimizationGoal: a.optimization_goal,
+        dailyBudget: a.daily_budget,
+        audienceLower: a.audience_lower, audienceUpper: a.audience_upper,
+        spend: a.metrics.spend, revenue: a.metrics.revenue, roas: a.metrics.roas,
+        purchases: a.metrics.purchases, cpa: a.metrics.cpa,
+        frequency: a.metrics.frequency, ctr: a.metrics.ctr, cpm: a.metrics.cpm,
+      })).sort((x, y) => y.spend - x.spend),
     },
     breakEvenRoas: ctx.breakEvenRoas,
     business: ctx.business,

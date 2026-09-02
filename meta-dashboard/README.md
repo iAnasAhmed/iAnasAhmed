@@ -119,7 +119,13 @@ sync) the dashboard says so instead of showing a zero.
 **Charts.** No chart library and no CDN, so it works offline. Spend and return are two stacked
 plots sharing a timeline rather than one dual-axis chart. Colours are a validated categorical set
 that stays distinguishable under colour-vision deficiency in both light and dark themes; status
-colours are reserved for state and always paired with a word, never colour alone.
+colours are reserved for state and always paired with a word, never colour alone. Every line and
+area plot carries a crosshair and tooltip; bars, cells and points have their own hover detail.
+
+**Interface.** A fixed rail for navigation, a sticky page header carrying the reporting window
+(7 / 28 / 90 days on the windowed views), and one card grammar throughout. Light and dark are both
+deliberately stepped rather than an inverted flip. It collapses to a single column with a scrolling
+top bar on narrow screens, and respects `prefers-reduced-motion`.
 
 ---
 
@@ -132,6 +138,8 @@ colours are reserved for state and always paired with a word, never colour alone
   across each entity's active period until the first live sync replaces them with real per-day rows.
 - **Read-only.** It never writes to your ad account. Every recommendation is something you action
   in Ads Manager yourself.
+- The dashboard follows your system light/dark setting until you press the theme button, which is then
+  remembered. `?theme=dark` or `?theme=light` forces one for a single load.
 - `?live=0` on the URL disables the push stream — useful for headless screenshots.
 - The second account (`660617751508124`, EGP 33,772, no recorded purchases) is tracked in
   `META_EXTRA_AD_ACCOUNTS` but the dashboard focuses on the primary one.
