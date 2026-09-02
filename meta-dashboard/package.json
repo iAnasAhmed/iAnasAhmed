@@ -1,0 +1,16 @@
+{
+  "name": "ayat-fahiem-meta-dashboard",
+  "version": "1.0.0",
+  "description": "Live Meta Ads command centre + media-buying mentor for Ayat Fahiem Cosmetics",
+  "type": "module",
+  "main": "src/server.js",
+  "engines": { "node": ">=22.5.0" },
+  "scripts": {
+    "start": "node --no-warnings src/server.js",
+    "dev": "node --no-warnings --watch src/server.js",
+    "sync": "node --no-warnings src/cli.js sync",
+    "doctor": "node --no-warnings src/cli.js doctor"
+  },
+  "dependencies": {},
+  "license": "MIT"
+}

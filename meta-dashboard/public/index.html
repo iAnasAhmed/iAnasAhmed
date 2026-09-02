@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ayat Fahiem Cosmetics — Meta Ads Command Centre</title>
+<link rel="stylesheet" href="/app.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💄</text></svg>">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <b>Ayat Fahiem Cosmetics</b>
+    <span id="brandSub">Meta Ads Command Centre</span>
+  </div>
+  <nav class="tabs" role="tablist" id="tabs">
+    <button class="tab" role="tab" data-view="pulse" aria-selected="true">Pulse</button>
+    <button class="tab" role="tab" data-view="mentor" aria-selected="false">Mentor <span class="pill" id="mentorPill" hidden>0</span></button>
+    <button class="tab" role="tab" data-view="campaigns" aria-selected="false">Campaigns</button>
+    <button class="tab" role="tab" data-view="audiences" aria-selected="false">Audiences</button>
+    <button class="tab" role="tab" data-view="planner" aria-selected="false">Planner</button>
+    <button class="tab" role="tab" data-view="history" aria-selected="false">History</button>
+  </nav>
+  <div class="topbar-right">
+    <span class="livedot is-offline" id="liveDot"><i></i><span id="liveText">connecting…</span></span>
+    <button class="btn" id="themeBtn" title="Toggle light / dark">◐</button>
+    <button class="btn btn-primary" id="syncBtn">Sync now</button>
+  </div>
+</header>
+
+<main>
+  <div id="notices"></div>
+  <section class="view" id="view-pulse"><div class="loading">Loading…</div></section>
+  <section class="view" id="view-mentor" hidden><div class="loading">Loading…</div></section>
+  <section class="view" id="view-campaigns" hidden><div class="loading">Loading…</div></section>
+  <section class="view" id="view-audiences" hidden><div class="loading">Loading…</div></section>
+  <section class="view" id="view-planner" hidden><div class="loading">Loading…</div></section>
+  <section class="view" id="view-history" hidden><div class="loading">Loading…</div></section>
+  <p class="foot" id="foot"></p>
+</main>
+
+<script type="module" src="/app.js"></script>
+</body>
+</html>
