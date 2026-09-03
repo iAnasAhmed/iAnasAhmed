@@ -28,6 +28,12 @@ import {
 import { createFundamentalsProvider } from '../data/fundamentals.ts';
 import * as screener from './screener-view.ts';
 import type { RawFilters } from './screener-view.ts';
+import * as journal from './notes-view.ts';
+import type { RawNoteFilters } from './notes-view.ts';
+import {
+  parseTags, type Note, type NoteKind, type NoteSort, type Sentiment, type Horizon, type NoteStatus,
+} from '../core/notes.ts';
+import { upsertNote, removeNote } from './store.ts';
 
 const storage: Storage = globalThis.localStorage;
 
@@ -35,7 +41,7 @@ let state: AppState = loadState(storage);
 let quotes: ReadonlyMap<string, Quote> = new Map();
 
 // --- research view state (transient; not persisted)
-type View = 'portfolio' | 'research';
+type View = 'portfolio' | 'research' | 'journal';
 let view: View = 'portfolio';
 let fundamentals: ReadonlyMap<string, ScreenMetrics> = new Map();
 let fundamentalsLoaded = false;
@@ -43,6 +49,13 @@ let screenWeights: ScreenWeights = { ...DEFAULT_WEIGHTS };
 let rawFilters: RawFilters = {
   search: '', sector: '', minLiquidityM: 0, maxPe: 0, minDivYield: 0,
 };
+
+// --- journal view state (transient; notes themselves are persisted)
+let noteFilters: RawNoteFilters = {
+  search: '', kind: 'all', status: 'all', sentiment: 'all', symbol: '', tag: '',
+};
+let noteSort: NoteSort = 'updated';
+let editingNoteId: string | null = null;
 
 // ------------------------------------------------------------------ helpers
 
@@ -249,7 +262,9 @@ function renderApp(): void {
         persist(updateSettings(state, { theme: next }));
       },
     }),
-    view === 'research' ? renderResearch() : renderPortfolio(),
+    view === 'research' ? renderResearch()
+      : view === 'journal' ? renderJournal()
+      : renderPortfolio(),
   );
 }
 
@@ -366,6 +381,93 @@ async function loadFundamentals(): Promise<void> {
   }
   fundamentalsLoaded = true;
   if (view === 'research') renderApp();
+}
+
+// ------------------------------------------------------------------- journal
+
+function renderJournal(): HTMLElement {
+  const heldSymbols = currentSummary().holdings
+    .filter((holding) => holding.instrument.assetClass !== 'money_market'
+      && holding.instrument.assetClass !== 'cash')
+    .map((holding) => holding.symbol);
+
+  const editing = editingNoteId
+    ? state.notes.find((n) => n.id === editingNoteId)
+    : undefined;
+
+  return journal.journalView({
+    notes: state.notes,
+    filters: noteFilters,
+    sort: noteSort,
+    heldSymbols,
+    today: today(),
+    ...(editing ? { editing } : {}),
+    handlers: {
+      onSave: handleNoteSave,
+      onEdit: (id) => {
+        editingNoteId = id;
+        renderApp();
+        document.querySelector('.note-composer')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      },
+      onDelete: (id) => {
+        if (window.confirm('Delete this note? This cannot be undone.')) {
+          if (editingNoteId === id) editingNoteId = null;
+          persist(removeNote(state, id));
+        }
+      },
+      onFilter: (patch) => { noteFilters = { ...noteFilters, ...patch }; renderApp(); },
+      onSort: (sort) => { noteSort = sort; renderApp(); },
+      onCancelEdit: () => { editingNoteId = null; renderApp(); },
+      onComposeFor: (symbol) => {
+        editingNoteId = null;
+        renderApp();
+        const symbolField = document.querySelector<HTMLInputElement>('#note-symbol');
+        const kindField = document.querySelector<HTMLSelectElement>('#note-kind');
+        const titleField = document.querySelector<HTMLInputElement>('#note-title');
+        if (symbolField) symbolField.value = symbol;
+        if (kindField) kindField.value = 'thesis';
+        if (titleField) { titleField.value = `${symbol}: `; titleField.focus(); }
+        document.querySelector('.note-composer')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      },
+    },
+  });
+}
+
+function handleNoteSave(form: HTMLFormElement): void {
+  const data = new FormData(form);
+  const read = (name: string): string => String(data.get(name) ?? '').trim();
+
+  const title = read('title');
+  if (!title) { window.alert('A note needs a title.'); return; }
+
+  const nowIso = new Date().toISOString();
+  const existing = read('id') ? state.notes.find((n) => n.id === read('id')) : undefined;
+
+  const symbol = read('symbol').toUpperCase();
+  const target = read('targetPrice');
+  const stop = read('stopPrice');
+  const review = read('reviewOn');
+
+  const note: Note = {
+    id: existing?.id ?? newId(),
+    createdAt: existing?.createdAt ?? nowIso,
+    updatedAt: nowIso,
+    title,
+    body: read('body'),
+    kind: read('kind') as NoteKind,
+    sentiment: read('sentiment') as Sentiment,
+    conviction: Number(read('conviction')) || 3,
+    horizon: read('horizon') as Horizon,
+    status: read('status') as NoteStatus,
+    tags: parseTags(read('tags')),
+    ...(symbol ? { symbol } : {}),
+    ...(target ? { targetPrice: price(Number(target)) as Price } : {}),
+    ...(stop ? { stopPrice: price(Number(stop)) as Price } : {}),
+    ...(review ? { reviewOn: review } : {}),
+  };
+
+  editingNoteId = null;
+  persist(upsertNote(state, note));
 }
 
 // ---------------------------------------------------------------------- boot

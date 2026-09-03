@@ -4,7 +4,7 @@ import { egp } from '../core/money.ts';
 import type { Transaction } from '../core/types.ts';
 import {
   loadState, saveState, reviveState, addTransaction, removeTransaction,
-  updateSettings, toggleWatch, newId, symbolsIn, toExport, EMPTY_STATE, DEFAULT_SETTINGS,
+  updateSettings, toggleWatch, upsertNote, removeNote, newId, symbolsIn, toExport, EMPTY_STATE, DEFAULT_SETTINGS,
   type Storage,
 } from './store.ts';
 
@@ -115,4 +115,27 @@ test('watchlist survives a storage round-trip', () => {
 test('a malformed watchlist revives as empty', () => {
   assert.deepEqual(reviveState({ watchlist: [1, null, 'OK'] }).watchlist, ['OK']);
   assert.deepEqual(reviveState({ watchlist: 'nope' }).watchlist, []);
+});
+
+test('upsertNote inserts then updates in place', () => {
+  const n = { id: 'x', createdAt: 't', updatedAt: 't', title: 'A', body: '', kind: 'thesis',
+    sentiment: 'bullish', conviction: 4, horizon: 'long', status: 'open', tags: [] } as const;
+  const a = upsertNote(EMPTY_STATE, n);
+  assert.equal(a.notes.length, 1);
+  const b = upsertNote(a, { ...n, title: 'B' });
+  assert.equal(b.notes.length, 1);
+  assert.equal(b.notes[0]!.title, 'B');
+});
+
+test('removeNote deletes by id; notes survive a storage round-trip', () => {
+  const n = { id: 'x', createdAt: 't', updatedAt: 't', title: 'A', body: '', kind: 'risk',
+    sentiment: 'bearish', conviction: 2, horizon: 'short', status: 'open', tags: ['m'] } as const;
+  const storage = memoryStorage();
+  saveState(storage, upsertNote(EMPTY_STATE, n));
+  assert.equal(loadState(storage).notes[0]!.id, 'x');
+  assert.equal(removeNote(upsertNote(EMPTY_STATE, n), 'x').notes.length, 0);
+});
+
+test('malformed notes revive as empty', () => {
+  assert.deepEqual(reviveState({ notes: [{ nope: true }, null] }).notes, []);
 });

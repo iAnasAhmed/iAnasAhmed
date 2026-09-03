@@ -29,7 +29,7 @@ function card(title: string, ...body: (Node | string | false | null)[]): HTMLEle
 
 // ------------------------------------------------------------------- header
 
-export type AppView = 'portfolio' | 'research';
+export type AppView = 'portfolio' | 'research' | 'journal';
 
 export function header(params: {
   readonly status: MarketStatus;
@@ -58,6 +58,7 @@ export function header(params: {
     h('nav', { class: 'topnav', 'aria-label': 'Views' },
       navButton('portfolio', 'Portfolio'),
       navButton('research', 'Research'),
+      navButton('journal', 'Journal'),
     ),
     h('div', { class: 'topbar-actions' },
       params.isDemo

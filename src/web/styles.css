@@ -719,3 +719,109 @@ input:focus-visible, select:focus-visible, button:focus-visible {
 .method-list { margin: 0; padding-left: 18px; display: grid; gap: 8px; font-size: 13px; color: var(--text-2); }
 .method-list li { line-height: 1.5; }
 .method-list strong { color: var(--text); }
+
+/* ================================================================ journal view */
+
+.journal-kpis { margin-top: 14px; }
+
+/* smart nudges */
+.nudges { display: grid; gap: 10px; margin-top: 14px; }
+.nudge {
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--muted);
+  background: var(--surface-2);
+}
+.nudge.warning { border-left-color: var(--warning); }
+.nudge.serious { border-left-color: var(--series-2); }
+.nudge.critical { border-left-color: var(--critical); }
+.nudge-title { font-weight: 600; font-size: 13.5px; }
+.nudge-detail { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.nudge-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.gap-chip {
+  border: 1px solid color-mix(in srgb, var(--critical) 40%, transparent);
+  background: color-mix(in srgb, var(--critical) 10%, transparent);
+  color: var(--critical);
+  font-size: 11.5px; font-weight: 650;
+  padding: 3px 9px; border-radius: 999px; cursor: pointer;
+}
+.gap-chip:hover { background: color-mix(in srgb, var(--critical) 20%, transparent); }
+
+/* composer */
+.note-composer.editing { border-color: var(--series-1); box-shadow: 0 0 0 1px var(--series-1), var(--shadow); }
+.note-form { display: flex; flex-direction: column; gap: 12px; }
+.note-form-top { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 640px) { .note-form-top { grid-template-columns: 1fr 160px; } }
+.note-form-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 560px) { .note-form-grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 900px) { .note-form-grid { grid-template-columns: repeat(4, 1fr); } }
+.field.grow { grid-column: 1 / -1; }
+textarea {
+  font: inherit; font-size: 15px; padding: 10px 11px;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--surface-2); color: var(--text); width: 100%; resize: vertical; min-height: 84px;
+}
+textarea:focus-visible { outline: 2px solid var(--series-1); outline-offset: 2px; }
+
+/* filters */
+.note-filters { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 560px) { .note-filters { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 960px) { .note-filters { grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr; } }
+
+/* note cards */
+.note-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 720px) { .note-grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1100px) { .note-grid { grid-template-columns: 1fr 1fr 1fr; } }
+
+.note-card {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--muted);
+  border-radius: var(--radius-sm);
+  min-width: 0;
+}
+/* kind accent stripe — encodes the note's type at a glance */
+.note-card.kind-thesis { border-left-color: var(--series-1); }
+.note-card.kind-risk { border-left-color: var(--critical); }
+.note-card.kind-catalyst { border-left-color: var(--series-3); }
+.note-card.kind-decision { border-left-color: var(--series-2); }
+.note-card.kind-lesson { border-left-color: var(--warning); }
+.note-card.kind-question { border-left-color: var(--muted); }
+.note-card.kind-observation { border-left-color: var(--muted); }
+
+.note-card-head { display: flex; align-items: center; gap: 6px; }
+.note-spacer { flex: 1; }
+.note-kind {
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 700;
+  padding: 2px 7px; border-radius: 5px; background: var(--surface-2); color: var(--text-2);
+}
+.note-kind.kind-thesis { color: var(--series-1); background: color-mix(in srgb, var(--series-1) 14%, transparent); }
+.note-kind.kind-risk { color: var(--critical); background: color-mix(in srgb, var(--critical) 14%, transparent); }
+.note-kind.kind-lesson { color: #7a5200; background: color-mix(in srgb, var(--warning) 22%, transparent); }
+.note-symbol { font-weight: 700; font-size: 12px; font-family: var(--mono); }
+.note-status {
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em;
+  padding: 2px 7px; border-radius: 999px; background: var(--surface-2); color: var(--muted);
+}
+.note-status.status-open { color: var(--good); background: color-mix(in srgb, var(--good) 13%, transparent); }
+.note-status.status-watching { color: #7a5200; background: color-mix(in srgb, var(--warning) 20%, transparent); }
+
+.note-title { font-size: 14.5px; font-weight: 640; line-height: 1.3; text-wrap: balance; }
+.note-body { font-size: 13px; color: var(--text-2); margin: 0; line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.note-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+.note-chip {
+  font-size: 11px; padding: 2px 7px; border-radius: 6px;
+  background: var(--surface-2); color: var(--text-2); font-variant-numeric: tabular-nums;
+}
+.note-chip.pos { color: var(--good); }
+.note-chip.neg { color: var(--critical); }
+.note-chip.due { color: var(--critical); background: color-mix(in srgb, var(--critical) 12%, transparent); }
+.note-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.tag {
+  font-size: 10.5px; padding: 2px 7px; border-radius: 999px;
+  background: color-mix(in srgb, var(--series-1) 10%, transparent); color: var(--series-1);
+}
+.note-foot { font-size: 10.5px; color: var(--muted); margin-top: auto; padding-top: 2px; }

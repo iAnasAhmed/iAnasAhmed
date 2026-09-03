@@ -8,6 +8,7 @@
 
 import type { Instrument, Quote, Transaction } from '../core/types.ts';
 import type { Snapshot } from '../core/history.ts';
+import type { Note } from '../core/notes.ts';
 import type { ProviderId } from '../data/registry.ts';
 import { MONEY_MARKET_BENCHMARK, INFLATION_ASSUMPTION } from '../core/performance.ts';
 import { OTHER_FEES_BPS_ESTIMATE, STAMP_DUTY_BPS, TELDA_COMMISSION_BPS } from '../core/costs.ts';
@@ -35,6 +36,8 @@ export interface AppState {
   readonly history: readonly Snapshot[];
   /** Symbols shortlisted from the screener, before any money is committed. */
   readonly watchlist: readonly string[];
+  /** Research journal — theses, risks, decisions, lessons. */
+  readonly notes: readonly Note[];
   readonly settings: Settings;
 }
 
@@ -54,6 +57,7 @@ export const EMPTY_STATE: AppState = {
   customInstruments: [],
   history: [],
   watchlist: [],
+  notes: [],
   settings: DEFAULT_SETTINGS,
 };
 
@@ -83,7 +87,18 @@ export function reviveState(raw: unknown): AppState {
     ? (record['watchlist'].filter((s): s is string => typeof s === 'string'))
     : [];
 
-  return { transactions, customInstruments, history, watchlist, settings };
+  const notes = Array.isArray(record['notes'])
+    ? (record['notes'].filter(isNote) as Note[])
+    : [];
+
+  return { transactions, customInstruments, history, watchlist, notes, settings };
+}
+
+function isNote(value: unknown): value is Note {
+  if (typeof value !== 'object' || value === null) return false;
+  const n = value as Record<string, unknown>;
+  return typeof n['id'] === 'string' && typeof n['title'] === 'string'
+    && typeof n['kind'] === 'string' && Array.isArray(n['tags']);
 }
 
 function isSnapshot(value: unknown): value is Snapshot {
@@ -161,6 +176,18 @@ export function toggleWatch(state: AppState, symbol: string): AppState {
     ? state.watchlist.filter((s) => s !== upper)
     : [...state.watchlist, upper];
   return { ...state, watchlist };
+}
+
+export function upsertNote(state: AppState, note: Note): AppState {
+  const exists = state.notes.some((n) => n.id === note.id);
+  const notes = exists
+    ? state.notes.map((n) => (n.id === note.id ? note : n))
+    : [...state.notes, note];
+  return { ...state, notes };
+}
+
+export function removeNote(state: AppState, id: string): AppState {
+  return { ...state, notes: state.notes.filter((n) => n.id !== id) };
 }
 
 /** Collision-resistant id without pulling in a uuid dependency. */
