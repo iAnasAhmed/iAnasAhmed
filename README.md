@@ -32,6 +32,26 @@ manual-entry-first: you log transactions, it does the maths exactly.
 - **Keeps your data private** — `localStorage` only. No account, no server, no
   telemetry. Explicit JSON export/import.
 
+## Live market data (optional)
+
+The app ships offline-first (demo prices and demo fundamentals). To use **real
+EGX data**:
+
+1. Run the app with `npm start` — the bundled server includes the data proxy.
+2. In **Settings → Price source**, choose *Yahoo Finance (live)*.
+3. In **Research → Data source**, choose *Yahoo Finance (live)* for the screener.
+
+No API key is needed. Yahoo's quote endpoints require a crumb + cookie, which
+the local proxy fetches and refreshes for you (`scripts/yahoo.mjs`); the browser
+only ever talks to `localhost`. Prices also have a crumbless fallback (Yahoo's
+chart endpoint), so the portfolio keeps working even if the batch path hiccups.
+
+**Caveat:** Yahoo's coverage of EGX (`.CA`) tickers is uneven — some names come
+back with only part of their fundamentals, or none. Missing figures are handled
+gracefully (they score neutrally in the screener). For complete, reliable EGX
+fundamentals, a keyed provider (Twelve Data, EODHD) is the next step; the
+provider interface is already in place for it.
+
 ## Quick start
 
 Requires **Node 22.6+**. That is the only requirement.

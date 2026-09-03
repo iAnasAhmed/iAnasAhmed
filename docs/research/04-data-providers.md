@@ -54,10 +54,18 @@ just a last price. Same constraint applies — no official free EGX feed:
   order-of-magnitude estimates). Realistic enough that the screen behaves like
   the real market, but point-in-time, unverified, and never to be traded on —
   clearly badged as such in the UI.
-- **`yahoo`** — best-effort live fundamentals via Yahoo's `quoteSummary`
-  endpoint (`price,summaryDetail,defaultKeyStatistics`), proxied through the
-  local server at `/api/fundamentals/`. Undocumented and unguaranteed; every
+- **`yahoo`** — best-effort live fundamentals via Yahoo's batched **v7 `quote`**
+  endpoint, which returns price, market cap, P/E, P/B, dividend yield, 52-week
+  change and average volume for many symbols in one request. It is proxied
+  through the local server at `/api/quotes`, because (a) the browser cannot make
+  the cross-origin call and (b) the endpoint requires a **crumb + cookie** that
+  the proxy mints and refreshes automatically (see `scripts/yahoo.mjs`). Every
   failure degrades to "no fundamentals for this name" rather than an error.
+
+Yahoo's EGX coverage is uneven — some `.CA` tickers return only a subset of
+fields, or nothing. That is expected and handled: partial data still screens,
+and a missing figure scores neutrally. The offline reference table remains the
+fuller dataset for the demo.
 
 Average daily traded value is the liquidity measure the screener weights most
 heavily. Where a provider only gives share volume, it is approximated as

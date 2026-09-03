@@ -59,12 +59,33 @@ test('yahoo provider returns an empty map for no symbols without fetching', asyn
   assert.equal(called, false);
 });
 
-test('yahoo provider parses a well-formed payload', async () => {
-  const body = JSON.stringify({
+test('yahoo provider parses the batched v7 quote payload', async () => {
+  const body = JSON.stringify({ quoteResponse: { result: [
+    { symbol: 'COMI.CA', regularMarketPrice: 138.11, regularMarketPreviousClose: 137.0 },
+  ] } });
+  const p = new YahooProvider({
+    quotesEndpoint: '/api/quotes',
+    fetchImpl: (async (url: string) =>
+      url.includes('/api/quotes') ? new Response(body, { status: 200 }) : new Response('{}', { status: 404 })
+    ) as unknown as typeof fetch,
+  });
+  const q = (await p.getQuotes(['COMI'])).get('COMI')!;
+  assert.equal(q.price, 138_110);
+  assert.equal(q.previousClose, 137_000);
+});
+
+test('yahoo provider falls back to the chart endpoint when the batch is empty', async () => {
+  const chart = JSON.stringify({
     chart: { result: [{ meta: { symbol: 'COMI.CA', regularMarketPrice: 96.4, chartPreviousClose: 95.1 } }] },
   });
   const p = new YahooProvider({
-    fetchImpl: (async () => new Response(body, { status: 200 })) as typeof fetch,
+    quotesEndpoint: '/api/quotes',
+    chartEndpoint: '/api/quote/',
+    fetchImpl: (async (url: string) =>
+      url.includes('/api/quotes')
+        ? new Response('{"quoteResponse":{"result":[]}}', { status: 200 }) // batch has nothing
+        : new Response(chart, { status: 200 })                              // chart fallback
+    ) as unknown as typeof fetch,
   });
   const q = (await p.getQuotes(['COMI'])).get('COMI')!;
   assert.equal(q.price, 96_400);
@@ -74,13 +95,6 @@ test('yahoo provider parses a well-formed payload', async () => {
 test('a failing provider degrades to an empty map, never throws', async () => {
   const p = new YahooProvider({
     fetchImpl: (async () => { throw new Error('network down'); }) as typeof fetch,
-  });
-  assert.equal((await p.getQuotes(['COMI'])).size, 0);
-});
-
-test('a malformed payload is ignored rather than trusted', async () => {
-  const p = new YahooProvider({
-    fetchImpl: (async () => new Response('{"chart":{"result":[{}]}}')) as typeof fetch,
   });
   assert.equal((await p.getQuotes(['COMI'])).size, 0);
 });

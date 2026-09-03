@@ -201,7 +201,10 @@ async function refreshQuotes(): Promise<void> {
     return;
   }
 
-  const provider = createProvider(state.settings.providerId, { endpoint: '/api/quote/' });
+  const provider = createProvider(state.settings.providerId, {
+    quotesEndpoint: '/api/quotes',
+    chartEndpoint: '/api/quote/',
+  });
   try {
     quotes = await provider.getQuotes(symbols);
   } catch {
@@ -354,7 +357,7 @@ function renderResearch(): HTMLElement {
 async function loadFundamentals(): Promise<void> {
   const symbols = EGX_INSTRUMENTS.filter((i) => i.assetClass === 'equity').map((i) => i.symbol);
   const provider = createFundamentalsProvider(state.settings.fundamentalsId, {
-    endpoint: '/api/fundamentals/',
+    quotesEndpoint: '/api/quotes',
   });
   try {
     fundamentals = await provider.getFundamentals(symbols);

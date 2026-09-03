@@ -9,7 +9,7 @@
   },
   "scripts": {
     "check": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test \"src/**/*.test.ts\"",
+    "test": "node --experimental-strip-types --test \"src/**/*.test.ts\" \"scripts/**/*.test.mjs\"",
     "build": "node scripts/build.mjs",
     "serve": "node scripts/serve.mjs",
     "start": "npm run build && npm run serve",

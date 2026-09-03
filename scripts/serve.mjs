@@ -1,20 +1,31 @@
 /**
- * Zero-dependency static server for dist/, plus a quote proxy.
+ * Zero-dependency static server for dist/, plus a Yahoo Finance proxy.
  *
- * The proxy exists because browsers block cross-origin requests to Yahoo
- * Finance. Requests to /api/quote/<SYMBOL> are forwarded server-side, so the
- * live price source works without a CORS shim or an API key.
+ * The proxy exists for two reasons: browsers block cross-origin requests to
+ * Yahoo, and Yahoo's data endpoints require a crumb+cookie the browser can't
+ * mint. Three routes are served, all confined to Yahoo:
+ *   /api/quotes?symbols=A.CA,B.CA  -> batched v7 quote (price + fundamentals)
+ *   /api/quote/<SYMBOL>            -> v8 chart (crumbless price fallback)
+ *   /api/fundamentals/<SYMBOL>     -> v10 quoteSummary (secondary)
+ *
+ * The Yahoo base URLs are env-overridable (YAHOO_BASE, YAHOO_COOKIE_URL) so the
+ * whole path can be exercised against a local fake in tests.
  */
 
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { extname, join, normalize, resolve } from 'node:path';
+import { createYahooSession } from './yahoo.mjs';
 
 const PORT = Number(process.env['PORT'] ?? 3000);
 const ROOT = resolve('dist');
-const YAHOO = 'https://query1.finance.yahoo.com/v8/finance/chart/';
-const YAHOO_SUMMARY = 'https://query1.finance.yahoo.com/v10/finance/quoteSummary/';
 const SYMBOL_RE = /^[A-Za-z0-9.\-]{1,20}$/;
+const SYMBOL_LIST_RE = /^[A-Za-z0-9.\-]{1,20}(,[A-Za-z0-9.\-]{1,20}){0,49}$/;
+
+const yahoo = createYahooSession({
+  base: process.env['YAHOO_BASE'] ?? 'https://query1.finance.yahoo.com',
+  cookieUrl: process.env['YAHOO_COOKIE_URL'] ?? 'https://fc.yahoo.com',
+});
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -25,60 +36,60 @@ const TYPES = {
   '.svg': 'image/svg+xml',
 };
 
+function sendJson(res, status, body) {
+  res.writeHead(status, { 'content-type': 'application/json' });
+  res.end(body);
+}
+
+/** Relay a Yahoo response's status and body verbatim, with a 502 on failure. */
+async function relay(res, upstreamPromise) {
+  try {
+    const upstream = await upstreamPromise;
+    const body = await upstream.text();
+    sendJson(res, upstream.status, body);
+  } catch (error) {
+    sendJson(res, 502, JSON.stringify({ error: String(error) }));
+  }
+}
+
 const server = createServer(async (req, res) => {
   const url = new URL(req.url ?? '/', `http://${req.headers.host ?? 'localhost'}`);
 
-  // --- quote proxy
-  if (url.pathname.startsWith('/api/quote/')) {
-    const symbol = decodeURIComponent(url.pathname.slice('/api/quote/'.length));
-    // Only exchange tickers: letters, digits, dot, dash. Nothing else reaches Yahoo.
-    if (!/^[A-Za-z0-9.\-]{1,20}$/.test(symbol)) {
-      res.writeHead(400, { 'content-type': 'application/json' });
-      res.end('{"error":"bad symbol"}');
+  // --- batched quote proxy: price AND fundamentals for many symbols at once
+  if (url.pathname === '/api/quotes') {
+    const symbols = url.searchParams.get('symbols') ?? '';
+    if (!SYMBOL_LIST_RE.test(symbols)) {
+      sendJson(res, 400, '{"error":"bad symbols"}');
       return;
     }
-    try {
-      const upstream = await fetch(`${YAHOO}${encodeURIComponent(symbol)}`, {
-        headers: { accept: 'application/json' },
-        signal: AbortSignal.timeout(8000),
-      });
-      const body = await upstream.text();
-      res.writeHead(upstream.status, { 'content-type': 'application/json' });
-      res.end(body);
-    } catch (error) {
-      res.writeHead(502, { 'content-type': 'application/json' });
-      res.end(JSON.stringify({ error: String(error) }));
-    }
+    await relay(res, yahoo.quote(symbols));
     return;
   }
 
-  // --- fundamentals proxy (Yahoo quoteSummary), same CORS reasoning as quotes
+  // --- crumbless chart proxy (price fallback)
+  if (url.pathname.startsWith('/api/quote/')) {
+    const symbol = decodeURIComponent(url.pathname.slice('/api/quote/'.length));
+    if (!SYMBOL_RE.test(symbol)) {
+      sendJson(res, 400, '{"error":"bad symbol"}');
+      return;
+    }
+    await relay(res, yahoo.chart(symbol));
+    return;
+  }
+
+  // --- quoteSummary proxy (secondary fundamentals source)
   if (url.pathname.startsWith('/api/fundamentals/')) {
     const symbol = decodeURIComponent(url.pathname.slice('/api/fundamentals/'.length));
     if (!SYMBOL_RE.test(symbol)) {
-      res.writeHead(400, { 'content-type': 'application/json' });
-      res.end('{"error":"bad symbol"}');
+      sendJson(res, 400, '{"error":"bad symbol"}');
       return;
     }
-    // Whitelist the modules param so the proxy can't be pointed anywhere else.
     const modules = url.searchParams.get('modules') ?? 'price,summaryDetail,defaultKeyStatistics';
     if (!/^[A-Za-z,]{1,120}$/.test(modules)) {
-      res.writeHead(400, { 'content-type': 'application/json' });
-      res.end('{"error":"bad modules"}');
+      sendJson(res, 400, '{"error":"bad modules"}');
       return;
     }
-    try {
-      const upstream = await fetch(
-        `${YAHOO_SUMMARY}${encodeURIComponent(symbol)}?modules=${modules}`,
-        { headers: { accept: 'application/json' }, signal: AbortSignal.timeout(8000) },
-      );
-      const body = await upstream.text();
-      res.writeHead(upstream.status, { 'content-type': 'application/json' });
-      res.end(body);
-    } catch (error) {
-      res.writeHead(502, { 'content-type': 'application/json' });
-      res.end(JSON.stringify({ error: String(error) }));
-    }
+    await relay(res, yahoo.summary(symbol, modules));
     return;
   }
 

@@ -39,27 +39,29 @@ test('the mock set feeds a working screen', async () => {
   assert.ok(results[0]!.score >= results[results.length - 1]!.score);
 });
 
-test('yahoo fundamentals parse a well-formed payload', async () => {
-  const body = JSON.stringify({
-    quoteSummary: { result: [{
-      price: { symbol: 'COMI.CA', regularMarketPrice: { raw: 96.4 }, marketCap: { raw: 290_000_000_000 } },
-      summaryDetail: {
-        trailingPE: { raw: 7.8 }, priceToBook: { raw: 1.3 },
-        dividendYield: { raw: 0.052 }, averageDailyVolume10Day: { raw: 1_200_000 },
-      },
-      defaultKeyStatistics: { '52WeekChange': { raw: 0.44 } },
-    }] },
-  });
+test('yahoo fundamentals parse the batched v7 quote payload', async () => {
+  const body = JSON.stringify({ quoteResponse: { result: [{
+    symbol: 'COMI.CA',
+    regularMarketPrice: 138.11,
+    marketCap: 471_750_000_000,
+    trailingPE: 6.0,
+    priceToBook: 1.6,
+    trailingAnnualDividendYield: 0.043,
+    fiftyTwoWeekChangePercent: 45.0,
+    averageDailyVolume3Month: 4_000_000,
+  }] } });
   const p = new YahooFundamentalsProvider({
     fetchImpl: (async () => new Response(body, { status: 200 })) as typeof fetch,
   });
   const metric = (await p.getFundamentals(['COMI'])).get('COMI')!;
-  assert.equal(metric.peRatio, 7.8);
-  assert.equal(metric.pbRatio, 1.3);
-  assert.equal(metric.dividendYield, 0.052);
-  assert.equal(metric.yearChange, 0.44);
-  // avgDailyValue ≈ volume × price = 1.2M × 96.4
-  assert.ok(metric.avgDailyValue! > 0);
+  assert.equal(metric.peRatio, 6.0);
+  assert.equal(metric.pbRatio, 1.6);
+  assert.equal(metric.dividendYield, 0.043);
+  assert.equal(metric.yearChange, 0.45);
+  assert.equal(metric.name, 'Commercial International Bank'); // enriched from the registry
+  assert.equal(metric.sector, 'Banking');
+  assert.ok(metric.avgDailyValue! > 0); // volume × price
+  assert.ok(metric.marketCap! > 0);
 });
 
 test('yahoo fundamentals degrade to empty on failure, never throw', async () => {
@@ -71,7 +73,7 @@ test('yahoo fundamentals degrade to empty on failure, never throw', async () => 
 
 test('a partial yahoo payload keeps what it has and omits the rest', async () => {
   const body = JSON.stringify({
-    quoteSummary: { result: [{ price: { symbol: 'ETEL.CA', regularMarketPrice: { raw: 45 } } }] },
+    quoteResponse: { result: [{ symbol: 'ETEL.CA', regularMarketPrice: 111 }] },
   });
   const p = new YahooFundamentalsProvider({
     fetchImpl: (async () => new Response(body)) as typeof fetch,
