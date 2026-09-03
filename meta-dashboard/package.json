@@ -1,16 +1,22 @@
 {
   "name": "ayat-fahiem-meta-dashboard",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Live Meta Ads command centre + media-buying mentor for Ayat Fahiem Cosmetics",
   "type": "module",
   "main": "src/server.js",
-  "engines": { "node": ">=22.5.0" },
+  "engines": { "node": ">=18.0.0" },
   "scripts": {
-    "start": "node --no-warnings src/server.js",
-    "dev": "node --no-warnings --watch src/server.js",
-    "sync": "node --no-warnings src/cli.js sync",
-    "doctor": "node --no-warnings src/cli.js doctor"
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "sync": "node src/cli.js sync",
+    "doctor": "node src/cli.js doctor",
+    "postinstall": "node scripts/postinstall.js"
   },
-  "dependencies": {},
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "chart.js": "^4.4.4",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  },
   "license": "MIT"
 }

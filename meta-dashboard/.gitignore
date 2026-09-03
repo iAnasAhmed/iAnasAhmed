@@ -6,3 +6,7 @@ data/*.db-wal
 data/*.db-shm
 *.log
 .DS_Store
+
+# Copied from node_modules/chart.js by `npm run postinstall` - a build
+# artefact, not source. Regenerated automatically on every `npm install`.
+public/vendor/

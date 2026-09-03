@@ -5,11 +5,13 @@ A live dashboard and media-buying mentor for the **ayatfahiemcosmetics** Meta ad
 you what changed and what happened next, segments your audiences into a working hierarchy,
 and builds the campaign plan off your own numbers rather than generic benchmarks.
 
-Zero dependencies. Node 22.5+ has everything it needs (`node:sqlite`, `node:http`, `fetch`).
+Built on a small, standard Node stack: Express, better-sqlite3, dotenv on the backend; Chart.js
+on the frontend, loaded from a local file rather than a CDN.
 
 ```bash
-cp .env.example .env      # add your Meta token
-node src/server.js        # → http://localhost:4300
+npm install                # pulls the four dependencies, copies Chart.js into public/vendor/
+cp .env.example .env       # add your Meta token
+npm start                  # → http://localhost:4300
 ```
 
 It works before you add a token: a baseline of the account's real history (captured 2 Sept 2026)
@@ -26,11 +28,11 @@ ships in `data/seed.json` and loads on first boot, so every tab has data from th
 2. **Economics.** The mentor's verdicts are only as good as these, so set them honestly in `.env`:
    `BUSINESS_GROSS_MARGIN` (margin after COGS and shipping), `TARGET_ROAS`, `TARGET_CPA`,
    `MONTHLY_BUDGET`. Break-even ROAS is derived as `1 / margin` — at 55% margin that is 1.82x.
-3. **Run it.** `node src/server.js`. It syncs on boot and every 15 minutes after
+3. **Run it.** `npm start`. It syncs on boot and every 15 minutes after
    (`SYNC_INTERVAL_MINUTES`), and pushes updates to the open dashboard over server-sent events.
 
-`node src/cli.js doctor` prints the full mentor report to the terminal.
-`node src/cli.js sync` forces one sync.
+`npm run doctor` prints the full mentor report to the terminal.
+`npm run sync` forces one sync.
 
 ---
 
@@ -87,11 +89,12 @@ set saturate takes it to **EGP 96k**.
 ## How it works
 
 ```
+scripts/postinstall.js  copies Chart.js's browser build into public/vendor/ after npm install
 src/
-  server.js        node:http server, static files, SSE push
-  config.js        .env reader, derived economics
+  server.js        Express app — routes, static files, SSE push
+  config.js        dotenv-backed config, derived economics
   meta.js          Graph API client — retry, backoff, pagination, action normalisation
-  store.js         node:sqlite schema and queries
+  store.js         better-sqlite3 schema and queries
   sync.js          live pull, change detection, seed loader
   api.js           builds one shared context; the six endpoint payloads
   cli.js           `doctor` and `sync` from the terminal
@@ -100,9 +103,17 @@ src/
     mentor.js      19 diagnostic rules
     audiences.js   segmentation, the ladder, the new-customer path
     planner.js     unit economics, budget allocation, scenarios, the 4-week plan
-public/            dashboard — vanilla JS modules, hand-rolled SVG charts
+public/            dashboard — vanilla JS modules; charts.js wraps Chart.js
 data/seed.json     baseline history captured from the live account
 ```
+
+**Dependencies, and why each one.** `express` for routing and static files instead of hand-rolled
+`node:http` plumbing. `better-sqlite3` for storage — a synchronous, battle-tested native module
+(Node's own experimental `node:sqlite` was modelled on its API, so the swap was mechanical).
+`dotenv` for `.env` loading. `chart.js` for the line, bar and bubble/scatter charts. Two chart
+types stay hand-rolled SVG on purpose: the delivery calendar and the inline tile sparklines have
+no clean native Chart.js fit, and forcing them through a chart library would cost more code and
+risk than the SVG they replace.
 
 **History is the point.** Every sync writes daily facts per entity and diffs entity
 configuration against the previous sync, so budget changes, status flips and new objects land in
@@ -116,11 +127,14 @@ media dashboard lies. Account-level spend and revenue are never patched from ano
 the baseline cannot know something (per-day purchase counts, which arrive with the first live
 sync) the dashboard says so instead of showing a zero.
 
-**Charts.** No chart library and no CDN, so it works offline. Spend and return are two stacked
-plots sharing a timeline rather than one dual-axis chart. Colours are a validated categorical set
-that stays distinguishable under colour-vision deficiency in both light and dark themes; status
-colours are reserved for state and always paired with a word, never colour alone. Every line and
-area plot carries a crosshair and tooltip; bars, cells and points have their own hover detail.
+**Charts.** Chart.js, loaded from `public/vendor/chart.umd.js` — a file `npm install` copies out
+of `node_modules`, not a CDN `<script>` tag, so the dashboard still works with no internet access
+once installed. Spend and return are two stacked plots sharing a timeline rather than one
+dual-axis chart. Colours are a validated categorical set that stays distinguishable under
+colour-vision deficiency in both light and dark themes; status colours are reserved for state and
+always paired with a word, never colour alone. Line charts get a hover crosshair via a small
+custom Chart.js plugin; every chart's tooltip is custom HTML (Chart.js's "external tooltip" hook)
+so it looks identical to the rest of the interface rather than a canvas-drawn default.
 
 **Interface.** A fixed rail for navigation, a sticky page header carrying the reporting window
 (7 / 28 / 90 days on the windowed views), and one card grammar throughout. Light and dark are both
@@ -143,3 +157,8 @@ top bar on narrow screens, and respects `prefers-reduced-motion`.
 - `?live=0` on the URL disables the push stream — useful for headless screenshots.
 - The second account (`660617751508124`, EGP 33,772, no recorded purchases) is tracked in
   `META_EXTRA_AD_ACCOUNTS` but the dashboard focuses on the primary one.
+- **better-sqlite3 is a native module.** `npm install` fetches a prebuilt binary for common
+  platforms automatically; on an unusual platform/Node combination it falls back to compiling
+  from source, which needs a C++ toolchain (Xcode Command Line Tools on macOS, `build-essential`
+  on Debian/Ubuntu, the "Desktop development with C++" workload on Windows). This is the one step
+  in `npm install` that can fail on a machine with no compiler and no matching prebuilt binary.

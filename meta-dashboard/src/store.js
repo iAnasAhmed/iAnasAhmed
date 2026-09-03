@@ -1,10 +1,13 @@
 import fs from 'node:fs';
-import { DatabaseSync } from 'node:sqlite';
+import Database from 'better-sqlite3';
 import { config } from './config.js';
 
 fs.mkdirSync(config.dataDir, { recursive: true });
 
-export const db = new DatabaseSync(config.dbPath);
+// better-sqlite3's synchronous prepare/run/get/all API is what Node's own
+// experimental node:sqlite module modelled itself on, so this is a drop-in
+// swap - every prepared statement and query below is unchanged.
+export const db = new Database(config.dbPath);
 
 db.exec(`
 PRAGMA journal_mode = WAL;
@@ -186,30 +189,29 @@ ON CONFLICT(account_id,date,level,entity_id) DO UPDATE SET
   leads=excluded.leads, video_views=excluded.video_views, source=excluded.source
 `);
 
-export function upsertDaily(accountId, level, rows, source = 'live') {
-  const tx = db.prepare('BEGIN');
-  tx.run();
-  try {
-    for (const r of rows) {
-      const entityId = level === 'account' ? accountId
-        : level === 'campaign' ? r.campaignId
-        : level === 'adset' ? r.adsetId
-        : r.adId;
-      if (!entityId || !r.dateStart) continue;
-      const parentId = level === 'adset' ? r.campaignId : level === 'ad' ? r.adsetId : null;
-      const name = level === 'campaign' ? r.campaignName : level === 'adset' ? r.adsetName : level === 'ad' ? r.adName : null;
-      upsertDailyStmt.run(
-        accountId, r.dateStart, level, String(entityId), parentId ? String(parentId) : null, name,
-        r.spend, r.impressions, r.reach, r.clicks, r.linkClicks,
-        r.purchases, r.revenue, r.addToCart, r.initiateCheckout, r.viewContent,
-        r.landingPageViews, r.messagingStarted, r.leads, r.videoViews, source,
-      );
-    }
-    db.prepare('COMMIT').run();
-  } catch (e) {
-    db.prepare('ROLLBACK').run();
-    throw e;
+// better-sqlite3's own transaction wrapper: it begins, commits, and rolls back
+// on a thrown error automatically, and is the idiomatic replacement for the
+// hand-rolled BEGIN/COMMIT/ROLLBACK statements this used to run by hand.
+const upsertDailyTx = db.transaction((accountId, level, rows, source) => {
+  for (const r of rows) {
+    const entityId = level === 'account' ? accountId
+      : level === 'campaign' ? r.campaignId
+      : level === 'adset' ? r.adsetId
+      : r.adId;
+    if (!entityId || !r.dateStart) continue;
+    const parentId = level === 'adset' ? r.campaignId : level === 'ad' ? r.adsetId : null;
+    const name = level === 'campaign' ? r.campaignName : level === 'adset' ? r.adsetName : level === 'ad' ? r.adName : null;
+    upsertDailyStmt.run(
+      accountId, r.dateStart, level, String(entityId), parentId ? String(parentId) : null, name,
+      r.spend, r.impressions, r.reach, r.clicks, r.linkClicks,
+      r.purchases, r.revenue, r.addToCart, r.initiateCheckout, r.viewContent,
+      r.landingPageViews, r.messagingStarted, r.leads, r.videoViews, source,
+    );
   }
+});
+
+export function upsertDaily(accountId, level, rows, source = 'live') {
+  upsertDailyTx(accountId, level, rows, source);
 }
 
 export function getDaily(accountId, { level = 'account', since, until, entityId } = {}) {
@@ -331,27 +333,23 @@ ON CONFLICT(id) DO UPDATE SET
   last_seen=excluded.last_seen, resolved_at=NULL
 `);
 
-export function persistAlerts(accountId, alerts) {
-  const ts = nowIso();
+const persistAlertsTx = db.transaction((accountId, alerts, ts) => {
   const ids = new Set();
-  db.prepare('BEGIN').run();
-  try {
-    for (const a of alerts) {
-      const id = `${a.ruleId}:${a.entityId || 'account'}`;
-      ids.add(id);
-      upsertAlertStmt.run(id, accountId, a.ruleId, a.severity, a.category ?? null,
-        a.entityLevel ?? null, a.entityId ?? null, a.entityName ?? null,
-        a.title, a.finding, a.why, a.fix, JSON.stringify(a.metrics || {}), ts, ts);
-    }
-    // Anything previously open that no longer fires is resolved as of now.
-    const open = db.prepare('SELECT id FROM alerts WHERE account_id=? AND resolved_at IS NULL').all(accountId);
-    const close = db.prepare('UPDATE alerts SET resolved_at=? WHERE id=?');
-    for (const row of open) if (!ids.has(row.id)) close.run(ts, row.id);
-    db.prepare('COMMIT').run();
-  } catch (e) {
-    db.prepare('ROLLBACK').run();
-    throw e;
+  for (const a of alerts) {
+    const id = `${a.ruleId}:${a.entityId || 'account'}`;
+    ids.add(id);
+    upsertAlertStmt.run(id, accountId, a.ruleId, a.severity, a.category ?? null,
+      a.entityLevel ?? null, a.entityId ?? null, a.entityName ?? null,
+      a.title, a.finding, a.why, a.fix, JSON.stringify(a.metrics || {}), ts, ts);
   }
+  // Anything previously open that no longer fires is resolved as of now.
+  const open = db.prepare('SELECT id FROM alerts WHERE account_id=? AND resolved_at IS NULL').all(accountId);
+  const close = db.prepare('UPDATE alerts SET resolved_at=? WHERE id=?');
+  for (const row of open) if (!ids.has(row.id)) close.run(ts, row.id);
+});
+
+export function persistAlerts(accountId, alerts) {
+  persistAlertsTx(accountId, alerts, nowIso());
 }
 
 export const getAlertHistory = (accountId, limit = 100) =>
@@ -367,3 +365,7 @@ export const getRecentSyncs = (limit = 20) =>
 
 export const isEmpty = (accountId) =>
   db.prepare('SELECT COUNT(*) AS c FROM daily WHERE account_id=?').get(accountId).c === 0;
+
+// better-sqlite3 recommends an explicit close so the WAL file checkpoints
+// cleanly on shutdown rather than relying on process exit.
+export const closeDb = () => db.close();

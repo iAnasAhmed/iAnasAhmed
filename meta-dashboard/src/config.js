@@ -1,27 +1,13 @@
-import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import dotenv from 'dotenv';
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
-/** Minimal .env reader - no dependency, tolerates quotes, comments and blank lines. */
-function loadEnvFile(file) {
-  if (!fs.existsSync(file)) return;
-  for (const raw of fs.readFileSync(file, 'utf8').split('\n')) {
-    const line = raw.trim();
-    if (!line || line.startsWith('#')) continue;
-    const eq = line.indexOf('=');
-    if (eq === -1) continue;
-    const key = line.slice(0, eq).trim();
-    let value = line.slice(eq + 1).trim();
-    if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
-      value = value.slice(1, -1);
-    }
-    if (process.env[key] === undefined) process.env[key] = value;
-  }
-}
-
-loadEnvFile(path.join(ROOT, '.env'));
+// dotenv leaves already-set process.env vars alone (no `override`), so a real
+// environment variable always wins over what's in .env - same semantics the
+// hand-rolled parser this replaces had.
+dotenv.config({ path: path.join(ROOT, '.env') });
 
 const num = (v, fallback) => {
   if (v === undefined || v === null || String(v).trim() === '') return fallback;
