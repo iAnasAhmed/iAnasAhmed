@@ -13,6 +13,8 @@
     "build": "node scripts/build.mjs",
     "serve": "node scripts/serve.mjs",
     "start": "npm run build && npm run serve",
-    "verify": "npm run check && npm test"
+    "verify": "npm run check && npm test",
+    "deploy": "npm run build && npx --yes wrangler@latest pages deploy dist",
+    "cf:dev": "npm run build && npx --yes wrangler@latest pages dev dist"
   }
 }

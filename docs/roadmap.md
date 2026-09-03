@@ -27,6 +27,17 @@ handled well** (`CLAUDE.md` §1.2).
 - [x] Sector-concentration flags against current holdings
 - [x] Watchlist to shortlist candidates before committing money
 - [x] Fundamentals provider (offline demo + best-effort live Yahoo)
+- [x] Live Yahoo data end to end (crumb/cookie proxy)
+
+### Research journal (done)
+
+- [x] Structured notes: kind, sentiment, conviction, horizon, status, tags
+- [x] Price targets/stops and scheduled reviews per note
+- [x] Smart surfacing: net stance, stale notes, due reviews, thesis coverage gaps
+
+### Deployment (done)
+
+- [x] Cloudflare Pages + Workers (Pages Functions proxy) with a deploy guide
 
 ## Phase 2 — Depth
 

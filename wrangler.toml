@@ -1,0 +1,12 @@
+# Cloudflare Pages configuration.
+#
+# The static site is the compiled dashboard in dist/; the API lives in
+# functions/ as Pages Functions, which run on the Cloudflare Workers runtime.
+# So a single `wrangler pages deploy` ships both the site and the Workers.
+#
+# Deploy:  npm run deploy        (build + wrangler pages deploy dist)
+# Preview: npx wrangler pages dev dist   (serves dist/ + functions/ locally)
+
+name = "telda-investing-tracker"
+compatibility_date = "2026-09-01"
+pages_build_output_dir = "dist"

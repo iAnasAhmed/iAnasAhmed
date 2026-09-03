@@ -28,6 +28,9 @@ manual-entry-first: you log transactions, it does the maths exactly.
   withholding, Telda's zero commission.
 - **Flags concentration** — oversized *equity* positions only; the money-market
   core is exempt by design.
+- **A research journal** — structured notes and insights (thesis, risk, catalyst,
+  decision, lesson) with conviction, horizon, tags, and price targets. It flags
+  stale notes, due reviews, and holdings you own with no written thesis.
 - **Works offline** — demo price provider by default; live quotes optional.
 - **Keeps your data private** — `localStorage` only. No account, no server, no
   telemetry. Explicit JSON export/import.
@@ -111,6 +114,18 @@ withholding, and the accounting identity `value = contributions + P&L`.
 Cost constants are modelled from published regulatory rates and are marked as
 estimates where unverified. **After your first real trade, put the contract-note
 figures into `src/core/costs.ts`** — one trade removes all the uncertainty.
+
+## Deploy to Cloudflare
+
+The app runs on **Cloudflare Pages** (static site) with **Pages Functions**
+(the Yahoo proxy, on the Workers runtime). One command ships both:
+
+```bash
+npm run deploy     # build + wrangler pages deploy dist
+```
+
+Full instructions, including GitHub-connected auto-deploys, are in
+[`docs/DEPLOY.md`](docs/DEPLOY.md).
 
 ## Not financial advice
 
