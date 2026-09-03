@@ -13,7 +13,7 @@ test('mock fundamentals are deterministic and cover equities only', async () => 
   assert.equal(a.has('MMF'), false); // money-market fund is not a screenable equity
 });
 
-test('mock fundamentals are internally plausible', async () => {
+test('mock fundamentals are realistic in scale and character', async () => {
   const all = await new MockFundamentalsProvider().getFundamentals(
     ['COMI', 'CIEB', 'FWRY', 'SWDY', 'TMGH'],
   );
@@ -21,9 +21,13 @@ test('mock fundamentals are internally plausible', async () => {
     assert.ok(metric.peRatio! > 0 && metric.peRatio! < 60);
     assert.ok(metric.dividendYield! >= 0 && metric.dividendYield! < 0.15);
     assert.ok(metric.avgDailyValue! > 0);
+    assert.ok(metric.marketCap! > 0);
   }
-  // Banks get cheaper multiples than tech in the demo model.
+  // Banks trade on cheaper multiples than fintech.
   assert.ok(all.get('COMI')!.peRatio! < all.get('FWRY')!.peRatio!);
+  // Anchored figures come through: CIB ~138 EGP, ~4.3% yield.
+  assert.ok(Math.abs(all.get('COMI')!.price! / 1000 - 138.11) < 0.01);
+  assert.ok(Math.abs(all.get('COMI')!.dividendYield! - 0.043) < 1e-9);
 });
 
 test('the mock set feeds a working screen', async () => {

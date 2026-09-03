@@ -84,8 +84,9 @@ function intro(vm: ScreenerViewModel): HTMLElement {
       ? h('div', { class: 'alert' },
           h('span', { 'aria-hidden': 'true' }, '⚠'),
           h('span', {},
-            h('strong', {}, 'Illustrative data. '),
-            'These fundamentals are synthetic demo figures, not real EGX numbers. ' +
+            h('strong', {}, 'Approximate demo data. '),
+            'These are approximate real-world figures compiled around Sep 2026 — ' +
+            'point-in-time, not a live feed, and not verified to the piastre. ' +
             'Switch the source to live data (with the local server running) before ' +
             'trusting anything here.'))
       : null,

@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { MockProvider } from './mock.ts';
+import { EGX_REFERENCE } from '../reference-egx.ts';
 import { YahooProvider } from './yahoo.ts';
 import { toProviderSymbol, fromProviderSymbol, searchInstruments, lookup, instrumentMap } from '../symbols.ts';
 
@@ -14,10 +15,11 @@ test('mock provider returns deterministic quotes', async () => {
   assert.equal(a.size, 2);
 });
 
-test('mock provider drifts at most 3% from base', async () => {
+test('mock provider drifts at most 3% from the reference base', async () => {
   const quotes = await new MockProvider(at).getQuotes(['COMI']);
   const p = quotes.get('COMI')!.price / 1000;
-  assert.ok(p > 96.4 * 0.97 && p < 96.4 * 1.03, `got ${p}`);
+  const base = EGX_REFERENCE['COMI']!.price;
+  assert.ok(p > base * 0.97 && p < base * 1.03, `got ${p} vs base ${base}`);
 });
 
 test('money-market units do not fluctuate', async () => {

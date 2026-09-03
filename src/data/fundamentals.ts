@@ -11,6 +11,7 @@
 import { egp, price } from '../core/money.ts';
 import type { ScreenMetrics } from '../core/screener.ts';
 import { EGX_INSTRUMENTS } from './symbols.ts';
+import { EGX_REFERENCE } from './reference-egx.ts';
 import { type MarketDataProvider, ProviderError } from './provider.ts';
 import { fromProviderSymbol, toProviderSymbol } from './symbols.ts';
 
@@ -23,70 +24,36 @@ export interface FundamentalsProvider {
 
 // ---------------------------------------------------------------- mock/demo
 
-/** Deterministic hash in [0,1) so demo figures are stable across reloads. */
-function hash(input: string): number {
-  let h = 2166136261;
-  for (let i = 0; i < input.length; i++) {
-    h ^= input.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return (h >>> 0) / 4294967295;
-}
-
-/** A value spread deterministically across [min, max] for a symbol+field. */
-function spread(symbol: string, field: string, min: number, max: number): number {
-  return min + hash(`${symbol}:${field}`) * (max - min);
-}
-
 /**
- * Offline fundamentals.
- *
- * Values are synthesised from the symbol so they are stable and internally
- * plausible, purely to demonstrate the screener. They are **not** real EGX
- * fundamentals. Banks are given lower P/E and P/B and higher yields than
- * growth names, so the demo screen behaves recognisably — but do not trade on
- * these numbers.
+ * Offline fundamentals, sourced from the curated reference table
+ * (reference-egx.ts): approximate real EGX figures for ~Sep 2026, not a live
+ * feed and not verified to the piastre. The UI badges them as such. Do not
+ * trade on them — switch to a live source for real numbers.
  */
 export class MockFundamentalsProvider implements FundamentalsProvider {
   readonly id = 'mock';
-  readonly label = 'Demo fundamentals (illustrative)';
+  readonly label = 'Demo · approx. real figures (~Sep 2026)';
   readonly offline = true;
 
   async getFundamentals(symbols: readonly string[]): Promise<Map<string, ScreenMetrics>> {
     const out = new Map<string, ScreenMetrics>();
 
     for (const symbol of symbols) {
-      const info = EGX_INSTRUMENTS.find((i) => i.symbol === symbol.toUpperCase());
-      if (!info || info.assetClass !== 'equity') continue;
+      const ref = EGX_REFERENCE[symbol.toUpperCase()];
+      if (!ref) continue;
+      const info = EGX_INSTRUMENTS.find((i) => i.symbol === ref.symbol);
 
-      const sector = info.sector ?? 'Unclassified';
-      const isBank = sector === 'Banking';
-      const isTech = sector === 'Technology';
-
-      // Sector-flavoured but synthetic ranges.
-      const pe = isBank ? spread(symbol, 'pe', 5, 10)
-        : isTech ? spread(symbol, 'pe', 18, 40)
-        : spread(symbol, 'pe', 8, 20);
-      const pb = isBank ? spread(symbol, 'pb', 0.8, 1.6)
-        : spread(symbol, 'pb', 1.2, 4.0);
-      const dividendYield = isTech ? spread(symbol, 'dy', 0, 0.02)
-        : spread(symbol, 'dy', 0.02, 0.08);
-      const yearChange = spread(symbol, 'yc', -0.25, 0.75);
-      const priceEgp = spread(symbol, 'px', 6, 120);
-      const marketCapEgp = spread(symbol, 'mc', 2, 260) * 1_000_000_000;
-      const advEgp = spread(symbol, 'adv', 0.3, 60) * 1_000_000;
-
-      out.set(info.symbol, {
-        symbol: info.symbol,
-        name: info.name,
-        sector,
-        price: price(Number(priceEgp.toFixed(3))),
-        marketCap: egp(Math.round(marketCapEgp)),
-        avgDailyValue: egp(Math.round(advEgp)),
-        peRatio: Number(pe.toFixed(1)),
-        pbRatio: Number(pb.toFixed(2)),
-        dividendYield: Number(dividendYield.toFixed(4)),
-        yearChange: Number(yearChange.toFixed(4)),
+      out.set(ref.symbol, {
+        symbol: ref.symbol,
+        name: info?.name ?? ref.symbol,
+        sector: info?.sector ?? 'Unclassified',
+        price: price(ref.price),
+        marketCap: egp(ref.marketCap),
+        avgDailyValue: egp(ref.avgDailyValue),
+        peRatio: ref.peRatio,
+        pbRatio: ref.pbRatio,
+        dividendYield: ref.dividendYield,
+        yearChange: ref.yearChange,
       });
     }
 

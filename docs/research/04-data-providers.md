@@ -48,9 +48,12 @@ The Research/screener view needs valuation and liquidity metrics (P/E, P/B,
 dividend yield, market cap, average daily traded value, 52-week change), not
 just a last price. Same constraint applies — no official free EGX feed:
 
-- **`mock`** — deterministic, offline, **clearly labelled illustrative demo
-  data**. Sector-flavoured (banks cheaper, tech pricier) so the screen behaves
-  recognisably, but the numbers are synthetic and must never be traded on.
+- **`mock`** — deterministic, offline, drawn from a **curated reference table**
+  (`src/data/reference-egx.ts`) of *approximate real* EGX figures compiled
+  ~Sep 2026 (prices anchored to public quotes; caps and traded values are
+  order-of-magnitude estimates). Realistic enough that the screen behaves like
+  the real market, but point-in-time, unverified, and never to be traded on —
+  clearly badged as such in the UI.
 - **`yahoo`** — best-effort live fundamentals via Yahoo's `quoteSummary`
   endpoint (`price,summaryDetail,defaultKeyStatistics`), proxied through the
   local server at `/api/fundamentals/`. Undocumented and unguaranteed; every

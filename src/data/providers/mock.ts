@@ -12,12 +12,15 @@
 import { price } from '../../core/money.ts';
 import type { Quote } from '../../core/types.ts';
 import type { MarketDataProvider } from '../provider.ts';
+import { EGX_REFERENCE } from '../reference-egx.ts';
 
-/** Baseline prices, in EGP, for the seeded EGX names. */
+/**
+ * Baseline prices, EGP. Equities use the curated reference figures (approximate
+ * real Sep-2026 quotes — see reference-egx.ts), so the demo behaves like the
+ * real market. The money-market fund is a flat 10.00 accrual unit.
+ */
 const BASE_PRICES: Readonly<Record<string, number>> = {
-  COMI: 96.4, ETEL: 47.2, HRHO: 24.85, SWDY: 88.1, TMGH: 62.5,
-  EAST: 31.7, ABUK: 71.3, FWRY: 8.42, ORAS: 285.0, MFPC: 118.6,
-  ESRS: 96.9, CIEB: 42.15, JUFO: 22.8, AMOC: 12.35, PHDC: 9.87,
+  ...Object.fromEntries(Object.values(EGX_REFERENCE).map((r) => [r.symbol, r.price])),
   MMF: 10.0,
 };
 

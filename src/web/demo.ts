@@ -13,40 +13,43 @@ import type { AppState } from './store.ts';
 import { DEFAULT_SETTINGS } from './store.ts';
 
 export function demoState(): AppState {
+  // Cost bases sit just below the demo's current (approximate real) prices, so
+  // the equity sleeve shows modest gains — enough to look real, not so much
+  // that it swamps the "slightly behind the money-market fund" teaching point.
   const transactions: Transaction[] = [
     { id: 'd1', date: '2026-04-01', kind: 'deposit', amount: egp(30_000),
       note: 'Opening capital' },
 
-    // Core sleeve: the benchmark itself, ~70%.
+    // Core sleeve: the benchmark itself, ~70% (21,000 of 30,000).
     { id: 'd2', date: '2026-04-02', kind: 'buy', symbol: 'MMF',
       quantity: 2_100, price: price(10) },
 
-    // Learning sleeve: ~20%, three liquid names, none above 40% of the sleeve.
+    // Learning sleeve: ~20%, three liquid names, none above ~40% of the sleeve.
     { id: 'd3', date: '2026-04-05', kind: 'buy', symbol: 'COMI',
-      quantity: 25, price: price(89.2) },
+      quantity: 25, price: price(132.0) },   // now ~138
     { id: 'd4', date: '2026-05-12', kind: 'buy', symbol: 'ETEL',
-      quantity: 45, price: price(43.6) },
+      quantity: 20, price: price(106.0) },   // now ~111
     { id: 'd5', date: '2026-06-03', kind: 'buy', symbol: 'FWRY',
-      quantity: 200, price: price(7.85) },
+      quantity: 60, price: price(19.2) },    // now ~20
 
     { id: 'd6', date: '2026-07-15', kind: 'dividend', symbol: 'COMI',
-      amount: egp(142.5), note: 'Net of 5% WHT' },
+      amount: egp(108), note: 'Net of 5% WHT' },
 
     // A trimmed position, so realised P&L is non-zero.
     { id: 'd7', date: '2026-08-20', kind: 'sell', symbol: 'FWRY',
-      quantity: 80, price: price(8.6) },
+      quantity: 20, price: price(20.5) },
   ];
 
-  // A plausible snapshot history, kept consistent with what the transactions
-  // above plus demo quotes actually produce (~30.4k) so the chart has no cliff
-  // where the seeded history meets today's live snapshot.
+  // A plausible snapshot history, roughly consistent with what the transactions
+  // above plus demo quotes produce (~30.3k), so the chart has no cliff where the
+  // seeded history meets today's live snapshot.
   const history = [
-    { date: '2026-04-02', value: egp(29_955) },
-    { date: '2026-05-01', value: egp(30_120) },
-    { date: '2026-06-01', value: egp(29_880) },
-    { date: '2026-07-01', value: egp(30_240) },
-    { date: '2026-08-01', value: egp(30_510) },
-    { date: '2026-09-01', value: egp(30_390) },
+    { date: '2026-04-02', value: egp(29_960) },
+    { date: '2026-05-01', value: egp(30_050) },
+    { date: '2026-06-01', value: egp(29_900) },
+    { date: '2026-07-01', value: egp(30_140) },
+    { date: '2026-08-01', value: egp(30_260) },
+    { date: '2026-09-01', value: egp(30_330) },
   ];
 
   return {
