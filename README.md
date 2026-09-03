@@ -1,16 +1,99 @@
-### Hello, I'm Anas Ahmed 👨🏻‍💻
-<!-- <img src="https://komarev.com/ghpvc/?username=iAnasAhmed&label=Profile%20views&color=blue&style=plastic" alt="iAnasAhmed" /> -->
-<p>I'm a MarTech Specialist from Egypt. I build the technical layer marketing runs on and the campaigns that run on top of it bridging the gap between development and performance marketing to craft digital experiences that don't just function flawlessly, but drive measurable business results. Passionate about staying updated with the latest technologies, open to new challenges, and dedicated to continuous learning.</p>
-<h3>Skills:</h3>
-<p>
-  <img alt="JavaScript" src="https://img.shields.io/badge/-JavaScript-F7DF1E?style=flat-square&logo=JavaScript&logoColor=FFFFFF" />
-  <img alt="TypeScript" src="https://img.shields.io/badge/-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=FFFFFF" />
-  <img alt="React" src="https://img.shields.io/badge/-React-61DAFB?style=flat-square&logo=react&logoColor=FFFFFF" />
-  <img alt="Next.js" src="https://img.shields.io/badge/-Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=FFFFFF" />
-  <img alt="Node.js" src="https://img.shields.io/badge/-Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=FFFFFF" />
-  <img alt="Meta Ads" src="https://img.shields.io/badge/-Meta%20Ads-0866FF?style=flat-square&logo=meta&logoColor=FFFFFF" />
-  <img alt="Google Analytics" src="https://img.shields.io/badge/-Google%20Analytics-E37400?style=flat-square&logo=googleanalytics&logoColor=FFFFFF" />
-  <img alt="SEO" src="https://img.shields.io/badge/-SEO%2FSEM-34A853?style=flat-square&logo=googlesearchconsole&logoColor=FFFFFF" />
-  <img alt="Shopify" src="https://img.shields.io/badge/-Shopify-7AB55C?style=flat-square&logo=shopify&logoColor=FFFFFF" />
-  <img alt="git" src="https://img.shields.io/badge/-Git-F05032?style=flat-square&logo=git&logoColor=FFFFFF" />
-</p>
+# Telda Investing Tracker
+
+A portfolio dashboard for investing on the **Egyptian Exchange (EGX) through
+Telda** — built to answer one question honestly:
+
+> **Is picking stocks actually beating an EGP money-market fund?**
+
+In Egypt that question has teeth. Risk-free EGP instruments currently yield
+**~20–25%**, so a "+18% year" is a *loss* against doing nothing. This dashboard
+is built around that comparison and is deliberately unflattering about it.
+
+<!-- Screenshots: run `npm start` and see it yourself — no data leaves your machine. -->
+
+## Why this exists
+
+Telda [launched EGX stock and fund investing on 29 March 2026](https://www.dailynewsegypt.com/2026/03/29/telda-launches-in-app-stock-fund-investment-service/)
+with zero commission — but **no public API and no export**. So the app is
+manual-entry-first: you log transactions, it does the maths exactly.
+
+## What it does
+
+- **Tracks everything** — buys, sells, dividends, fees, stamp duty, cash,
+  deposits, withdrawals. Every EGP is accounted for.
+- **Benchmarks you against doing nothing** — XIRR vs. an EGP money-market fund,
+  with the shortfall shown in EGP, not just percent.
+- **Shows real returns** — inflation-adjusted, using the exact Fisher relation.
+- **Models EGX costs correctly** — 0.05% stamp duty per side, 5% dividend
+  withholding, Telda's zero commission.
+- **Flags concentration** — oversized *equity* positions only; the money-market
+  core is exempt by design.
+- **Works offline** — demo price provider by default; live quotes optional.
+- **Keeps your data private** — `localStorage` only. No account, no server, no
+  telemetry. Explicit JSON export/import.
+
+## Quick start
+
+Requires **Node 22.6+**. That is the only requirement.
+
+```bash
+npm start          # build + serve at http://localhost:3000
+```
+
+Then open <http://localhost:3000/#demo> to see it populated with an example
+portfolio built to the framework in [`docs/allocation-framework.md`](docs/allocation-framework.md).
+
+```bash
+npm run verify     # typecheck + full test suite
+npm test           # 105 tests, node:test
+npm run check      # tsc --noEmit, strict
+```
+
+**There is no `npm install`.** Zero runtime and zero build dependencies — see
+[`CLAUDE.md`](CLAUDE.md) §2 for why, and for the migration path if that ever
+stops being the right call.
+
+## Documentation
+
+| Document | What it covers |
+|---|---|
+| [`CLAUDE.md`](CLAUDE.md) | Project constitution — the owner's mandate and binding rules |
+| [`docs/allocation-framework.md`](docs/allocation-framework.md) | How to size a first position on ~30,000 EGP |
+| [`docs/roadmap.md`](docs/roadmap.md) | Phase gates: Telda → depth → Binance |
+| [`docs/research/01-telda-investing.md`](docs/research/01-telda-investing.md) | What Telda actually offers, verified |
+| [`docs/research/02-egx-costs-and-tax.md`](docs/research/02-egx-costs-and-tax.md) | Stamp duty, capital gains, dividend WHT |
+| [`docs/research/03-macro-context.md`](docs/research/03-macro-context.md) | Rates, inflation, and the hurdle rate |
+| [`docs/research/04-data-providers.md`](docs/research/04-data-providers.md) | Market-data options and their trade-offs |
+| [`docs/research/05-crypto-egypt-legal.md`](docs/research/05-crypto-egypt-legal.md) | ⛔ Why the Binance phase is legally gated |
+
+Every factual claim carries a dated, linked source. Anything unverified is
+labelled `UNVERIFIED` rather than asserted.
+
+## Architecture
+
+```
+src/
+  core/   Pure domain. Zero imports, 100% tested. Money is integer piastres.
+  data/   Market-data providers behind one swappable interface.
+  web/    UI only. Renders what core computes; contains no business logic.
+```
+
+The dependency rule is one-way: `web/` → `data/` → `core/`.
+`core/` and `data/` are portable — they drop into Next.js or a Worker unchanged.
+
+## Accuracy
+
+Money is **integer piastres**; prices are **integer milli-EGP** (EGX quotes to
+3 dp). No floats touch a balance. The test suite covers the edge cases that
+actually cost money: partial sells, overselling, cost capitalisation, dividend
+withholding, and the accounting identity `value = contributions + P&L`.
+
+Cost constants are modelled from published regulatory rates and are marked as
+estimates where unverified. **After your first real trade, put the contract-note
+figures into `src/core/costs.ts`** — one trade removes all the uncertainty.
+
+## Not financial advice
+
+This is a measurement tool. It tracks decisions; it does not make them. Nothing
+here is a recommendation to buy or sell any security. Verify all figures against
+your real Telda statements.
