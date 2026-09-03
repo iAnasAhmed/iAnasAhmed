@@ -269,10 +269,14 @@ function renderApp(): void {
 // ---------------------------------------------------------------------- boot
 
 /**
- * `#demo` loads the example portfolio without touching saved data — handy for
- * a first look, and for reproducible screenshots.
+ * `#demo` (or the `__TELDA_DEMO__` global the standalone bundle sets) loads the
+ * example portfolio without touching saved data — handy for a first look, for
+ * reproducible screenshots, and for the shareable single-file build.
  */
-if (globalThis.location?.hash === '#demo' && state.transactions.length === 0) {
+const wantsDemo =
+  globalThis.location?.hash === '#demo' ||
+  (globalThis as { __TELDA_DEMO__?: boolean }).__TELDA_DEMO__ === true;
+if (wantsDemo && state.transactions.length === 0) {
   state = demoState();
 }
 
