@@ -4,7 +4,7 @@ import { egp } from '../core/money.ts';
 import type { Transaction } from '../core/types.ts';
 import {
   loadState, saveState, reviveState, addTransaction, removeTransaction,
-  updateSettings, newId, symbolsIn, toExport, EMPTY_STATE, DEFAULT_SETTINGS,
+  updateSettings, toggleWatch, newId, symbolsIn, toExport, EMPTY_STATE, DEFAULT_SETTINGS,
   type Storage,
 } from './store.ts';
 
@@ -97,4 +97,22 @@ test('export payload is versioned and timestamped', () => {
   assert.ok(Date.parse(payload.exportedAt) > 0);
   // and it round-trips back through revive
   assert.deepEqual(reviveState(JSON.parse(JSON.stringify(payload))), EMPTY_STATE);
+});
+
+test('toggleWatch adds and removes symbols, case-insensitively', () => {
+  const a = toggleWatch(EMPTY_STATE, 'comi');
+  assert.deepEqual(a.watchlist, ['COMI']);
+  const b = toggleWatch(a, 'COMI');
+  assert.deepEqual(b.watchlist, []);
+});
+
+test('watchlist survives a storage round-trip', () => {
+  const storage = memoryStorage();
+  saveState(storage, toggleWatch(EMPTY_STATE, 'SWDY'));
+  assert.deepEqual(loadState(storage).watchlist, ['SWDY']);
+});
+
+test('a malformed watchlist revives as empty', () => {
+  assert.deepEqual(reviveState({ watchlist: [1, null, 'OK'] }).watchlist, ['OK']);
+  assert.deepEqual(reviveState({ watchlist: 'nope' }).watchlist, []);
 });

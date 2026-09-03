@@ -29,13 +29,24 @@ function card(title: string, ...body: (Node | string | false | null)[]): HTMLEle
 
 // ------------------------------------------------------------------- header
 
+export type AppView = 'portfolio' | 'research';
+
 export function header(params: {
   readonly status: MarketStatus;
   readonly providerLabel: string;
   readonly isDemo: boolean;
+  readonly view: AppView;
+  readonly onNav: (view: AppView) => void;
   readonly onRefresh: () => void;
   readonly onToggleTheme: () => void;
 }): HTMLElement {
+  const navButton = (view: AppView, label: string): HTMLElement =>
+    h('button', {
+      class: params.view === view ? 'nav-btn active' : 'nav-btn',
+      'aria-current': params.view === view ? 'page' : 'false',
+      onClick: () => params.onNav(view),
+    }, label);
+
   return h('header', { class: 'topbar' },
     h('div', { class: 'brand' },
       h('span', { class: 'brand-mark' }, 'T'),
@@ -43,6 +54,10 @@ export function header(params: {
         h('div', { class: 'brand-name' }, 'Telda Investing Tracker'),
         h('div', { class: `market-pill ${params.status}` }, describeMarketStatus(params.status)),
       ),
+    ),
+    h('nav', { class: 'topnav', 'aria-label': 'Views' },
+      navButton('portfolio', 'Portfolio'),
+      navButton('research', 'Research'),
     ),
     h('div', { class: 'topbar-actions' },
       params.isDemo

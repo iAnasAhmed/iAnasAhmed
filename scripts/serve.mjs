@@ -13,6 +13,8 @@ import { extname, join, normalize, resolve } from 'node:path';
 const PORT = Number(process.env['PORT'] ?? 3000);
 const ROOT = resolve('dist');
 const YAHOO = 'https://query1.finance.yahoo.com/v8/finance/chart/';
+const YAHOO_SUMMARY = 'https://query1.finance.yahoo.com/v10/finance/quoteSummary/';
+const SYMBOL_RE = /^[A-Za-z0-9.\-]{1,20}$/;
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -40,6 +42,36 @@ const server = createServer(async (req, res) => {
         headers: { accept: 'application/json' },
         signal: AbortSignal.timeout(8000),
       });
+      const body = await upstream.text();
+      res.writeHead(upstream.status, { 'content-type': 'application/json' });
+      res.end(body);
+    } catch (error) {
+      res.writeHead(502, { 'content-type': 'application/json' });
+      res.end(JSON.stringify({ error: String(error) }));
+    }
+    return;
+  }
+
+  // --- fundamentals proxy (Yahoo quoteSummary), same CORS reasoning as quotes
+  if (url.pathname.startsWith('/api/fundamentals/')) {
+    const symbol = decodeURIComponent(url.pathname.slice('/api/fundamentals/'.length));
+    if (!SYMBOL_RE.test(symbol)) {
+      res.writeHead(400, { 'content-type': 'application/json' });
+      res.end('{"error":"bad symbol"}');
+      return;
+    }
+    // Whitelist the modules param so the proxy can't be pointed anywhere else.
+    const modules = url.searchParams.get('modules') ?? 'price,summaryDetail,defaultKeyStatistics';
+    if (!/^[A-Za-z,]{1,120}$/.test(modules)) {
+      res.writeHead(400, { 'content-type': 'application/json' });
+      res.end('{"error":"bad modules"}');
+      return;
+    }
+    try {
+      const upstream = await fetch(
+        `${YAHOO_SUMMARY}${encodeURIComponent(symbol)}?modules=${modules}`,
+        { headers: { accept: 'application/json' }, signal: AbortSignal.timeout(8000) },
+      );
       const body = await upstream.text();
       res.writeHead(upstream.status, { 'content-type': 'application/json' });
       res.end(body);

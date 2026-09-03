@@ -16,6 +16,8 @@ const STORAGE_KEY = 'telda-tracker/v1';
 
 export interface Settings {
   readonly providerId: ProviderId;
+  /** Data source for screener fundamentals: 'mock' or 'yahoo'. */
+  readonly fundamentalsId: ProviderId;
   /** Annual money-market rate used as the benchmark, as a ratio. */
   readonly benchmarkRate: number;
   /** Annual inflation assumption, as a ratio. */
@@ -31,11 +33,14 @@ export interface AppState {
   readonly customInstruments: readonly Instrument[];
   /** Observed total-value snapshots, one per day the app was opened. */
   readonly history: readonly Snapshot[];
+  /** Symbols shortlisted from the screener, before any money is committed. */
+  readonly watchlist: readonly string[];
   readonly settings: Settings;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
   providerId: 'mock',
+  fundamentalsId: 'mock',
   benchmarkRate: MONEY_MARKET_BENCHMARK,
   inflation: INFLATION_ASSUMPTION,
   commissionBps: TELDA_COMMISSION_BPS,
@@ -48,6 +53,7 @@ export const EMPTY_STATE: AppState = {
   transactions: [],
   customInstruments: [],
   history: [],
+  watchlist: [],
   settings: DEFAULT_SETTINGS,
 };
 
@@ -73,7 +79,11 @@ export function reviveState(raw: unknown): AppState {
     ? (record['history'].filter(isSnapshot) as Snapshot[])
     : [];
 
-  return { transactions, customInstruments, history, settings };
+  const watchlist = Array.isArray(record['watchlist'])
+    ? (record['watchlist'].filter((s): s is string => typeof s === 'string'))
+    : [];
+
+  return { transactions, customInstruments, history, watchlist, settings };
 }
 
 function isSnapshot(value: unknown): value is Snapshot {
@@ -143,6 +153,14 @@ export function updateSettings(state: AppState, patch: Partial<Settings>): AppSt
 
 export function withHistory(state: AppState, history: readonly Snapshot[]): AppState {
   return { ...state, history };
+}
+
+export function toggleWatch(state: AppState, symbol: string): AppState {
+  const upper = symbol.toUpperCase();
+  const watchlist = state.watchlist.includes(upper)
+    ? state.watchlist.filter((s) => s !== upper)
+    : [...state.watchlist, upper];
+  return { ...state, watchlist };
 }
 
 /** Collision-resistant id without pulling in a uuid dependency. */

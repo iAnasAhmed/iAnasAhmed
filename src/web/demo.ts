@@ -53,6 +53,8 @@ export function demoState(): AppState {
     transactions,
     customInstruments: [],
     history,
+    // A couple of names already shortlisted, so the Research view isn't empty.
+    watchlist: ['SWDY', 'ABUK'],
     settings: DEFAULT_SETTINGS,
   };
 }

@@ -20,6 +20,14 @@ handled well** (`CLAUDE.md` §1.2).
 - [ ] Live price provider wired up (Yahoo adapter) once running locally
 - [ ] CSV import of Telda statements (needs a real statement to design against)
 
+### Research / screener (done)
+
+- [x] Screener scoring engine — filter, factor-rank, weighted match score
+- [x] Liquidity tiers and the dividend-vs-hurdle column
+- [x] Sector-concentration flags against current holdings
+- [x] Watchlist to shortlist candidates before committing money
+- [x] Fundamentals provider (offline demo + best-effort live Yahoo)
+
 ## Phase 2 — Depth
 
 - [ ] Dividend tracking with 5% WHT modelled

@@ -42,6 +42,24 @@ Example — Commercial International Bank:
 | Yahoo Finance | `COMI.CA` |
 | Reuters/Refinitiv | `COMI.CA` |
 
+## Fundamentals (for the screener)
+
+The Research/screener view needs valuation and liquidity metrics (P/E, P/B,
+dividend yield, market cap, average daily traded value, 52-week change), not
+just a last price. Same constraint applies — no official free EGX feed:
+
+- **`mock`** — deterministic, offline, **clearly labelled illustrative demo
+  data**. Sector-flavoured (banks cheaper, tech pricier) so the screen behaves
+  recognisably, but the numbers are synthetic and must never be traded on.
+- **`yahoo`** — best-effort live fundamentals via Yahoo's `quoteSummary`
+  endpoint (`price,summaryDetail,defaultKeyStatistics`), proxied through the
+  local server at `/api/fundamentals/`. Undocumented and unguaranteed; every
+  failure degrades to "no fundamentals for this name" rather than an error.
+
+Average daily traded value is the liquidity measure the screener weights most
+heavily. Where a provider only gives share volume, it is approximated as
+`volume × price` — a rough but useful proxy, flagged as such in the code.
+
 ## Rate limits & etiquette
 
 Poll at most **once per minute** during EGX hours (Sun–Thu, 10:00–14:15 EET) and

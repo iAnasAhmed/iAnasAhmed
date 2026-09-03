@@ -6,7 +6,7 @@ import { render, qs, h } from './dom.ts';
 import * as views from './views.ts';
 import {
   loadState, saveState, addTransaction, removeTransaction, updateSettings,
-  withHistory, newId, symbolsIn, toExport, reviveState, EMPTY_STATE,
+  withHistory, toggleWatch, newId, symbolsIn, toExport, reviveState, EMPTY_STATE,
   type AppState,
 } from './store.ts';
 import { demoState } from './demo.ts';
@@ -19,13 +19,30 @@ import {
 } from '../core/performance.ts';
 import { recordSnapshot, benchmarkSeries, alignedDates, trimHistory, today } from '../core/history.ts';
 import { marketStatus } from '../core/market-hours.ts';
-import { instrumentMap } from '../data/symbols.ts';
+import { instrumentMap, EGX_INSTRUMENTS } from '../data/symbols.ts';
 import { createProvider, type ProviderId } from '../data/registry.ts';
+import {
+  runScreen, equitySectorWeights, sectorsIn, DEFAULT_WEIGHTS,
+  type ScreenMetrics, type ScreenWeights, type ScreenFilters,
+} from '../core/screener.ts';
+import { createFundamentalsProvider } from '../data/fundamentals.ts';
+import * as screener from './screener-view.ts';
+import type { RawFilters } from './screener-view.ts';
 
 const storage: Storage = globalThis.localStorage;
 
 let state: AppState = loadState(storage);
 let quotes: ReadonlyMap<string, Quote> = new Map();
+
+// --- research view state (transient; not persisted)
+type View = 'portfolio' | 'research';
+let view: View = 'portfolio';
+let fundamentals: ReadonlyMap<string, ScreenMetrics> = new Map();
+let fundamentalsLoaded = false;
+let screenWeights: ScreenWeights = { ...DEFAULT_WEIGHTS };
+let rawFilters: RawFilters = {
+  search: '', sector: '', minLiquidityM: 0, maxPe: 0, minDivYield: 0,
+};
 
 // ------------------------------------------------------------------ helpers
 
@@ -208,15 +225,20 @@ function captureSnapshot(): void {
 function renderApp(): void {
   applyTheme();
 
-  const summary = currentSummary();
   const provider = createProvider(state.settings.providerId);
-  const dates = alignedDates(state.history, [today()]);
 
   render(qs('#app'),
     views.header({
       status: marketStatus(),
       providerLabel: provider.label,
       isDemo: state.settings.providerId === 'mock',
+      view,
+      onNav: (next) => {
+        if (next === view) return;
+        view = next;
+        renderApp();
+        if (view === 'research' && !fundamentalsLoaded) void loadFundamentals();
+      },
       onRefresh: () => void refreshQuotes(),
       onToggleTheme: () => {
         const next = state.settings.theme === 'system' ? 'light'
@@ -224,46 +246,123 @@ function renderApp(): void {
         persist(updateSettings(state, { theme: next }));
       },
     }),
-
-    h('main', { class: 'layout' },
-      views.hero(summary, dayChange()),
-      views.benchmarkCard(benchmarkResult(), state.settings.benchmarkRate),
-      views.kpiGrid(summary),
-
-      h('div', { class: 'grid-2' },
-        views.allocationCard(allocationByClass(summary)),
-        views.performanceCard(
-          state.history,
-          benchmarkSeries(state.transactions, state.settings.benchmarkRate, dates),
-        ),
-      ),
-
-      views.holdingsCard(summary.holdings, concentrationWarnings(summary)),
-
-      h('div', { class: 'grid-2' },
-        views.transactionForm({ onSubmit: handleSubmit }),
-        views.transactionsCard(state.transactions, (id) => {
-          persist(removeTransaction(state, id));
-        }),
-      ),
-
-      views.settingsCard({
-        providerId: state.settings.providerId,
-        benchmarkRate: state.settings.benchmarkRate,
-        inflation: state.settings.inflation,
-        otherFeesBps: state.settings.otherFeesBps,
-        handlers: {
-          onChange: handleSettingsChange,
-          onExport: handleExport,
-          onImport: (file) => void handleImport(file),
-          onSeedDemo: () => { persist(demoState()); void refreshQuotes(); },
-          onClear: handleClear,
-        },
-      }),
-
-      views.disclaimer(),
-    ),
+    view === 'research' ? renderResearch() : renderPortfolio(),
   );
+}
+
+function renderPortfolio(): HTMLElement {
+  const summary = currentSummary();
+  const dates = alignedDates(state.history, [today()]);
+
+  return h('main', { class: 'layout' },
+    views.hero(summary, dayChange()),
+    views.benchmarkCard(benchmarkResult(), state.settings.benchmarkRate),
+    views.kpiGrid(summary),
+
+    h('div', { class: 'grid-2' },
+      views.allocationCard(allocationByClass(summary)),
+      views.performanceCard(
+        state.history,
+        benchmarkSeries(state.transactions, state.settings.benchmarkRate, dates),
+      ),
+    ),
+
+    views.holdingsCard(summary.holdings, concentrationWarnings(summary)),
+
+    h('div', { class: 'grid-2' },
+      views.transactionForm({ onSubmit: handleSubmit }),
+      views.transactionsCard(state.transactions, (id) => {
+        persist(removeTransaction(state, id));
+      }),
+    ),
+
+    views.settingsCard({
+      providerId: state.settings.providerId,
+      benchmarkRate: state.settings.benchmarkRate,
+      inflation: state.settings.inflation,
+      otherFeesBps: state.settings.otherFeesBps,
+      handlers: {
+        onChange: handleSettingsChange,
+        onExport: handleExport,
+        onImport: (file) => void handleImport(file),
+        onSeedDemo: () => { persist(demoState()); void refreshQuotes(); },
+        onClear: handleClear,
+      },
+    }),
+
+    views.disclaimer(),
+  );
+}
+
+// ------------------------------------------------------------------ research
+
+/** Screener filters as the engine wants them, derived from the raw UI values. */
+function screenFilters(): ScreenFilters {
+  const filters: ScreenFilters = {
+    ...(rawFilters.search ? { search: rawFilters.search } : {}),
+    ...(rawFilters.sector ? { sectors: [rawFilters.sector] } : {}),
+    ...(rawFilters.minLiquidityM > 0 ? { minLiquidity: egp(rawFilters.minLiquidityM * 1_000_000) } : {}),
+    ...(rawFilters.maxPe > 0 ? { maxPe: rawFilters.maxPe } : {}),
+    ...(rawFilters.minDivYield > 0 ? { minDividendYield: rawFilters.minDivYield / 100 } : {}),
+  };
+  return filters;
+}
+
+function renderResearch(): HTMLElement {
+  const metrics = [...fundamentals.values()];
+  const summary = currentSummary();
+
+  const results = runScreen(metrics, {
+    filters: screenFilters(),
+    weights: screenWeights,
+    benchmarkRate: state.settings.benchmarkRate,
+    sectorWeights: equitySectorWeights(summary.holdings),
+  });
+
+  const provider = createFundamentalsProvider(state.settings.fundamentalsId);
+
+  if (!fundamentalsLoaded) {
+    return h('main', { class: 'layout' },
+      h('section', { class: 'card' },
+        h('p', { class: 'muted' }, 'Loading fundamentals…')),
+    );
+  }
+
+  return screener.screenerView({
+    results,
+    sectors: sectorsIn(metrics),
+    weights: screenWeights,
+    filters: rawFilters,
+    watchlist: state.watchlist,
+    benchmarkRate: state.settings.benchmarkRate,
+    isDemo: state.settings.fundamentalsId === 'mock',
+    sourceLabel: provider.label,
+    sourceId: state.settings.fundamentalsId,
+    totalUniverse: metrics.length,
+    handlers: {
+      onFilters: (patch) => { rawFilters = { ...rawFilters, ...patch }; renderApp(); },
+      onWeight: (factor, value) => { screenWeights = { ...screenWeights, [factor]: value }; renderApp(); },
+      onToggleWatch: (symbol) => persist(toggleWatch(state, symbol)),
+      onSourceChange: (id) => {
+        persist(updateSettings(state, { fundamentalsId: id as ProviderId }));
+        void loadFundamentals();
+      },
+    },
+  });
+}
+
+async function loadFundamentals(): Promise<void> {
+  const symbols = EGX_INSTRUMENTS.filter((i) => i.assetClass === 'equity').map((i) => i.symbol);
+  const provider = createFundamentalsProvider(state.settings.fundamentalsId, {
+    endpoint: '/api/fundamentals/',
+  });
+  try {
+    fundamentals = await provider.getFundamentals(symbols);
+  } catch {
+    fundamentals = new Map();
+  }
+  fundamentalsLoaded = true;
+  if (view === 'research') renderApp();
 }
 
 // ---------------------------------------------------------------------- boot
