@@ -1,0 +1,1834 @@
+<title>The Ayat Fahiem Growth Dossier</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;600&family=Instrument+Serif:ital@0;1&display=swap');
+
+/* ============================================================
+   TOKENS — porcelain / lacquer
+   Light ground reads as pressed-powder porcelain; dark ground as
+   lipstick-case lacquer. Series hues validated for CVD in both modes.
+   ============================================================ */
+:root {
+  color-scheme: light;
+  --ground:      #faf7f5;
+  --raised:      #ffffff;
+  --sunk:        #f2ece9;
+  --ink:         #1a1210;
+  --ink-2:       #5c4f4b;
+  --ink-3:       #8b7c77;
+  --line:        #e7dfdb;
+  --line-strong: #cfc2bc;
+  --accent:      #b4315e;
+  --accent-ink:  #82204a;
+  --accent-wash: #f7e8ee;
+  --s1: #b4315e;  --s2: #c08015;  --s3: #3f51a8;  --s4: #00937c;  --s5: #8a4fb8;
+  --o1: #de94af;  --o2: #cb6588;  --o3: #b4315e;  --o4: #82204a;
+  --good: #2e7d32; --good-wash: #e6f2e7;
+  --warn: #c2410c; --warn-wash: #fceee6;
+  --crit: #a81e1e; --crit-wash: #fbe9e9;
+  --grid: rgba(26,18,16,.09);
+  --shadow: 0 1px 2px rgba(26,18,16,.05), 0 8px 24px -16px rgba(26,18,16,.18);
+  --radius: 3px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ground:      #17110f;
+    --raised:      #211917;
+    --sunk:        #120d0c;
+    --ink:         #f7f1ee;
+    --ink-2:       #c3b4ae;
+    --ink-3:       #8f817b;
+    --line:        #332723;
+    --line-strong: #4a3a35;
+    --accent:      #db5384;
+    --accent-ink:  #f2a5c0;
+    --accent-wash: #2c1720;
+    --s1: #db5384;  --s2: #b5851c;  --s3: #7286dd;  --s4: #12a88f;  --s5: #a87cdd;
+    --o1: #f2c0d2;  --o2: #e58cab;  --o3: #db5384;  --o4: #b33465;
+    --good: #5ec07a; --good-wash: #16241a;
+    --warn: #f08a5d; --warn-wash: #2a1a12;
+    --crit: #ef6d6d; --crit-wash: #2a1414;
+    --grid: rgba(247,241,238,.10);
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground:      #17110f;
+  --raised:      #211917;
+  --sunk:        #120d0c;
+  --ink:         #f7f1ee;
+  --ink-2:       #c3b4ae;
+  --ink-3:       #8f817b;
+  --line:        #332723;
+  --line-strong: #4a3a35;
+  --accent:      #db5384;
+  --accent-ink:  #f2a5c0;
+  --accent-wash: #2c1720;
+  --s1: #db5384;  --s2: #b5851c;  --s3: #7286dd;  --s4: #12a88f;  --s5: #a87cdd;
+  --o1: #f2c0d2;  --o2: #e58cab;  --o3: #db5384;  --o4: #b33465;
+  --good: #5ec07a; --good-wash: #16241a;
+  --warn: #f08a5d; --warn-wash: #2a1a12;
+  --crit: #ef6d6d; --crit-wash: #2a1414;
+  --grid: rgba(247,241,238,.10);
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  font-variant-numeric: tabular-nums;
+}
+h1, h2, h3, h4 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+a { color: var(--accent); text-decoration-color: color-mix(in srgb, var(--accent) 35%, transparent); text-underline-offset: 3px; }
+a:hover { text-decoration-color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+button { font: inherit; color: inherit; cursor: pointer; }
+.ar { font-family: 'IBM Plex Sans Arabic', 'Archivo', sans-serif; direction: rtl; unicode-bidi: isolate; }
+
+.mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+.eyebrow {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-3); font-weight: 500;
+}
+.serif { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; letter-spacing: -.01em; }
+
+/* ============================================================
+   SHELL
+   ============================================================ */
+.shell { display: block; max-width: 1440px; margin: 0 auto; }
+@media (min-width: 1100px) {
+  .shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); gap: 0; align-items: start; }
+}
+
+/* Rail */
+.rail {
+  position: sticky; top: 0; z-index: 40;
+  background: color-mix(in srgb, var(--ground) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+  padding: 10px 16px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.rail::-webkit-scrollbar { display: none; }
+.rail-inner { display: flex; gap: 6px; }
+.rail-brand { display: none; }
+.rail a {
+  flex: 0 0 auto; display: flex; align-items: baseline; gap: 7px;
+  padding: 5px 10px; border: 1px solid var(--line); border-radius: 100px;
+  font-size: 12.5px; color: var(--ink-2); text-decoration: none; white-space: nowrap;
+  background: var(--raised);
+}
+.rail a .n { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--ink-3); }
+.rail a:hover { border-color: var(--line-strong); color: var(--ink); }
+.rail a.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.rail a.on .n { color: rgba(255,255,255,.72); }
+@media (min-width: 1100px) {
+  .rail {
+    position: sticky; top: 0; height: 100vh; overflow-y: auto; overflow-x: hidden;
+    border-bottom: none; border-right: 1px solid var(--line);
+    padding: 30px 22px 30px 30px; backdrop-filter: none;
+    background: var(--ground);
+  }
+  .rail-inner { flex-direction: column; gap: 1px; }
+  .rail-brand { display: block; margin-bottom: 26px; }
+  .rail-brand .mark { font-family: 'Instrument Serif', serif; font-size: 25px; line-height: 1.1; letter-spacing: -.015em; }
+  .rail-brand .sub { margin-top: 5px; }
+  .rail a {
+    border: none; border-radius: 2px; background: none; padding: 5px 8px 5px 0;
+    font-size: 13px; white-space: normal; line-height: 1.35;
+  }
+  .rail a .n { min-width: 20px; }
+  .rail a.on { background: none; color: var(--accent); font-weight: 600; }
+  .rail a.on .n { color: var(--accent); }
+}
+.rail-foot { display: none; }
+@media (min-width: 1100px) { .rail-foot { display: block; margin-top: 26px; padding-top: 16px; border-top: 1px solid var(--line); } }
+
+.main { min-width: 0; padding: 0 16px 100px; }
+@media (min-width: 700px)  { .main { padding: 0 32px 120px; } }
+@media (min-width: 1100px) { .main { padding: 0 44px 140px; max-width: 1060px; } }
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+section { padding-top: 64px; scroll-margin-top: 70px; }
+@media (min-width: 1100px) { section { scroll-margin-top: 24px; } }
+.sec-head { display: flex; align-items: baseline; gap: 14px; border-top: 1px solid var(--ink); padding-top: 12px; margin-bottom: 8px; }
+.sec-head .num { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--accent); font-weight: 500; letter-spacing: .06em; }
+.sec-head h2 { font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(27px, 4.2vw, 40px); line-height: 1.06; font-weight: 400; }
+.deck { max-width: 66ch; color: var(--ink-2); font-size: 15.5px; margin-top: 10px; }
+.deck strong { color: var(--ink); font-weight: 600; }
+.stack { display: flex; flex-direction: column; gap: 22px; margin-top: 26px; }
+
+/* ============================================================
+   PANELS / CARDS
+   ============================================================ */
+.panel {
+  background: var(--raised); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 20px;
+}
+.panel-t { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.panel-t h3 { font-size: 15px; font-weight: 600; letter-spacing: -.005em; }
+.panel-t .note { font-size: 12.5px; color: var(--ink-3); }
+
+/* Hero metric tiles */
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.tile { background: var(--raised); padding: 15px 16px 16px; }
+.tile .k { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+.tile .v { font-family: 'Instrument Serif', Georgia, serif; font-size: 31px; line-height: 1.12; margin-top: 6px; letter-spacing: -.015em; }
+.tile .v .u { font-family: 'Archivo', sans-serif; font-size: 13px; color: var(--ink-3); letter-spacing: 0; margin-left: 3px; }
+.tile .d { font-size: 12px; color: var(--ink-2); margin-top: 4px; }
+.tile .d.up { color: var(--good); } .tile .d.dn { color: var(--crit); }
+
+/* Callout */
+.call { border-left: 3px solid var(--accent); background: var(--accent-wash); padding: 14px 16px; border-radius: 0 var(--radius) var(--radius) 0; }
+.call .lead { font-weight: 600; }
+.call p + p { margin-top: 7px; }
+.call.warn { border-left-color: var(--warn); background: var(--warn-wash); }
+.call.crit { border-left-color: var(--crit); background: var(--crit-wash); }
+.call.good { border-left-color: var(--good); background: var(--good-wash); }
+
+/* Pills */
+.pill { display: inline-flex; align-items: center; gap: 5px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .07em; text-transform: uppercase; padding: 2.5px 7px; border-radius: 100px; border: 1px solid currentColor; white-space: nowrap; }
+.pill.good { color: var(--good); } .pill.warn { color: var(--warn); } .pill.crit { color: var(--crit); } .pill.mute { color: var(--ink-3); }
+.pill.solid-good { background: var(--good-wash); border-color: transparent; }
+.dot { width: 8px; height: 8px; border-radius: 2px; flex: 0 0 auto; display: inline-block; }
+
+/* Tables */
+.tw { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--raised); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .09em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; background: var(--sunk); position: sticky; top: 0; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: color-mix(in srgb, var(--accent) 4%, transparent); }
+td.num, th.num { text-align: right; font-family: 'IBM Plex Mono', monospace; }
+td.name { font-weight: 500; white-space: normal; min-width: 150px; }
+td.wrap { white-space: normal; min-width: 220px; color: var(--ink-2); }
+th.sortable { cursor: pointer; user-select: none; }
+th.sortable:hover { color: var(--ink); }
+th.sortable[aria-sort="descending"]::after { content: " ↓"; color: var(--accent); }
+th.sortable[aria-sort="ascending"]::after { content: " ↑"; color: var(--accent); }
+
+/* Filter chips */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { padding: 4px 11px; border: 1px solid var(--line-strong); background: var(--raised); border-radius: 100px; font-size: 12.5px; color: var(--ink-2); }
+.chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--ground); }
+
+/* Charts */
+.chart { width: 100%; display: block; overflow: visible; }
+.chart text { font-family: 'IBM Plex Mono', monospace; }
+.axis-l { font-size: 9.5px; fill: var(--ink-3); letter-spacing: .04em; }
+.val-l  { font-size: 10px; fill: var(--ink-2); }
+.grid-l { stroke: var(--grid); stroke-width: 1; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 12px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-2); }
+
+/* Split grids */
+.g2 { display: grid; gap: 22px; grid-template-columns: 1fr; }
+@media (min-width: 860px) { .g2 { grid-template-columns: 1fr 1fr; } }
+.g3 { display: grid; gap: 14px; grid-template-columns: 1fr; }
+@media (min-width: 700px) { .g3 { grid-template-columns: repeat(3, 1fr); } }
+.g2u { display: grid; gap: 22px; grid-template-columns: 1fr; }
+@media (min-width: 960px) { .g2u { grid-template-columns: 1.25fr 1fr; } }
+
+/* Definition rows */
+.rows { display: flex; flex-direction: column; }
+.row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 9px 0; border-bottom: 1px dotted var(--line-strong); }
+.row:last-child { border-bottom: none; }
+.row .l { color: var(--ink-2); font-size: 13.5px; }
+.row .r { font-family: 'IBM Plex Mono', monospace; font-size: 13.5px; font-weight: 500; text-align: right; }
+
+/* Play cards */
+.play { border: 1px solid var(--line); border-radius: var(--radius); background: var(--raised); padding: 0; overflow: hidden; }
+.play > .hd { display: flex; gap: 12px; align-items: flex-start; padding: 15px 18px; border-bottom: 1px solid var(--line); }
+.play .rank { font-family: 'Instrument Serif', serif; font-size: 27px; line-height: 1; color: var(--accent); flex: 0 0 auto; width: 30px; }
+.play .hd h4 { font-size: 15.5px; font-weight: 600; }
+.play .hd .sub { font-size: 12.5px; color: var(--ink-3); margin-top: 2px; }
+.play .bd { padding: 15px 18px; display: flex; flex-direction: column; gap: 11px; font-size: 14px; }
+.play .bd .lbl { font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); display: block; margin-bottom: 3px; }
+.play .ft { display: flex; flex-wrap: wrap; gap: 8px 20px; padding: 12px 18px; background: var(--sunk); border-top: 1px solid var(--line); }
+.play .ft div { font-size: 12.5px; }
+.play .ft b { font-family: 'IBM Plex Mono', monospace; }
+
+/* Controls */
+.ctl { display: flex; flex-direction: column; gap: 5px; }
+.ctl label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.ctl label b { font-size: 13px; color: var(--ink); letter-spacing: 0; text-transform: none; }
+input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 22px; background: transparent; margin: 0; }
+input[type=range]::-webkit-slider-runnable-track { height: 3px; background: var(--line-strong); border-radius: 2px; }
+input[type=range]::-moz-range-track { height: 3px; background: var(--line-strong); border-radius: 2px; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 15px; height: 15px; border-radius: 50%; background: var(--accent); border: 2px solid var(--raised); margin-top: -6px; box-shadow: 0 0 0 1px var(--accent); }
+input[type=range]::-moz-range-thumb { width: 13px; height: 13px; border-radius: 50%; background: var(--accent); border: 2px solid var(--raised); box-shadow: 0 0 0 1px var(--accent); }
+
+/* Checklist */
+.task { display: flex; gap: 11px; align-items: flex-start; padding: 10px 0; border-bottom: 1px dotted var(--line-strong); }
+.task:last-child { border-bottom: none; }
+.task input { margin: 4px 0 0; width: 15px; height: 15px; accent-color: var(--accent); flex: 0 0 auto; }
+.task .tt { font-size: 14px; }
+.task .tm { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+.task.done .tt { text-decoration: line-through; color: var(--ink-3); }
+
+/* Footnote refs */
+sup.ref { font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; color: var(--accent); font-weight: 500; padding-left: 1px; }
+.src-list { display: grid; gap: 7px; grid-template-columns: 1fr; font-size: 12.5px; }
+@media (min-width: 760px) { .src-list { grid-template-columns: 1fr 1fr; } }
+.src-list div { color: var(--ink-2); display: flex; gap: 8px; }
+.src-list .n { font-family: 'IBM Plex Mono', monospace; color: var(--accent); flex: 0 0 auto; }
+
+ul.bul { margin: 0; padding-left: 17px; display: flex; flex-direction: column; gap: 6px; }
+ul.bul li { font-size: 14px; color: var(--ink-2); }
+ul.bul li strong { color: var(--ink); font-weight: 600; }
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+
+<div class="shell">
+
+<nav class="rail" aria-label="Sections">
+  <div class="rail-brand">
+    <div class="mark">Ayat Fahiem<br>Growth Dossier</div>
+    <div class="sub eyebrow">Rev. 03 SEP 2026 · Cairo</div>
+  </div>
+  <div class="rail-inner" id="rail"></div>
+  <div class="rail-foot">
+    <div class="eyebrow" style="margin-bottom:6px">Built on</div>
+    <p style="font-size:12px;color:var(--ink-2);line-height:1.45">Live Shopify data pulled 3 Sep 2026 (ayatfahiem.com) + 2026 category research. Every figure with a <span class="mono" style="color:var(--accent)">§</span> is your own store's number.</p>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- ══════════════ HERO ══════════════ -->
+<section id="s00" style="padding-top:38px">
+  <div class="eyebrow">Confidential · Founder &amp; Board · Ayat Fahiem Cosmetics</div>
+  <h1 class="serif" style="font-size:clamp(38px,7.2vw,72px);line-height:1.02;margin:16px 0 0;max-width:15ch">You are not a lipstick brand any more.</h1>
+  <p class="deck" style="font-size:17px;margin-top:18px;max-width:60ch">In the twelve months to 31 August 2026 your store did <b class="mono">EGP&nbsp;2.78m</b> in gross sales across <b class="mono">1,674</b> orders. Forty-two per cent of that came from four liquid blushes you launched in October 2025 — a category that did not exist in the business two years ago. The lipstick line that made your name is now the <em>second</em> engine.</p>
+  <p class="deck" style="margin-top:12px">This dossier is the whole picture: what your own data says, what the global prestige market is doing in 2026, what Egypt specifically will and won't pay for, and eleven costed plays to get from EGP&nbsp;2.8m to EGP&nbsp;12m without raising a round.</p>
+
+  <div style="margin-top:30px">
+    <div class="panel-t"><h3>The line, sized by what it actually earns</h3><span class="note">Stripe width = share of trailing-12-month gross sales. Colour is an approximate rendering of each shade — it encodes nothing.</span></div>
+    <div id="shadecard"></div>
+  </div>
+
+  <div class="tiles" style="margin-top:26px">
+    <div class="tile"><div class="k">TTM gross sales</div><div class="v">2.78<span class="u">m EGP</span></div><div class="d">Sep 2025 – Aug 2026 <span class="mono" style="color:var(--accent)">§</span></div></div>
+    <div class="tile"><div class="k">Orders</div><div class="v">1,674</div><div class="d">4.6 / day average</div></div>
+    <div class="tile"><div class="k">Conversion rate</div><div class="v">2.03<span class="u">%</span></div><div class="d dn">Beauty median on Shopify is 3.2%<sup class="ref">14</sup></div></div>
+    <div class="tile"><div class="k">Average order</div><div class="v">1,658<span class="u">EGP</span></div><div class="d">≈ USD 32 at 51.8 EGP/USD</div></div>
+    <div class="tile"><div class="k">Repeat order share</div><div class="v">16.7<span class="u">%</span></div><div class="d dn">Colour cosmetics benchmark 20–30%<sup class="ref">14</sup></div></div>
+    <div class="tile"><div class="k">Traffic from Meta</div><div class="v">73.9<span class="u">%</span></div><div class="d dn">Single-platform dependency</div></div>
+  </div>
+
+  <div class="call" style="margin-top:26px">
+    <p class="lead">The one number that decides the next twelve months</p>
+    <p>Your store converts <b class="mono">2.03%</b> of sessions and <b class="mono">57.3%</b> of started checkouts. Beauty's Shopify median is 3.2% conversion.<sup class="ref">14</sup> You already bought the traffic — 79,535 sessions in a year. Closing the gap to 3.2% at today's average order is <b class="mono">EGP 1.55m of additional gross sales a year with zero extra ad spend</b>. That is more than doubling revenue by fixing the checkout, the shade-finder and the delivery promise. Every play in section 09 is ranked against that number.</p>
+  </div>
+</section>
+
+<!-- ══════════════ 01 ══════════════ -->
+<section id="s01">
+  <div class="sec-head"><span class="num">01</span><h2>The P&amp;L truth</h2></div>
+  <p class="deck">Two spikes, one long trough, and a returns problem that shows up exactly when you scale. Read the shape, not the total.</p>
+
+  <div class="stack">
+    <div class="panel">
+      <div class="panel-t"><h3>Gross sales by month</h3><span class="note">EGP · hover any month</span></div>
+      <div id="chart-rev"></div>
+      <div class="panel-t" style="margin:22px 0 12px"><h3>Orders by month</h3><span class="note">Same months, own scale — never a second y-axis</span></div>
+      <div id="chart-ord"></div>
+    </div>
+
+    <div class="g2">
+      <div class="panel">
+        <div class="panel-t"><h3>What the shape is telling you</h3></div>
+        <ul class="bul">
+          <li><strong>October 2025 (EGP 491k) was the blush launch.</strong> 285 orders — still your best month ever. A category launch, not a discount, produced it.</li>
+          <li><strong>July 2026 (EGP 459k) was the second spike</strong> — 270 orders, 9,486 sessions, and it did it on <em>zero</em> discount. That is the more valuable of the two spikes because it is repeatable.</li>
+          <li><strong>March–June 2026 is the problem.</strong> Four consecutive months at 67–79 orders. April bottomed at EGP 81k with an AOV of 1,171 — your worst month on both counts.</li>
+          <li><strong>You have no baseline.</strong> The business runs at ~70 orders/month and jumps to ~270 when you push. Nothing holds the floor between pushes: no subscription, no replenishment flow, no evergreen offer.</li>
+          <li><strong>Returns spike with volume.</strong> October's 12.9% and November's 8.7% return rates say your fulfilment and expectation-setting break under load.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <div class="panel-t"><h3>Trailing twelve months, unpacked</h3><span class="note">Sep 2025 – Aug 2026</span></div>
+        <div class="rows" id="rows-ttm"></div>
+      </div>
+    </div>
+
+    <div class="call warn">
+      <p class="lead">EGP 140,203 walked back out the door</p>
+      <p>Returns ran <b class="mono">5.05%</b> of gross over the year, concentrated in your two biggest months. On top of that, roughly 85% of your orders are cash-on-delivery — in the sample of your last 20 orders, 17 sat at <span class="mono">PENDING</span> payment.<sup class="ref">15</sup> Egypt's return-to-origin rate on COD runs <b class="mono">25–35%</b>, the worst in the region (Saudi 15–25%, UAE 10–18%).<sup class="ref">10</sup> Refused parcels frequently never get recorded as "returns" at all — they just come back. Your true leakage is almost certainly above 5%.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 02 ══════════════ -->
+<section id="s02">
+  <div class="sec-head"><span class="num">02</span><h2>Four leaks, priced</h2></div>
+  <p class="deck">79,535 people came. 1,615 bought. Here is exactly where the other 77,920 went, and what each stage is worth in Egyptian pounds if you fix it.</p>
+
+  <div class="stack">
+    <div class="g2u">
+      <div class="panel">
+        <div class="panel-t"><h3>Funnel, trailing twelve months</h3><span class="note">Shopify sessions <span class="mono" style="color:var(--accent)">§</span></span></div>
+        <div id="chart-funnel"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-t"><h3>Stage-by-stage</h3></div>
+        <div class="rows" id="rows-funnel"></div>
+        <p style="font-size:12.5px;color:var(--ink-3);margin-top:12px">Benchmarks: beauty stores on Shopify convert a 3.2% median, 5.4% at the 80th percentile.<sup class="ref">14</sup></p>
+      </div>
+    </div>
+
+    <div class="tw">
+      <table>
+        <thead><tr>
+          <th>Leak</th><th class="num">Lost / yr</th><th>Why it happens</th><th>Cheapest fix</th><th class="num">Recoverable EGP/yr</th>
+        </tr></thead>
+        <tbody id="tb-leaks"></tbody>
+      </table>
+    </div>
+    <p style="font-size:12.5px;color:var(--ink-3)">Recoverable figures assume conservative uplifts (the low end of published ranges) applied to your own trailing-twelve-month traffic and average order value. They are estimates, not promises — the traffic and AOV inputs are your real numbers.</p>
+
+    <div class="g3">
+      <div class="panel"><div class="eyebrow">Device</div><div class="tile" style="padding:8px 0 0"><div class="v">96.8<span class="u">% mobile</span></div></div><p style="font-size:13px;color:var(--ink-2);margin-top:8px">77,607 of 80,133 sessions. Desktop is 2.7%. Every design decision is a phone decision — if it does not work one-handed on a mid-range Android over 4G, it does not work.</p></div>
+      <div class="panel"><div class="eyebrow">Where they are</div><div class="tile" style="padding:8px 0 0"><div class="v">90.5<span class="u">% Egypt</span></div></div><p style="font-size:13px;color:var(--ink-2);margin-top:8px">Then USA 2,058 · UAE 1,095 · Saudi 689 · Kuwait 340. Over 4,100 Gulf and diaspora sessions a year produced <em>one</em> Abu Dhabi order. That is a shipping-options problem, not a demand problem.</p></div>
+      <div class="panel"><div class="eyebrow">How they arrive</div><div class="tile" style="padding:8px 0 0"><div class="v">1.7<span class="u">% search</span></div></div><p style="font-size:13px;color:var(--ink-2);margin-top:8px">1,371 Google sessions in a whole year. Your product pages have empty product types, almost no tags, and no Arabic shade content. You are invisible to anyone typing <span class="ar">أحمر شفاه مات</span>.</p></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-t"><h3>Traffic sources, trailing twelve months</h3><span class="note">Sessions <span class="mono" style="color:var(--accent)">§</span></span></div>
+      <div id="chart-traffic"></div>
+      <div class="call crit" style="margin-top:16px">
+        <p class="lead">Concentration risk</p>
+        <p>Instagram plus Facebook is <b class="mono">73.9%</b> of all traffic. One algorithm change, one ad-account suspension, one week of raised CPMs and three-quarters of the business stops. "Pangleglobal" (2,814 sessions) is TikTok's ad network — you already touch TikTok's inventory but have almost no organic TikTok presence (1,553 sessions). In 2026 TikTok Shop is doing USD 15.8bn in the US alone and <b class="mono">79% of it is beauty</b>.<sup class="ref">17</sup></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 03 ══════════════ -->
+<section id="s03">
+  <div class="sec-head"><span class="num">03</span><h2>Catalog X-ray</h2></div>
+  <p class="deck">Twenty-two live SKUs, fifteen archived ones, and a price architecture that contradicts itself. Sort any column.</p>
+
+  <div class="stack">
+    <div class="g3">
+      <div class="panel"><div class="eyebrow">Revenue concentration</div><div class="tile" style="padding:8px 0 0"><div class="v">55.8<span class="u">% top 5</span></div></div><p style="font-size:13px;color:var(--ink-2);margin-top:8px">Candy Rose alone is <b class="mono">23.5%</b> of the year. One blush shade going out of stock costs you a quarter of the business.</p></div>
+      <div class="panel"><div class="eyebrow">Stock on hand</div><div class="tile" style="padding:8px 0 0"><div class="v">683<span class="u">units</span></div></div><p style="font-size:13px;color:var(--ink-2);margin-top:8px">≈ EGP 575k at retail, ≈ 1.8 months of cover at the last 30 days' rate. Lean. Three SKUs are at zero.</p></div>
+      <div class="panel"><div class="eyebrow">Dead weight</div><div class="tile" style="padding:8px 0 0"><div class="v">125<span class="u">Travel Duos</span></div></div><p style="font-size:13px;color:var(--ink-2);margin-top:8px">18% of all your units sit in one EGP 400 SKU. It is your best acquisition tool and your worst margin — see section 10.</p></div>
+    </div>
+
+    <div>
+      <div class="panel-t" style="margin-bottom:10px">
+        <h3>Every SKU, twelve months and ninety days</h3>
+        <div class="chips" id="cat-chips"></div>
+      </div>
+      <div class="tw" style="max-height:520px;overflow-y:auto">
+        <table id="tbl-sku">
+          <thead><tr>
+            <th class="sortable" data-k="name">Shade</th>
+            <th class="sortable" data-k="cat">Category</th>
+            <th class="sortable num" data-k="price">Price</th>
+            <th class="sortable num" data-k="ttm">TTM gross</th>
+            <th class="sortable num" data-k="ttmO">Orders</th>
+            <th class="sortable num" data-k="d90">90d gross</th>
+            <th class="sortable num" data-k="share90">90d share vs TTM</th>
+            <th class="sortable num" data-k="disc">Discount</th>
+            <th class="sortable num" data-k="inv">Stock</th>
+            <th>Read</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p style="font-size:12.5px;color:var(--ink-3);margin-top:8px">"90d share vs TTM" is the last 90 days' revenue as a share of the full year's — above 25% means the shade is accelerating, below 15% means it is fading. Discount = 1 − (net ÷ gross), so it includes returns as well as codes.</p>
+    </div>
+
+    <div class="g2">
+      <div class="panel">
+        <div class="panel-t"><h3>Category mix is moving fast</h3><span class="note">Share of gross sales</span></div>
+        <div id="chart-mix"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-t"><h3>The price ladder makes no sense</h3></div>
+        <div class="rows">
+          <div class="row"><span class="l">Liquid matte lipstick — identical formula, identical size</span><span class="r">860 <em style="color:var(--ink-3)">or</em> 980</span></div>
+          <div class="row"><span class="l">Liquid blush — identical formula, identical size</span><span class="r">1,125 / 1,350 / <b style="color:var(--crit)">1,500</b></span></div>
+          <div class="row"><span class="l">Lip gloss</span><span class="r">750</span></div>
+          <div class="row"><span class="l">Lip contour</span><span class="r">499</span></div>
+          <div class="row"><span class="l">Travel size 1.2 ml</span><span class="r">250</span></div>
+          <div class="row"><span class="l">Travel duo</span><span class="r">400</span></div>
+        </div>
+        <div class="call warn" style="margin-top:14px">
+          <p>Four blushes, one formula, <strong>four different prices</strong> — and the cheapest two are the ones dying. Sun Kissed (1,125) is carrying an <b class="mono">18.3%</b> discount and Pinky Winky (1,125) has collapsed to 14% of its yearly run-rate. Meanwhile Candy Rose at <b class="mono">1,500</b> outsells all three combined at full price. The market told you the answer: <strong>price the whole blush line at 1,500 and stop discounting.</strong> Same for lipstick — everything to 980.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="call crit">
+      <p class="lead">You archived your bundles. Put them back.</p>
+      <p>Fifteen "Kit" SKUs (lipstick + gloss + contour, sealed, EGP 1,267–1,490) were archived in November 2025. They had earned <b class="mono">EGP 63,086</b> at an average of roughly EGP 1,330 per unit — versus your 1,658 average <em>order</em>. Cosmetics bundles are the highest-converting format in the category at <b class="mono">3.4–5.2%</b>.<sup class="ref">14</sup> Worse, the smart collection <span class="mono">/collections/kits</span> is still live and now resolves to an empty page. Two other holes: <strong>Lip Contour has sold nothing in 90 days</strong> despite doing EGP 63k over the year (its inventory is untracked, so it is silently unbuyable), and <strong>both lip glosses are effectively dead</strong> — EGP 750 each in 90 days, one at zero stock.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 04 ══════════════ -->
+<section id="s04">
+  <div class="sec-head"><span class="num">04</span><h2>Who is buying, and from where</h2></div>
+  <p class="deck">1,543 customers in twelve months, 1,343 of them brand new. Cairo is more than half the money. Mansoura — where the studio is — punches far above its population.</p>
+
+  <div class="stack">
+    <div class="g2u">
+      <div class="panel">
+        <div class="panel-t"><h3>Gross sales by governorate</h3><span class="note">Trailing twelve months, EGP <span class="mono" style="color:var(--accent)">§</span></span></div>
+        <div id="chart-geo"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-t"><h3>Customer economics</h3></div>
+        <div class="rows" id="rows-cust"></div>
+        <div class="call good" style="margin-top:14px">
+          <p>The direction is right. Returning-customer rate rose from 13% in October 2025 to a steady <b class="mono">19–24%</b> through 2026, and your best repeat customers have spent EGP 5,030–5,805 across three to six orders. A customer who comes back three times is worth roughly <b class="mono">3× your CAC ceiling</b>. You have proof the product retains — you just have no mechanism that <em>asks</em> people to come back.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div class="panel">
+        <div class="panel-t"><h3>The Delta is under-served</h3></div>
+        <ul class="bul">
+          <li><strong>Cairo + Giza + 6th of October = EGP 1.84m</strong>, 66% of revenue, from ~22% of Egypt's population.</li>
+          <li><strong>Dakahlia is your fourth-biggest region</strong> at EGP 206k. That is the Mansoura studio's halo — physical presence converts. It is a template, not an accident.</li>
+          <li><strong>Alexandria (EGP 241k) under-indexes</strong> versus its size and income. No local pop-up, no local creator.</li>
+          <li><strong>Upper Egypt is nearly absent</strong> — Minya, Sohag, Asyut, Aswan, Qena together are EGP 55k, under 2%. That is 25 million people.</li>
+          <li><strong>Matrouh does EGP 34,005 on 8 orders</strong> — an average order of over EGP 4,250. Summer-coast, high-basket buyers. There is a North Coast seasonal play hiding in that row.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <div class="panel-t"><h3>Data hygiene is costing you deliveries</h3></div>
+        <p style="font-size:14px;color:var(--ink-2)">Your city field currently contains, as separate values: <span class="mono">Cairo</span>, <span class="mono">القاهره</span>, <span class="mono">القاهرة</span>, <span class="mono">New Cairo</span>, <span class="mono">New cairo</span>, <span class="mono">Egypt</span>, <span class="mono">1</span>, and blank. Twenty orders worth EGP 40,920 have no region at all.</p>
+        <ul class="bul" style="margin-top:12px">
+          <li>Replace the free-text city field with a <strong>governorate dropdown plus an area dropdown</strong> at checkout. This is the single highest-return change to your checkout — it cuts failed deliveries, which in a COD market is cash.</li>
+          <li>Make <strong>phone number required and validated</strong> (<span class="mono">01[0125]\d{8}</span>). Your customer records show null phones; a courier who cannot call is a courier who returns the parcel.</li>
+          <li>Add a <strong>WhatsApp order confirmation</strong> before dispatch. Confirming COD orders before they ship is the standard Egyptian RTO fix.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 05 ══════════════ -->
+<section id="s05">
+  <div class="sec-head"><span class="num">05</span><h2>The Egyptian market, honestly</h2></div>
+  <p class="deck">A 115-million-person market that is getting cheaper to sell into and more expensive to import into, at exactly the same time.</p>
+
+  <div class="stack">
+    <div class="tiles">
+      <div class="tile"><div class="k">Egypt beauty &amp; personal care</div><div class="v">1.96<span class="u">bn USD</span></div><div class="d">2025 · 5.43% CAGR to 2034<sup class="ref">3</sup></div></div>
+      <div class="tile"><div class="k">Egypt colour cosmetics</div><div class="v">~0.98<span class="u">bn USD</span></div><div class="d">2025 estimate<sup class="ref">7</sup></div></div>
+      <div class="tile"><div class="k">Egypt e-commerce</div><div class="v">9–11<span class="u">bn USD</span></div><div class="d">2026, growing ~25%/yr<sup class="ref">6</sup></div></div>
+      <div class="tile"><div class="k">Headline inflation</div><div class="v">13.4<span class="u">%</span></div><div class="d up">Feb 2026, down from ~38% peak<sup class="ref">11</sup></div></div>
+      <div class="tile"><div class="k">USD / EGP</div><div class="v">~51.8</div><div class="d">Managed float, banks forecast 45–49<sup class="ref">11</sup></div></div>
+      <div class="tile"><div class="k">MEA beauty growth</div><div class="v">16<span class="u">%</span></div><div class="d up">2025, vs 6% globally<sup class="ref">5</sup></div></div>
+    </div>
+
+    <div class="g2">
+      <div class="panel">
+        <div class="panel-t"><h3>The tailwinds are real</h3></div>
+        <ul class="bul">
+          <li><strong>Disinflation is a margin gift.</strong> Inflation fell from ~38% (Sep 2024) to 13.4% (Feb 2026) with institutions forecasting 8–10% by end-2026 and the central bank targeting 7% ±2.<sup class="ref">11</sup> Your input costs stabilise before your prices have to come down.</li>
+          <li><strong>The pound stabilising kills the importers' advantage slowly, not quickly.</strong> Anyone importing finished prestige makeup still eats <b class="mono">30% duty + 14% VAT + 5% excise</b> on CIF value.<sup class="ref">8</sup> A locally made prestige-quality product has a structural 40–50% landed-cost edge over Dior at the same shelf.</li>
+          <li><strong>Egypt is the second-largest cosmetics consumer in Africa</strong> (81,000 tonnes in 2024, after Nigeria) and one of its leading manufacturers.<sup class="ref">13</sup> AfCFTA and COMESA give you preferential access to a 1.5-billion-person market from a Cairo warehouse.</li>
+          <li><strong>Regulation is EU-shaped, which helps you.</strong> Egypt's cosmetic rules are largely aligned to EU Regulation 1223/2009 and notification runs through the EDA's EgyCosm system.<sup class="ref">9</sup> Clearing EDA is an export credential, not just a local hurdle.</li>
+          <li><strong>There is no Sephora in Egypt.</strong> Global prestige reaches Egyptian consumers mostly through parallel-import e-tailers. The prestige shelf is unclaimed.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <div class="panel-t"><h3>The headwinds are also real</h3></div>
+        <ul class="bul">
+          <li><strong>Purchasing power is thin and unequal.</strong> The middle class is defined at EGP 5,000–25,000 of monthly household income, and the top 10% of households hold 28.6% of disposable income.<sup class="ref">11</sup> Your EGP 1,500 blush is a genuine luxury purchase for most of the country.</li>
+          <li><strong>Volume fell while value rose.</strong> Through the 2024 devaluation Egyptian beauty grew in pounds and shrank in units, with mass outperforming premium.<sup class="ref">12</sup> You are selling into a market that has learned to trade down.</li>
+          <li><strong>COD is the tax you cannot avoid.</strong> 40–70% of Egyptian e-commerce transactions are cash-on-delivery depending on category,<sup class="ref">10</sup> and your own orders run ~85% pending-payment. That is working capital locked in transit and a 25–35% RTO exposure.</li>
+          <li><strong>Local competition is organised.</strong> Nefertari has 100+ stores and reported 35% growth in 2024; Beesline holds 8–10% of the organic sub-segment.<sup class="ref">7</sup> They own the natural/clean position at scale.</li>
+          <li><strong>Dupe culture is the ceiling.</strong> Globally, masstige gained five points of share in five years, and the mid-mass dupe segment is a USD 4.6bn business in 2026.<sup class="ref">16</sup> Egyptian shoppers see the same TikToks.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-t"><h3>The landed-cost wall your international competitors hit</h3><span class="note">Illustrative, on a USD 20 CIF prestige lipstick</span></div>
+      <div id="chart-duty"></div>
+      <p style="font-size:13px;color:var(--ink-2);margin-top:14px">A EUR/USD-priced prestige lipstick arriving in Egypt legally is marked up roughly <b class="mono">1.56×</b> before anyone takes a margin: 30% customs duty, 5% excise on cosmetics as a luxury good, then 14% VAT on the duty-inclusive value.<sup class="ref">8</sup> Add importer and retailer margin and a USD 20 CIF product lands on shelf near USD 55–70. <strong>This is your moat.</strong> You can spend genuinely prestige money on formula and packaging and still undercut them — but only if you manufacture at or into Egypt rather than importing finished goods yourself.</p>
+    </div>
+
+    <div class="panel">
+      <div class="panel-t"><h3>Where Egyptian women actually buy prestige makeup</h3></div>
+      <div class="tw" style="border:none">
+        <table>
+          <thead><tr><th>Channel</th><th>Who</th><th>What it is good for</th><th>Your position today</th></tr></thead>
+          <tbody id="tb-channels"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 06 ══════════════ -->
+<section id="s06">
+  <div class="sec-head"><span class="num">06</span><h2>The global high-end board</h2></div>
+  <p class="deck">Five houses own roughly half of global premium beauty.<sup class="ref">4</sup> Below them sits the layer that actually matters to you: founder-led brands that went from nothing to acquisition in under eight years using mechanics you can copy this quarter.</p>
+
+  <div class="stack">
+    <div class="tiles">
+      <div class="tile"><div class="k">Global prestige beauty</div><div class="v">82.4<span class="u">bn USD</span></div><div class="d">2025 · 6.8% CAGR to 2034<sup class="ref">1</sup></div></div>
+      <div class="tile"><div class="k">Luxury cosmetics</div><div class="v">58.1<span class="u">bn USD</span></div><div class="d">2025 → 83.3bn by 2033<sup class="ref">4</sup></div></div>
+      <div class="tile"><div class="k">Top 5 houses' share</div><div class="v">45–55<span class="u">%</span></div><div class="d">of global premium revenue<sup class="ref">4</sup></div></div>
+      <div class="tile"><div class="k">L'Oréal, luxury makeup</div><div class="v">~22<span class="u">%</span></div><div class="d">single-company share<sup class="ref">4</sup></div></div>
+      <div class="tile"><div class="k">Prestige makeup growth</div><div class="v">+3<span class="u">%</span></div><div class="d dn">2025 — value up, units soft<sup class="ref">2</sup></div></div>
+      <div class="tile"><div class="k">Lip liner growth</div><div class="v">+34<span class="u">%</span></div><div class="d up">prestige; +36% mass<sup class="ref">2</sup></div></div>
+    </div>
+
+    <div>
+      <div class="panel-t" style="margin-bottom:10px">
+        <h3>Brand tracker — 24 houses and brands worth watching</h3>
+        <div class="chips" id="brand-chips"></div>
+      </div>
+      <div class="tw" style="max-height:560px;overflow-y:auto">
+        <table id="tbl-brands">
+          <thead><tr>
+            <th class="sortable" data-k="brand">Brand</th>
+            <th class="sortable" data-k="house">House</th>
+            <th class="sortable" data-k="tier">Tier</th>
+            <th class="sortable" data-k="anchor">Hero / price anchor</th>
+            <th>Why it matters in 2026</th>
+            <th>The mechanic to steal</th>
+            <th class="sortable" data-k="eg">In Egypt</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p style="font-size:12.5px;color:var(--ink-3);margin-top:8px">"In Egypt" records a September 2026 scan of Egyptian online beauty retailers (Maven, Ramfa, GoMyz, Havenly, Loolia Closet, The Boutique Store, Noon Egypt). <b>Parallel</b> = observed listed by those independent e-tailers, typically via parallel import rather than an authorised local distributor. <b>Thin</b> = not observed in that scan. This describes what Egyptian shoppers can actually find online, not the brands’ own stated distribution. Egypt has no Sephora retail estate, which is why nearly every row reads Parallel.</p>
+    </div>
+
+    <div class="g2">
+      <div class="panel">
+        <div class="panel-t"><h3>What the winners have in common</h3></div>
+        <ul class="bul">
+          <li><strong>A narrow, ownable assortment.</strong> Rare Beauty, Rhode, Merit and Glow Recipe all won with focused ranges and one unmistakable hero, not a full counter.<sup class="ref">18</sup> You already have this — Candy Rose is your Soft Pinch.</li>
+          <li><strong>A physical gesture, not a product.</strong> Charlotte Tilbury sells a <em>look</em> ("Pillow Talk"); Rare sells a <em>motion</em> (one tap, blend with a finger). Your Mansoura studio means you can name and own an application gesture that nobody else in Egypt can teach.</li>
+          <li><strong>Creator volume, not creator spend.</strong> The 2026 standard moved from seeding 100 creators to seeding 1,000.<sup class="ref">18</sup> In Egypt, nano creators cost USD 50–200 and micro USD 200–800 — well below UAE rates for comparable reach, with higher engagement.<sup class="ref">19</sup></li>
+          <li><strong>Documented velocity beats a product line.</strong> Retail buyers now pull TikTok Shop GMV curves and creator-to-purchase conversion before a meeting.<sup class="ref">18</sup> Your Shopify record <em>is</em> that document — start keeping it presentable now.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <div class="panel-t"><h3>What the exit actually looks like</h3></div>
+        <div class="rows">
+          <div class="row"><span class="l">Beauty M&amp;A, EV/EBITDA (YTD 2025)</span><span class="r">14.9×</span></div>
+          <div class="row"><span class="l">Consumer sector average, same period</span><span class="r">9.8×</span></div>
+          <div class="row"><span class="l">Typical revenue multiple, 2022–25</span><span class="r">~3.6×</span></div>
+          <div class="row"><span class="l">Breakout / founder-led brands</span><span class="r">5–8×</span></div>
+          <div class="row"><span class="l">e.l.f. × rhode (Aug 2025)</span><span class="r">≈ USD 1bn</span></div>
+          <div class="row"><span class="l">L'Oréal × Medik8 / Aesop</span><span class="r">~20× EBITDA</span></div>
+          <div class="row"><span class="l">Public beauty median gross margin</span><span class="r">69.4%</span></div>
+        </div>
+        <p style="font-size:13px;color:var(--ink-2);margin-top:14px">Source: 2026 beauty M&amp;A reporting.<sup class="ref">20</sup> The practical translation: at EGP 12m of revenue with a defensible 65%+ gross margin and a real repeat rate, you are a credible regional acquisition target for a Gulf strategic or a MENA consumer fund. <strong>Gross margin is the thing being bought.</strong> Every discount you run is a direct deduction from your eventual valuation, at a multiple.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 07 ══════════════ -->
+<section id="s07">
+  <div class="sec-head"><span class="num">07</span><h2>Trend radar, 2026</h2></div>
+  <p class="deck">Every trend below is real. Most of them are not yours. Filter by what you should actually do about it.</p>
+
+  <div class="stack">
+    <div class="chips" id="trend-chips"></div>
+    <div id="trend-grid" class="g3" style="gap:14px"></div>
+    <p style="font-size:12.5px;color:var(--ink-3)"><b>Act now</b> = launch or change something this quarter. <b>Build toward</b> = start the groundwork, ship within twelve months. <b>Watch</b> = track, do not spend. <b>Not yours</b> = real trend, wrong brand or wrong market — deliberately declining it is a strategy.</p>
+  </div>
+</section>
+
+<!-- ══════════════ 08 ══════════════ -->
+<section id="s08">
+  <div class="sec-head"><span class="num">08</span><h2>The strategy, in one page</h2></div>
+  <p class="deck">Everything above narrows to a single choice about what kind of company this is.</p>
+
+  <div class="stack">
+    <div class="panel" style="border-color:var(--accent);border-width:1px">
+      <div class="eyebrow" style="color:var(--accent)">The positioning</div>
+      <p class="serif" style="font-size:clamp(23px,3.6vw,33px);line-height:1.2;margin-top:12px;max-width:26ch">The pharmacist's colour house. Prestige pigment, clinical formula, made for Egyptian skin.</p>
+      <p style="color:var(--ink-2);margin-top:16px;max-width:66ch">Nobody else in this market can credibly say all three. Nefertari owns natural. The parallel importers own foreign prestige. The mass brands own cheap. <strong>Nobody owns "formulated by a clinical pharmacist, pigmented like a luxury house, and matched to Egyptian undertones."</strong> That is a defensible position because it is true, it is hard to copy, and it converts your biography into the product claim.</p>
+      <div class="tag-row">
+        <span class="pill mute">Clinical pharmacist founder</span>
+        <span class="pill mute">Coconut oil · shea · vitamin E</span>
+        <span class="pill mute">EDA-notified</span>
+        <span class="pill mute">Made for medium-to-deep warm undertones</span>
+        <span class="pill mute">Mansoura studio proof</span>
+      </div>
+    </div>
+
+    <div class="g3">
+      <div class="panel">
+        <div class="eyebrow">Portfolio architecture</div>
+        <h4 style="font-size:15px;margin:8px 0 10px">Three jobs, three price bands</h4>
+        <div class="rows">
+          <div class="row"><span class="l"><b>Entry</b><br><span style="font-size:12px;color:var(--ink-3)">Travel sizes, duos, minis</span></span><span class="r">250–500</span></div>
+          <div class="row"><span class="l"><b>Core</b><br><span style="font-size:12px;color:var(--ink-3)">Lipstick, gloss, liner</span></span><span class="r">980</span></div>
+          <div class="row"><span class="l"><b>Signature</b><br><span style="font-size:12px;color:var(--ink-3)">Blush, and the next hero</span></span><span class="r">1,500</span></div>
+        </div>
+        <p style="font-size:13px;color:var(--ink-2);margin-top:12px">Entry buys the customer. Core repeats. Signature carries the margin and the brand. Right now Entry is 12% of the last 90 days and has no defined path into Core — that is the missing conveyor.</p>
+      </div>
+      <div class="panel">
+        <div class="eyebrow">The wedge</div>
+        <h4 style="font-size:15px;margin:8px 0 10px">Own the flush, not the lip</h4>
+        <p style="font-size:14px;color:var(--ink-2)">Blush and bronzer posted double-digit gains globally in 2026 and lip liner was the single fastest-growing makeup segment.<sup class="ref">2</sup> Your own data already agrees: a blush you launched eleven months ago is a quarter of the business. Lipstick is where you came from; <strong>cheek and lip-line is where the category is going</strong>, and it is where you already have proof.</p>
+      </div>
+      <div class="panel">
+        <div class="eyebrow">The moat</div>
+        <h4 style="font-size:15px;margin:8px 0 10px">Shade truth for Egyptian skin</h4>
+        <p style="font-size:14px;color:var(--ink-2)">Global prestige shade ranges are built on Western undertone maps. You have a professional makeup studio, a pharmacist's formulation vocabulary and thousands of Egyptian faces of data. Publish an <strong>undertone system</strong> — name it, teach it, make every product page answer "is this shade mine?" This is the asset a competitor cannot buy.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-t"><h3>What to stop doing</h3></div>
+      <ul class="bul">
+        <li><strong>Stop running two prices for one formula.</strong> The 860/980 lipstick split and the 1,125/1,350/1,500 blush split teach customers to wait for the cheap one.</li>
+        <li><strong>Stop discounting the newest products.</strong> Sun Kissed at 18.3% and Güzel Travel at 40% off are training your best-margin customers to devalue your launches.</li>
+        <li><strong>Stop launching without a bundle.</strong> Every hero needs a kit at launch, not a kit archived a month later.</li>
+        <li><strong>Stop treating international traffic as noise.</strong> 4,100 Gulf and diaspora sessions with no shipping option is a closed door with people knocking on it.</li>
+        <li><strong>Stop letting the trough happen.</strong> March–June has no plan. Build the always-on offer before you build the next launch.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 09 ══════════════ -->
+<section id="s09">
+  <div class="sec-head"><span class="num">09</span><h2>Eleven plays, ranked by EGP</h2></div>
+  <p class="deck">Ordered by expected annual gross-sales impact against effort. Every estimate is built from your own trailing-twelve-month traffic, conversion and average order value — the uplift assumptions are the conservative end of published 2026 benchmarks, and each one is stated so you can argue with it.</p>
+  <div class="stack" id="plays"></div>
+  <div class="call" style="margin-top:22px">
+    <p class="lead">Total modelled upside: <span id="plays-total">—</span> of additional annual gross sales</p>
+    <p>That is not a forecast — plays overlap and none of them are free. Treat it as a ranked queue: the first four are cheap, fast and compounding, and together they carry more than half the number. Section 11 lets you model what actually happens when you only do some of them.</p>
+  </div>
+</section>
+
+<!-- ══════════════ 10 ══════════════ -->
+<section id="s10">
+  <div class="sec-head"><span class="num">10</span><h2>Unit economics lab</h2></div>
+  <p class="deck">Your Shopify data shows revenue, not profit — it has no cost of goods in it. So this is a model, and every input is yours to change. The defaults are realistic Egyptian DTC cosmetics assumptions; the order volume and average order value are your real numbers. <strong>Change the inputs until they match your invoices, then read the bottom line.</strong></p>
+
+  <div class="stack">
+    <div class="g2u">
+      <div class="panel">
+        <div class="panel-t"><h3>Inputs</h3><button id="ue-reset" class="chip" type="button">Reset to defaults</button></div>
+        <div style="display:grid;gap:16px;grid-template-columns:1fr">
+          <div id="ue-controls" style="display:grid;gap:15px;grid-template-columns:1fr 1fr"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-t"><h3>Per delivered order</h3></div>
+        <div class="rows" id="ue-rows"></div>
+        <div id="ue-summary" style="margin-top:16px"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-t"><h3>Where every pound of an average order goes</h3><span class="note">Waterfall, EGP per order placed</span></div>
+      <div id="chart-ue"></div>
+    </div>
+
+    <div class="g2">
+      <div class="panel">
+        <div class="panel-t"><h3>The Travel Duo problem</h3></div>
+        <p style="font-size:14px;color:var(--ink-2)">Your EGP 400 Travel Duo took <b class="mono">423 orders</b> over the year — more order-lines than any other product — and it is your cheapest thing. Run it through the model at an AOV of 480 (400 + shipping) and it is close to, or below, break-even once cash-on-delivery failure and acquisition cost are included.</p>
+        <p style="font-size:14px;color:var(--ink-2);margin-top:10px"><strong>That does not mean kill it.</strong> It means stop treating it as a product and start treating it as a paid acquisition channel with a job: every Travel Duo box must contain a shade-matched offer that moves that buyer to a EGP 980 or EGP 1,500 purchase within 30 days. If it does that even 20% of the time, it is the best-value customer acquisition you have. If it does not, it is a loss leader with no leader.</p>
+      </div>
+      <div class="panel">
+        <div class="panel-t"><h3>The COD tax, quantified</h3></div>
+        <p style="font-size:14px;color:var(--ink-2)">Set the COD share slider to 85% (your reality) and then to 55%, and watch the bottom line. Every point you shift from cash to prepaid removes a return-to-origin risk of 25–35%<sup class="ref">10</sup> and frees working capital that is currently sitting in couriers' vans.</p>
+        <ul class="bul" style="margin-top:10px">
+          <li><strong>Pay-now discount:</strong> 5% off for card or wallet payment costs less than one failed COD parcel.</li>
+          <li><strong>Paymob is ~2.75% + EGP 3; Fawry runs 1.5–2.5%.</strong><sup class="ref">21</sup> Both are cheaper than a 22% RTO rate.</li>
+          <li><strong>WhatsApp confirmation before dispatch</strong> is the single most effective RTO reducer in this market and costs nothing but a person's time.</li>
+          <li><strong>Free shipping above EGP 1,500</strong> pushes AOV toward the Signature band and pays for itself in mix.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 11 ══════════════ -->
+<section id="s11">
+  <div class="sec-head"><span class="num">11</span><h2>The road to EGP 12m</h2></div>
+  <p class="deck">Four levers, one chart. Baseline is your actual last twelve months, repeated. Move the levers to see what the same store does with the plays from section 09 applied.</p>
+
+  <div class="stack">
+    <div class="panel">
+      <div class="panel-t"><h3>Twelve-month projection</h3><span class="note">Sep 2026 – Aug 2027, EGP gross sales</span></div>
+      <div id="sc-controls" style="display:grid;gap:16px;grid-template-columns:1fr;margin-bottom:22px"></div>
+      <div id="chart-scenario"></div>
+      <div class="legend">
+        <span><span class="dot" style="background:var(--s1)"></span>Plan</span>
+        <span><span class="dot" style="background:var(--s3)"></span>Baseline (actual last 12 months)</span>
+      </div>
+      <div id="sc-out" class="tiles" style="margin-top:20px"></div>
+    </div>
+    <p style="font-size:12.5px;color:var(--ink-3)">The model multiplies your actual monthly gross sales by (traffic growth × conversion uplift × order-value uplift), then applies a floor so no month falls below the chosen share of the year's peak — that floor is what an always-on offer and a repeat programme actually buy you. It assumes no change in returns; if you also fix returns, add roughly 3–5% on top.</p>
+  </div>
+</section>
+
+<!-- ══════════════ 12 ══════════════ -->
+<section id="s12">
+  <div class="sec-head"><span class="num">12</span><h2>The first ninety days</h2></div>
+  <p class="deck">Sequenced so that nothing depends on something later in the list. Ticks are saved in this browser.</p>
+
+  <div class="stack">
+    <div class="g3" id="board"></div>
+    <div class="panel">
+      <div class="panel-t"><h3>Months 4–12</h3></div>
+      <div class="tw" style="border:none">
+        <table>
+          <thead><tr><th>Quarter</th><th>Theme</th><th>Ships</th><th class="num">Target</th></tr></thead>
+          <tbody id="tb-roadmap"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 13 ══════════════ -->
+<section id="s13">
+  <div class="sec-head"><span class="num">13</span><h2>Risk register</h2></div>
+  <p class="deck">What kills this business, in order of likelihood × damage. Each one has a trigger you can actually watch.</p>
+  <div class="stack">
+    <div class="tw">
+      <table>
+        <thead><tr><th>Risk</th><th>Severity</th><th>Early warning</th><th>Mitigation</th></tr></thead>
+        <tbody id="tb-risk"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 14 ══════════════ -->
+<section id="s14">
+  <div class="sec-head"><span class="num">14</span><h2>Method &amp; sources</h2></div>
+  <p class="deck">Two kinds of number appear in this dossier and they are not equal.</p>
+  <div class="stack">
+    <div class="g2">
+      <div class="panel">
+        <div class="eyebrow" style="color:var(--accent)">§ — Your own data</div>
+        <p style="font-size:14px;color:var(--ink-2);margin-top:8px">Pulled live from the Shopify Admin API for <span class="mono">ayatfahiem.com</span> on <b>3 September 2026</b>: monthly sales, orders, discounts, returns and average order value; sessions and the full checkout funnel; traffic by referrer, device and country; sales by governorate and city; product-level revenue for both the trailing twelve months and the trailing ninety days; the live and archived catalogue with prices and stock; collections; and a sample of recent orders and repeat customers. These are facts about your business.</p>
+        <p style="font-size:14px;color:var(--ink-2);margin-top:10px">Headline totals use <b>Sep 2025 – Aug 2026</b>, twelve complete months. September 2026 is excluded from totals because it was two days old when this was built.</p>
+      </div>
+      <div class="panel">
+        <div class="eyebrow">Modelled figures</div>
+        <p style="font-size:14px;color:var(--ink-2);margin-top:8px">Everything in sections 10 and 11, and the "recoverable EGP" column in section 02, is a <strong>model</strong>. Your Shopify data contains no cost of goods, no ad spend and no courier invoices, so those inputs are assumptions — set at realistic Egyptian DTC cosmetics levels and exposed as sliders precisely so you can replace them with your real figures. Uplift assumptions use the conservative end of the published 2026 benchmarks cited below.</p>
+        <p style="font-size:14px;color:var(--ink-2);margin-top:10px">Market figures from different research houses use different scopes and definitions and do not always agree; where they conflict, both framings are shown rather than averaged.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-t"><h3>References</h3></div>
+      <div class="src-list" id="sources"></div>
+    </div>
+    <p style="font-size:12.5px;color:var(--ink-3)">Prepared 3 September 2026. Brand, competitor and market observations reflect public reporting available at that date. Nothing here constitutes financial or regulatory advice; confirm EDA notification requirements and current tariff schedules with a licensed Egyptian customs broker before acting on section 05.</p>
+  </div>
+</section>
+
+</main>
+</div>
+
+<div id="tip" role="status" style="position:fixed;z-index:99;pointer-events:none;opacity:0;transition:opacity .1s;background:var(--ink);color:var(--ground);padding:7px 10px;border-radius:3px;font-size:12px;font-family:'IBM Plex Mono',monospace;line-height:1.5;max-width:260px;box-shadow:0 6px 20px rgba(0,0,0,.25)"></div>
+
+<script>
+(function () {
+"use strict";
+
+/* ═══════════════════ DATA — all § figures from the live Shopify store ═══════════════════ */
+
+// month, orders, gross, net, shipping, sessions, cartAdds, reachedCheckout, completed, newC, retC, returns
+const MONTHS = [
+  ["Sep 25",  27,  39221,  37289,  2260,  1215,  83,  44,  27,  26,  1,      0],
+  ["Oct 25", 285, 491345, 394715, 21630,  8242, 716, 418, 248, 222, 31,  63513],
+  ["Nov 25", 190, 346454, 311919, 15410, 11863, 682, 362, 187, 158, 29,  30196],
+  ["Dec 25", 156, 316941, 309723, 13380,  8786, 517, 257, 155, 132, 23,   1624],
+  ["Jan 26", 141, 199258, 193658, 11480, 11031, 519, 269, 138, 123, 17,   5600],
+  ["Feb 26", 101, 150486, 145721,  8250,  6089, 324, 181,  98,  76, 23,   4475],
+  ["Mar 26",  79, 130100, 129100,  6860,  3843, 243, 121,  79,  61, 18,   1000],
+  ["Apr 26",  68,  81405,  79005,  5760,  4157, 256, 131,  68,  52, 16,   2400],
+  ["May 26",  67, 119310, 117244,  5980,  3281, 248, 143,  65,  55, 11,   1570],
+  ["Jun 26",  75, 113710, 111390,  6320,  3966, 246, 111,  76,  63, 11,   2320],
+  ["Jul 26", 270, 458970, 449145, 22920,  9486, 808, 441, 263, 205, 60,   9825],
+  ["Aug 26", 215, 328755, 311075, 17840,  7576, 626, 343, 211, 170, 39,  17680]
+];
+
+// name, category, price, ttmGross, ttmNet, ttmOrders, d90Gross, d90Orders, inventory(null=untracked), swatch, note
+const PRODUCTS = [
+  ["Candy Rose","Blush",1500,658371,607728,501,143700,91,28,"#e58ba0","Your #1 SKU and 23.5% of the year. Highest price in the line — and it wins anyway."],
+  ["Golden Hour","Blush",1350,316572,282252,259,72090,53,28,"#e0a24f","Strong second blush. Middle price, middle result."],
+  ["Candy","Lipstick",980,230509,225306,254,103880,104,22,"#d6455f","Accelerating: 45% of its whole year came in the last 90 days."],
+  ["Cinnamon","Lipstick",980,183479,177790,190,101920,97,38,"#a8452f","Accelerating hard — 56% of its year in 90 days. Deepest stock. Push it."],
+  ["Travel Duo – Mon Amour & Güzel","Travel",400,178250,174800,423,96400,235,125,"#8e3350","Most-ordered item in the store and the thinnest margin. Treat it as acquisition, not product."],
+  ["Guzel","Lipstick",980,148879,145096,156,57820,54,29,"#b03050","Steady core. A named shade with a Turkish-drama association you have never merchandised."],
+  ["Mon Amour","Lipstick",980,133293,127549,146,69580,70,27,"#c02840","Accelerating. It is also your travel-size hero — the ladder already exists here."],
+  ["Sun Kissed","Blush",1125,116683,95296,107,34875,29,29,"#e8896b","18.3% discount leakage — the worst in the line. Stop discounting it, reprice to 1,500."],
+  ["Blossom","Lipstick",860,99283,95843,124,37670,43,28,"#d77289","Priced at 860 for no formulation reason. Move to 980."],
+  ["Pinky Winky","Blush",1125,94334,82803,84,13500,12,32,"#e077a0","Collapsed: 14% of its year in the last 90 days, and 32 units sitting. Bundle it or retire it."],
+  ["Best Friends","Lipstick",860,92460,88631,112,51600,58,28,"#c4566b","Strong performer trapped in the wrong price band."],
+  ["Caramel","Lipstick",980,71698,67064,79,28420,28,30,"#a96a48","Mid-pack. Nude-brown is a growth shade family globally — merchandise it with Mocha."],
+  ["Lip Contour","Liner",499,63244,61249,127,0,0,null,"#7a4436","Zero sales in 90 days on untracked inventory. Lip liner was the fastest-growing makeup segment of 2026. Fix this first."],
+  ["Wine Night","Lipstick",980,59172,57260,64,20580,20,29,"#6e1f35","Seasonal (autumn/winter). Plan a Q4 relaunch around it."],
+  ["Mocha","Lipstick",980,58752,56747,66,19600,20,31,"#8a5340","Under-performing a globally hot shade family."],
+  ["Barbie","Lipstick",860,40399,39195,47,16340,17,31,"#e0537f","Trademark-adjacent name. Rename before you scale into retail or export."],
+  ["Marilyn Monroe","Lipstick",980,35545,33427,40,9800,10,31,"#b81c2c","Slowing. Classic red is a permanent category — this is a merchandising failure, not a shade failure."],
+  ["Girlhood","Lipstick",860,34846,32307,40,19780,22,28,"#de7c93","Accelerating from a small base. The name is the most ownable in the line."],
+  ["Bad Girl Lipgloss","Gloss",750,33540,32260,47,750,1,null,"#c98fa0","Effectively dead — one order in 90 days, inventory untracked."],
+  ["Sexy Lady Lipgloss","Gloss",750,31086,28675,42,750,1,0,"#d9a0ac","Out of stock. Gloss is a growth format globally and you are absent from it."],
+  ["Mon Amour – Travel Size","Travel",250,25250,20500,87,10500,40,27,"#c02840","18.8% discount leakage on a 250 EGP item. That is negative contribution territory."],
+  ["Sunset","Lipstick",860,20304,19874,23,9460,10,38,"#d2604a","Weakest full-size lipstick with the deepest stock. Bundle candidate."],
+  ["Güzel – Travel Size","Travel",250,12500,7500,49,6000,24,24,"#b03050","40% discount leakage — the single worst margin line in the catalogue."],
+  ["LULU","Lipstick",860,5160,0,2,5160,2,0,"#8b3a52","Net revenue of zero on 5,160 gross. Out of stock and giving product away."],
+  ["Kits (15 SKUs, archived)","Kit",1330,63086,60892,43,0,0,0,"#6b5c57","Archived Nov 2025 after earning EGP 63k. The /collections/kits page is still live and empty."]
+];
+
+const TRAFFIC = [
+  ["Instagram","social",43710],["Facebook","social",15511],["Direct / unknown","direct",15048],
+  ["Pangle (TikTok ad network)","paid",2814],["TikTok organic","social",1553],
+  ["Google organic","search",1371],["Google paid","paid",18],["Everything else","other",108]
+];
+
+const REGIONS = [
+  ["Cairo",1535828,934],["Giza",255112,158],["Alexandria",240841,163],["Dakahlia (Mansoura)",206485,135],
+  ["Gharbia",111509,51],["6th of October",53717,31],["Al Sharqia",47879,25],["Damietta",40670,23],
+  ["Matrouh",34005,8],["Qalyubia",29860,17],["Kafr el-Sheikh",21944,11],["South Sinai",21375,15],
+  ["Monufia",20962,14],["Beheira",19180,16],["Minya",17972,10],["Ismailia",15830,10],
+  ["Port Said",15494,10],["Faiyum",15164,6],["Sohag",13889,6],["Asyut",11380,10],["Aswan",9420,6],
+  ["Abu Dhabi (UAE)",7200,1],["Beni Suef",6793,4],["Red Sea",3740,2],["Qena",2880,2],
+  ["Florida (US)",2310,2],["New Jersey (US)",1380,1],["Suez",1200,3],["England (UK)",956,1],["Unassigned",40920,20]
+];
+
+/* ═══════════════════ DERIVED TOTALS ═══════════════════ */
+const T = MONTHS.reduce((a, m) => ({
+  orders: a.orders + m[1], gross: a.gross + m[2], net: a.net + m[3], ship: a.ship + m[4],
+  sessions: a.sessions + m[5], cart: a.cart + m[6], checkout: a.checkout + m[7], bought: a.bought + m[8],
+  newC: a.newC + m[9], retC: a.retC + m[10], ret: a.ret + m[11]
+}), {orders:0,gross:0,net:0,ship:0,sessions:0,cart:0,checkout:0,bought:0,newC:0,retC:0,ret:0});
+T.aov = T.gross / T.orders;
+T.cvr = T.bought / T.sessions;
+T.customers = T.newC + T.retC;
+
+/* ═══════════════════ UTILITIES ═══════════════════ */
+const $ = s => document.querySelector(s);
+const el = (t, c, h) => { const n = document.createElement(t); if (c) n.className = c; if (h != null) n.innerHTML = h; return n; };
+const fmt = n => Math.round(n).toLocaleString('en-US');
+const k = n => n >= 1e6 ? (n/1e6).toFixed(2) + 'm' : n >= 1000 ? Math.round(n/1000) + 'k' : fmt(n);
+const pc = (n, d) => (n * 100).toFixed(d == null ? 1 : d) + '%';
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const cssv = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+const tip = $('#tip');
+function bindTip(node, html) {
+  node.addEventListener('pointerenter', () => { tip.innerHTML = html; tip.style.opacity = '1'; });
+  node.addEventListener('pointermove', e => {
+    const w = tip.offsetWidth, h = tip.offsetHeight;
+    let x = e.clientX + 14, y = e.clientY - h - 10;
+    if (x + w > innerWidth - 8) x = e.clientX - w - 14;
+    if (y < 8) y = e.clientY + 18;
+    tip.style.left = x + 'px'; tip.style.top = y + 'px';
+  });
+  node.addEventListener('pointerleave', () => { tip.style.opacity = '0'; });
+}
+function svg(w, h) {
+  const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  s.setAttribute('width', w); s.setAttribute('height', h);
+  s.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+  s.setAttribute('class', 'chart'); s.setAttribute('role', 'img');
+  return s;
+}
+function nd(tag, attrs, text) {
+  const n = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const a in attrs) n.setAttribute(a, attrs[a]);
+  if (text != null) n.textContent = text;
+  return n;
+}
+function mount(id, node) { const c = $(id); if (!c) return; c.innerHTML = ''; c.appendChild(node); }
+function W(id, min) { const c = $(id); return Math.max(min || 280, c ? c.clientWidth : 600); }
+
+/* ═══════════════════ HERO SHADE CARD ═══════════════════ */
+function shadeCard() {
+  const box = $('#shadecard'); if (!box) return;
+  box.innerHTML = '';
+  const rows = PRODUCTS.slice().sort((a, b) => b[3] - a[3]);
+  const total = rows.reduce((s, p) => s + p[3], 0);
+  const w = W('#shadecard', 300), h = 92;
+  const s = svg(w, h);
+  s.setAttribute('aria-label', 'Shade card: each stripe is one product, width proportional to its share of trailing twelve month gross sales.');
+  let x = 0;
+  rows.forEach(p => {
+    const bw = Math.max(2, (p[3] / total) * (w - (rows.length - 1) * 2));
+    const g = nd('g', {});
+    g.appendChild(nd('rect', {x: x.toFixed(2), y: 0, width: bw.toFixed(2), height: 56, fill: p[9], rx: 1.5}));
+    if (bw > 60) {
+      const room = Math.floor((bw - 8) / 6.1);
+      let nm = p[0].split(' – ')[0];
+      if (nm.length > room) nm = nm.slice(0, Math.max(3, room - 1)) + '…';
+      g.appendChild(nd('text', {x: (x + 5).toFixed(2), y: 74, class: 'val-l', 'font-size': 10}, nm));
+      g.appendChild(nd('text', {x: (x + 5).toFixed(2), y: 87, class: 'axis-l', 'font-size': 9.5}, pc(p[3] / total, 1)));
+    }
+    bindTip(g, '<b>' + esc(p[0]) + '</b><br>' + esc(p[1]) + ' · EGP ' + fmt(p[2]) + '<br>TTM ' + egpS(p[3]) + ' · ' + pc(p[3]/total,1) + ' of sales<br>' + p[5] + ' orders');
+    g.style.cursor = 'crosshair';
+    s.appendChild(g);
+    x += bw + 2;
+  });
+  box.appendChild(s);
+}
+function egpS(n) { return 'EGP ' + fmt(n); }
+
+/* ═══════════════════ MONTHLY CHARTS ═══════════════════ */
+function niceMax(v) {
+  if (v <= 0) return 1;
+  const mag = Math.pow(10, Math.floor(Math.log10(v)));
+  const n = v / mag;
+  const step = n <= 1 ? 1 : n <= 1.25 ? 1.25 : n <= 1.5 ? 1.5 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 3 ? 3 : n <= 4 ? 4 : n <= 5 ? 5 : n <= 6 ? 6 : n <= 8 ? 8 : 10;
+  return step * mag;
+}
+function monthlyBars(id, valIdx, label, colorVar, fmtFn) {
+  const w = W(id, 300), padL = 46, padR = 8, padT = 14, padB = 26, h = 190;
+  const iw = w - padL - padR, ih = h - padT - padB;
+  const vals = MONTHS.map(m => m[valIdx]);
+  const max = niceMax(Math.max.apply(null, vals) * 1.02);
+  const s = svg(w, h);
+  s.setAttribute('aria-label', label + ' by month.');
+  const ticks = 4;
+  for (let i = 0; i <= ticks; i++) {
+    const y = padT + ih - (ih * i / ticks);
+    s.appendChild(nd('line', {x1: padL, x2: w - padR, y1: y.toFixed(1), y2: y.toFixed(1), class: 'grid-l'}));
+    s.appendChild(nd('text', {x: padL - 7, y: (y + 3.5).toFixed(1), class: 'axis-l', 'text-anchor': 'end'}, fmtFn(max * i / ticks)));
+  }
+  const bw = iw / MONTHS.length;
+  MONTHS.forEach((m, i) => {
+    const v = m[valIdx], bh = (v / max) * ih;
+    const bx = padL + i * bw + bw * 0.16, bwr = bw * 0.68;
+    const g = nd('g', {}); g.style.cursor = 'crosshair';
+    g.appendChild(nd('rect', {x: bx.toFixed(2), y: (padT + ih - bh).toFixed(2), width: bwr.toFixed(2), height: Math.max(1, bh).toFixed(2), fill: cssv(colorVar), rx: 2}));
+    g.appendChild(nd('rect', {x: (padL + i * bw).toFixed(2), y: padT, width: bw.toFixed(2), height: ih, fill: 'transparent'}));
+    bindTip(g, '<b>' + m[0] + '</b><br>Gross ' + egpS(m[2]) + '<br>' + m[1] + ' orders · AOV ' + fmt(m[2] / m[1]) +
+      '<br>' + fmt(m[5]) + ' sessions · CVR ' + pc(m[8] / m[5], 2) + '<br>Returns ' + egpS(m[11]));
+    s.appendChild(g);
+    if (w > 480 || i % 2 === 0) {
+      s.appendChild(nd('text', {x: (padL + i * bw + bw / 2).toFixed(2), y: h - 8, class: 'axis-l', 'text-anchor': 'middle', 'font-size': w > 480 ? 9.5 : 8.5}, m[0].split(' ')[0]));
+    }
+  });
+  mount(id, s);
+}
+
+/* ═══════════════════ FUNNEL ═══════════════════ */
+function funnel() {
+  const id = '#chart-funnel', w = W(id, 280);
+  const stages = [
+    ['Sessions', T.sessions, '--o1'],
+    ['Added to cart', T.cart, '--o2'],
+    ['Reached checkout', T.checkout, '--o3'],
+    ['Bought', T.bought, '--o4']
+  ];
+  const rowH = 54, h = stages.length * rowH + 8;
+  const s = svg(w, h);
+  s.setAttribute('aria-label', 'Conversion funnel from sessions to purchases.');
+  const max = T.sessions, barMax = w - 4;
+  stages.forEach((st, i) => {
+    const y = i * rowH + 4;
+    const bw = Math.max(3, (st[1] / max) * barMax);
+    const g = nd('g', {}); g.style.cursor = 'crosshair';
+    g.appendChild(nd('rect', {x: 0, y: y + 16, width: bw.toFixed(1), height: 20, fill: cssv(st[2]), rx: 2}));
+    g.appendChild(nd('text', {x: 0, y: y + 11, class: 'val-l', 'font-size': 11.5, 'font-weight': 500}, st[0]));
+    g.appendChild(nd('text', {x: w, y: y + 11, class: 'val-l', 'font-size': 11.5, 'text-anchor': 'end'}, fmt(st[1])));
+    if (i > 0) {
+      const prev = stages[i - 1][1];
+      g.appendChild(nd('text', {x: Math.min(bw + 8, w - 60).toFixed(1), y: y + 30, class: 'axis-l', 'font-size': 10}, pc(st[1] / prev, 1) + ' of previous'));
+    } else {
+      g.appendChild(nd('text', {x: Math.min(bw + 8, w - 60).toFixed(1), y: y + 30, class: 'axis-l', 'font-size': 10}, '100%'));
+    }
+    bindTip(g, '<b>' + st[0] + '</b><br>' + fmt(st[1]) + '<br>' + pc(st[1] / T.sessions, 2) + ' of all sessions');
+    s.appendChild(g);
+  });
+  mount(id, s);
+}
+
+/* ═══════════════════ HORIZONTAL BARS (traffic, geo) ═══════════════════ */
+function hbars(id, rows, opts) {
+  const w = W(id, 280), labelW = Math.min(opts.labelW || 150, w * 0.42);
+  const rowH = opts.rowH || 26, h = rows.length * rowH + 6;
+  const s = svg(w, h);
+  s.setAttribute('aria-label', opts.aria || '');
+  const max = Math.max.apply(null, rows.map(r => r[1]));
+  const barMax = w - labelW - (opts.valW || 62);
+  rows.forEach((r, i) => {
+    const y = i * rowH + 4;
+    const bw = Math.max(2, (r[1] / max) * barMax);
+    const g = nd('g', {}); g.style.cursor = 'crosshair';
+    g.appendChild(nd('text', {x: 0, y: y + 14, class: 'val-l', 'font-size': 11.5}, r[0]));
+    g.appendChild(nd('rect', {x: labelW, y: y + 4, width: bw.toFixed(1), height: 13, fill: r[3] || cssv(opts.color || '--accent'), rx: 2}));
+    g.appendChild(nd('text', {x: w, y: y + 14, class: 'val-l', 'font-size': 11, 'text-anchor': 'end'}, opts.fmtV(r[1])));
+    g.appendChild(nd('rect', {x: 0, y: y, width: w, height: rowH - 2, fill: 'transparent'}));
+    bindTip(g, r[2] || ('<b>' + esc(r[0]) + '</b><br>' + opts.fmtV(r[1])));
+    s.appendChild(g);
+  });
+  mount(id, s);
+}
+
+/* ═══════════════════ STACKED MIX ═══════════════════ */
+function mixChart() {
+  const id = '#chart-mix', w = W(id, 280);
+  const cats = ['Lipstick', 'Blush', 'Travel', 'Gloss', 'Liner', 'Kit'];
+  const cols = ['--s1', '--s2', '--s3', '--s4', '--s5', '--ink-3'];
+  const sum = (i) => cats.map(c => PRODUCTS.filter(p => p[1] === c).reduce((a, p) => a + p[i], 0));
+  const ttm = sum(3), d90 = sum(6);
+  const tT = ttm.reduce((a, b) => a + b, 0), t9 = d90.reduce((a, b) => a + b, 0);
+  const h = 152, s = svg(w, h);
+  s.setAttribute('aria-label', 'Category mix of gross sales, trailing twelve months versus last ninety days.');
+  [[ttm, tT, 'Trailing 12 months', 22], [d90, t9, 'Last 90 days', 92]].forEach(row => {
+    s.appendChild(nd('text', {x: 0, y: row[3] - 8, class: 'axis-l', 'font-size': 10}, row[2] + ' · ' + egpS(row[1])));
+    let x = 0;
+    row[0].forEach((v, i) => {
+      if (v <= 0) return;
+      const bw = (v / row[1]) * (w - 2);
+      const g = nd('g', {}); g.style.cursor = 'crosshair';
+      g.appendChild(nd('rect', {x: x.toFixed(2), y: row[3], width: Math.max(1, bw - 2).toFixed(2), height: 26, fill: cssv(cols[i]), rx: 2}));
+      if (bw > 52) g.appendChild(nd('text', {x: (x + 6).toFixed(2), y: row[3] + 17, 'font-size': 10.5, fill: '#fff', 'font-family': "'IBM Plex Mono',monospace"}, pc(v / row[1], 0)));
+      bindTip(g, '<b>' + cats[i] + '</b><br>' + egpS(v) + '<br>' + pc(v / row[1], 1) + ' of ' + row[2].toLowerCase());
+      s.appendChild(g);
+      x += bw;
+    });
+  });
+  mount(id, s);
+  const host = $(id).parentNode;
+  const old = host.querySelector('.legend');
+  if (old) old.remove();
+  const lg = el('div', 'legend');
+  cats.forEach((c, i) => {
+    const pctT = pc(ttm[i] / tT, 1), pct9 = pc(d90[i] / t9, 1);
+    lg.appendChild(el('span', '', '<span class="dot" style="background:' + cssv(cols[i]) + '"></span>' + c + ' <span style="color:var(--ink-3)">' + pctT + ' → ' + pct9 + '</span>'));
+  });
+  $(id).parentNode.appendChild(lg);
+}
+
+/* ═══════════════════ DUTY WALL ═══════════════════ */
+function dutyChart() {
+  const id = '#chart-duty', w = W(id, 280);
+  const cif = 20, duty = cif * 0.30, exc = (cif + duty) * 0.05, vat = (cif + duty + exc) * 0.14;
+  const parts = [['CIF value', cif, '--s3'], ['Customs duty 30%', duty, '--s1'], ['Excise 5%', exc, '--s2'], ['VAT 14%', vat, '--s5']];
+  const total = cif + duty + exc + vat;
+  const h = 96, s = svg(w, h);
+  s.setAttribute('aria-label', 'Import cost build-up on a twenty dollar CIF prestige lipstick entering Egypt.');
+  let x = 0;
+  parts.forEach(p => {
+    const bw = (p[1] / total) * (w - 2);
+    const g = nd('g', {}); g.style.cursor = 'crosshair';
+    g.appendChild(nd('rect', {x: x.toFixed(2), y: 20, width: Math.max(1, bw - 2).toFixed(2), height: 30, fill: cssv(p[2]), rx: 2}));
+    if (bw > 62) {
+      g.appendChild(nd('text', {x: (x + 6).toFixed(2), y: 39, 'font-size': 10.5, fill: '#fff', 'font-family': "'IBM Plex Mono',monospace"}, '$' + p[1].toFixed(2)));
+    }
+    g.appendChild(nd('text', {x: (x).toFixed(2), y: 14, class: 'axis-l', 'font-size': bw > 90 ? 9.5 : 8.5}, bw > 60 ? p[0] : ''));
+    bindTip(g, '<b>' + p[0] + '</b><br>USD ' + p[1].toFixed(2) + '<br>' + pc(p[1] / total, 1) + ' of landed cost');
+    s.appendChild(g);
+    x += bw;
+  });
+  s.appendChild(nd('text', {x: 0, y: 70, class: 'val-l', 'font-size': 12, 'font-weight': 500}, 'USD 20.00 CIF → USD ' + total.toFixed(2) + ' landed, before anyone takes a margin'));
+  s.appendChild(nd('text', {x: 0, y: 86, class: 'axis-l', 'font-size': 10}, 'A ' + (total / cif).toFixed(2) + '× multiplier that a locally-made product never pays.'));
+  mount(id, s);
+}
+
+/* ═══════════════════ CONTENT DATA ═══════════════════ */
+const BRANDS = [
+  ["Dior Beauty","LVMH","Luxury","Addict Lip Glow · ~$45","A generational run that has not faltered; Lip Glow turned a tinted balm into a status object and Glow Maximizer trended again in 2026.","One low-friction hero at a luxury price that recruits people into the whole house.","Parallel"],
+  ["Chanel Beauty","Chanel","Ultra-luxury","Baume Essentiel stick · ~$50","Its multitasking highlighter stick was one of 2026's biggest TikTok beauty moments for the wet-look sheen.","A single stick that does two jobs travels further on video than two products that each do one.","Parallel"],
+  ["Charlotte Tilbury","Puig","Luxury","Pillow Talk · ~$37","Sells one Magic Cream a minute and an Airbrush product roughly every two seconds worldwide.","Name the LOOK, not the shade. 'Pillow Talk' is a promise; 'Nude 03' is a SKU.","Parallel"],
+  ["Lancôme","L'Oréal Luxe","Luxury","Teint Idole Ultra Wear","A backbone of the ~22% share L'Oréal holds in global luxury makeup.","Complexion authority earned through shade breadth, then extended into colour.","Parallel"],
+  ["YSL Beauty","L'Oréal Luxe","Luxury","Loveshine · Rouge Volupté","Object design as the product — the case is half the purchase.","Make the packaging giftable on its own. In a COD market, a giftable box is also a returns reducer.","Parallel"],
+  ["Armani Beauty","L'Oréal Luxe","Luxury","Luminous Silk · ~$69","Pro-artist credibility that survives every trend cycle.","Professional endorsement is the most durable proof there is — and you are a professional.","Parallel"],
+  ["Estée Lauder","Estée Lauder Cos.","Luxury","Double Wear","One measurable performance claim ('24-hour wear') owned for decades.","Pick one claim you can prove and never change it. Yours is already written: long-lasting, high pigment, smudge-free.","Parallel"],
+  ["MAC Cosmetics","Estée Lauder Cos.","Prestige","Ruby Woo · ~$26","The artist brand — shade names as cultural shorthand and the original MUA distribution model.","MAC grew out of makeup artists. So did you. Build the artist network before you build the ad account.","Parallel"],
+  ["Bobbi Brown","Estée Lauder Cos.","Prestige","Corrector · Pot Rouge","Founder-artist authority translated into a corrective-colour system.","Systemise your expertise into a named method customers can follow at home.","Parallel"],
+  ["Tom Ford Beauty","Estée Lauder Cos.","Ultra-luxury","Lip Color · ~$62","Price as positioning — scarcity and a heavy case do the talking.","Price is a signal. Your own data proves it: the EGP 1,500 blush beats the EGP 1,125 ones.","Thin"],
+  ["NARS","Shiseido","Prestige","Orgasm blush · ~$32","The blush that made blush a hero category, three decades before the 2026 boom.","A single blush shade can be a brand. Candy Rose is 23.5% of your year — treat it like Orgasm.","Parallel"],
+  ["Guerlain","LVMH","Ultra-luxury","Rouge G · refillable case","Refill architecture built into a luxury ritual rather than bolted on.","Refills raise repeat purchase 35–50% and cut cost per use 20–40% — and EU rules push this way from 2027.","Thin"],
+  ["Fenty Beauty","LVMH","Prestige","Pro Filt'r · ~$40","Rewrote the shade-range rulebook and still earns outsized share of voice.","Shade inclusivity as the launch story. In Egypt the equivalent story is undertone, not depth alone.","Parallel"],
+  ["Huda Beauty","Independent (Dubai)","Prestige","Easy Bake · Lip Contour","The proof that a MENA founder-led brand can go global from Dubai — and it started with lashes and lip liner.","This is your closest structural analogue: creator-founder, region-first, lip-led. Study the first three years, not the current one.","Parallel"],
+  ["Rare Beauty","Independent (Selena Gomez)","Prestige","Soft Pinch Liquid Blush · ~$25","The liquid-blush phenomenon; focused assortment, one unmistakable hero, digital-first.","Your Candy Rose is structurally the same product in the same moment. Merchandise it as a movement, not a shade.","Parallel"],
+  ["Rhode","e.l.f. Beauty","Masstige","Peptide Lip Tint · ~$18","Acquired by e.l.f. in Aug 2025 for around USD 1bn after leading the 'glazed skin' moment.","Viral product drops with deliberate scarcity. Drops also solve your March–June trough.","Thin"],
+  ["Glossier","Independent","Masstige","Cloud Paint · ~$22","Community-built brand; the cream-blush format that everyone now copies.","Customers as the content engine. Your 1,543 customers have never been asked for a photo.","Thin"],
+  ["Merit","Independent","Prestige","Flush Balm · ~$32","Minimalist five-minute-face system; named as one of beauty's next billion-dollar brands.","Sell a routine of 3–4 products, not a catalogue. Your kits were exactly this and you archived them.","Thin"],
+  ["Haus Labs","Independent (Lady Gaga)","Prestige","Triclone Foundation","Artist-led formulation storytelling with ingredient claims front and centre.","Ingredient-led storytelling. You already have coconut oil, shea butter and vitamin E — and a pharmacist to explain them.","Thin"],
+  ["Westman Atelier","Independent","Ultra-luxury","Vital Skin Stick · ~$70","Clean-luxury sticks at a genuinely high price with no discounting, ever.","Never discounting is a positioning tool. Your 18.3% and 40% markdowns are doing the opposite.","Thin"],
+  ["Makeup by Mario","Independent","Prestige","Master Mattes · Surreal Concealer","Celebrity-artist brand built on teaching technique on video.","Tutorial-first product design: build the product around a lesson you already teach in the studio.","Thin"],
+  ["Patrick Ta","Independent","Prestige","Major Headlights blush duo","Dual-format blush (crème + powder) that made a two-step ritual into one SKU.","Two-step in one package raises the price ceiling without a new customer.","Thin"],
+  ["Sulwhasoo","Amorepacific","Ultra-luxury","Concentrated Ginseng","K-beauty prestige is a leading force in GCC luxury growth.","Heritage-ingredient storytelling. Egypt has its own: hibiscus, black seed, moringa, Aswan botanicals.","Thin"],
+  ["e.l.f. Beauty","e.l.f. Beauty","Masstige","Halo Glow · ~$14","The masstige masterclass — prestige codes at a price nobody thinks twice about; masstige gained five points of global share in five years.","This is your threat, not your model. Egyptian dupes will come for the EGP 980 tier. Defend with formula proof and shade authority, not price.","Parallel"]
+];
+
+const TRENDS = [
+  ["act","Blush &amp; bronzer boom","Blush and bronzer posted double-digit gains globally in 2026, and cream/liquid formats lead.","You already own this. Unify blush pricing at 1,500, add two shades for deeper undertones, and build a cheek-first campaign."],
+  ["act","Lip liner is the fastest-growing segment","+36% in mass and +34% in prestige — the single fastest-growing makeup segment of the year.","Your Lip Contour has sold nothing in 90 days because its inventory is untracked. Relaunch it in three shades this quarter."],
+  ["act","Bundles convert best in cosmetics","Cosmetics bundle offers convert at 3.4–5.2%, versus a 3.2% category median.","Un-archive the kits, and build one 'Lip + Cheek' set at EGP 2,400 as the hero gifting SKU."],
+  ["act","Creator volume over creator spend","The 2026 standard moved from seeding 100 creators to 1,000. Egyptian nano rates run USD 50–200.","300 Egyptian nano/micro creators is roughly USD 30–60k of product and fees — the cheapest reach in this market."],
+  ["act","TikTok Shop is a beauty retailer now","TikTok Shop is doing USD 15.8bn in the US with 79% of it beauty; it became the UK's fourth-largest beauty retailer.","You already buy Pangle (TikTok network) traffic. Open the shop, seed it with the Travel Duo, and let creators sell."],
+  ["build","Hybrid / multitasking formats","Lip-and-cheek, tinted SPF, skin tints and stick multitaskers are where 2026 innovation concentrates.","A lip-and-cheek stick is your obvious next hero: one SKU, two of your proven categories, travel-friendly."],
+  ["build","Refillable and lighter packaging","Refills lift repeat purchase 35–50% and cut cost per use 20–40%; EU rules require refill systems from 2027.","Refills also cut your landed cost per use. Design the next blush case for a refill from day one."],
+  ["build","Shade &amp; undertone personalisation","AI-driven personalisation delivers 15–18% conversion lifts in beauty e-commerce; AR try-on has lifted conversion ~30% on Instagram Shopping.","You do not need AI first. Publish a human undertone quiz built on your studio experience; add try-on later."],
+  ["build","Halal and clean claims in the Gulf","80% of GCC shoppers say they will pay more for halal-certified cosmetics.","If Gulf export is the plan, halal certification is a prerequisite, not a marketing option. Start the paperwork early."],
+  ["watch","Cloud skin, blush blocking, soft-focus","Blurred, filter-like finishes and blush placement techniques are the dominant looks going into 2026.","Free content, not product development. Teach the technique with the products you already sell."],
+  ["watch","Climate-adaptive formulas","Formulas that respond to skin temperature and environment are moving from novelty to mainstream claims.","Relevant to Egyptian summer. Track it — but a heat-proof claim needs real testing before you make it."],
+  ["decline","Full-range expansion (foundation, mascara, eyes)","The obvious move for a makeup brand with momentum, and the one that kills indie margins.","Complexion needs 20+ shades, huge inventory and a returns problem you cannot afford yet. The winners of 2026 all won narrow. Stay narrow."]
+];
+
+const PLAYS = [
+  ["Fix the checkout and the delivery promise","Conversion · ship in 3 weeks",
+   "Governorate + area dropdowns replacing the free-text city field; required, validated Egyptian mobile number; WhatsApp order confirmation before dispatch; a 5% pay-now discount for card/wallet; delivery date shown on the product page.",
+   "You convert 57.3% of started checkouts — 1,206 people a year reach checkout and leave. Egypt's RTO rate on COD is 25–35%, and your city field currently contains eight spellings of Cairo plus the value '1'.",
+   "Under EGP 20k (apps + a week of dev)","Low","3 weeks",750000],
+  ["Rebuild the price ladder and stop discounting","Margin · ship in 1 week",
+   "One price per formula: every liquid blush at EGP 1,500, every liquid matte lipstick at EGP 980. Kill the 860 and 1,125 tiers. No sitewide codes; promotional value goes into bundles and gifts-with-purchase instead.",
+   "Candy Rose at 1,500 outsells the two 1,125 blushes combined at full price. Sun Kissed is carrying 18.3% leakage and Güzel Travel 40%. Gross margin is what an acquirer buys, at a 14.9× multiple.",
+   "Free","Low","1 week",360000],
+  ["Un-archive the kits, build the Lip + Cheek set","AOV · ship in 2 weeks",
+   "Restore the fifteen archived kits (the /collections/kits page is live and empty). Add one hero set: Candy Rose blush + a matched 980 lipstick + Lip Contour, EGP 2,400, in giftable packaging.",
+   "Cosmetics bundles convert at 3.4–5.2% versus your 2.03%. The kits earned EGP 63k before you archived them, at ~EGP 1,330 each.",
+   "Packaging tooling, ~EGP 60k","Low","2 weeks",520000],
+  ["Build the repeat engine","Retention · ship in 4 weeks",
+   "A 30-day post-delivery WhatsApp and email flow: 'how did it wear?', a shade-matched second product, and a named loyalty tier at 3 orders. Collect and use the phone numbers you are currently not storing.",
+   "Repeat orders are 16.7% of your total against a 20–30% colour-cosmetics benchmark; beauty email opens at 38.5%, the highest of any vertical. Your best repeat customers already spend EGP 5,000–5,800 across 3–6 orders.",
+   "~EGP 3k/month in tooling","Low","4 weeks",470000],
+  ["Kill the March–June trough","Baseline · plan now, run from Feb",
+   "An always-on offer that does not need a launch: a monthly shade drop, a Ramadan and Eid gifting calendar, a summer 'North Coast kit', and a standing creator programme so there is content in the quiet months.",
+   "March–June 2026 ran 67–79 orders a month against 270 in July. Four months at a 150-order floor is +288 orders a year at today's average order value.",
+   "Creator seeding, ~EGP 150k/yr","Medium","Ongoing",480000],
+  ["Open TikTok Shop and seed 300 creators","Channel · ship in 6 weeks",
+   "TikTok Shop Egypt storefront, Travel Duo as the entry SKU, 300 Egyptian nano and micro creators seeded with product plus affiliate commission. Repurpose everything to Instagram Reels.",
+   "You already buy TikTok network traffic (2,814 Pangle sessions) but have almost no organic presence (1,553). TikTok Shop is 79% beauty in the US. Egyptian nano creators cost USD 50–200 versus far more in the UAE.",
+   "USD 30–60k of product + fees","Medium","6 weeks",550000],
+  ["Arabic SEO and real product pages","Acquisition · ship in 8 weeks",
+   "Fill every empty product type and tag. Bilingual product pages with Arabic shade descriptions, undertone guidance, ingredient explanations and customer photos. One shade-guide article per shade family.",
+   "1,371 Google sessions in an entire year — 1.7% of traffic. Every session from search is a session you do not pay Meta for, and 73.9% of your traffic currently comes from one company.",
+   "~EGP 80k (copy + dev)","Medium","8 weeks",450000],
+  ["Turn on the Gulf","Expansion · ship in 8 weeks",
+   "International shipping with duties shown at checkout, AED and SAR presentment, a Gulf-only bundle at a higher price point, and a Dubai-based creator cohort. Start the halal certification file.",
+   "4,124 sessions a year from UAE, Saudi, Kuwait and the US produced one order. Premium beauty in Saudi is forecast to grow 75% between 2025 and 2030; 80% of GCC shoppers will pay more for halal certification.",
+   "~EGP 120k incl. certification","Medium","8 weeks",400000],
+  ["Relaunch lip liner properly","Product · ship in 10 weeks",
+   "Track Lip Contour's inventory, add two more shades, and put a liner into every lipstick product page as a one-click add-on at EGP 499.",
+   "Lip liner was the fastest-growing makeup segment of 2026 (+34% prestige, +36% mass). Lip Contour earned EGP 63k while buyable and has sold nothing in 90 days.",
+   "~EGP 200k first production run","Medium","10 weeks",380000],
+  ["Open the pharmacy and studio channel","Distribution · pilot in 12 weeks",
+   "You are a clinical pharmacist. Use it: a 30-door pilot into dermo-cosmetic pharmacy counters and premium salons, with a counter-top display, a tester unit and a trained staff script.",
+   "Pharmacy is the strongest channel for dermo-cosmetics in Egypt and typically needs a local distributor. Dakahlia is already your fourth-biggest region purely because of the Mansoura studio's halo — physical presence converts.",
+   "~EGP 350k (displays + stock)","High","12 weeks",600000],
+  ["Publish the undertone system","Moat · ship in 6 weeks",
+   "Name and publish an Egyptian undertone framework. Every product page answers 'is this shade mine?'. A quiz on the homepage. Customer photos on every shade, on every skin tone.",
+   "AI-driven personalisation delivers 15–18% conversion lifts in beauty; AR try-on has lifted conversion ~30% on Instagram Shopping. This is the asset a competitor cannot buy, because it comes from your studio.",
+   "~EGP 90k (content + build)","Medium","6 weeks",380000]
+];
+
+const CHANNELS = [
+  ["Your own Shopify store","Direct","Full margin, full data, full control of the brand story.","<b>2.78m EGP/yr.</b> This is the whole business today. It is also your entire distribution risk."],
+  ["Instagram &amp; Facebook","Meta","Discovery and demand generation for a visual, shade-led product.","<b>73.9% of all traffic.</b> Overwhelming dependency on one company's algorithm."],
+  ["TikTok Shop","Social commerce","In-feed purchase; 79% of TikTok Shop's US volume is beauty.","<b>Absent.</b> You buy its ad inventory via Pangle but sell nothing on it."],
+  ["Independent e-tailers","Parallel prestige","Where Egyptians actually buy Charlotte Tilbury, MAC, Huda and NARS today.","<b>Absent.</b> These are potential stockists, not just competitors."],
+  ["Noon &amp; Amazon Egypt","Marketplace","Replenishment and reach beyond Cairo; Amazon holds ~11% and Noon ~8% of Egyptian e-commerce.","<b>Absent.</b> Worth one SKU as a test, not the catalogue."],
+  ["Pharmacy counters","Dermo-cosmetic","The strongest Egyptian channel for anything with a formulation claim; needs a distributor.","<b>Absent — and it is your natural home.</b> You are a clinical pharmacist."],
+  ["Salons &amp; makeup studios","Professional","Trial with a trusted intermediary; the MAC model.","<b>One studio (Mansoura), and it built your fourth-largest region.</b>"],
+  ["Department stores &amp; malls","Physical prestige","Discovery and the credibility of a physical counter. No Sephora estate exists in Egypt.","<b>Absent.</b> Expensive. Later — after the pharmacy channel proves the model."]
+];
+
+const RISKS = [
+  ["Single-SKU dependency","crit","Candy Rose stock cover falls below 6 weeks, or its 90-day share of its own annual revenue drops under 15%.","Second blush hero at the same price; keep 10 weeks of cover on the top three SKUs; never let the hero stock out."],
+  ["Meta dependency","crit","A week where Instagram + Facebook exceed 80% of sessions, or CPMs rise more than 25% month over month.","Ship the SEO and TikTok Shop plays. Target Meta under 55% of traffic within twelve months."],
+  ["COD return-to-origin","crit","Recorded returns above 8% in any month, or courier RTO invoices above 20% of dispatched parcels.","WhatsApp confirmation before dispatch; pay-now discount; validated phone and address; drop unconfirmed high-value COD orders."],
+  ["Working capital squeeze","warn","Inventory cover under 6 weeks while COD receivables exceed one month of revenue.","Shift mix toward prepaid; negotiate faster courier remittance (Bosta remits in 3–5 days, Mylerz 5–7); pre-sell drops."],
+  ["Dupes at the 980 tier","warn","A local competitor lists a liquid matte at EGP 400–500 with comparable claims and creator support.","Do not follow them down. Defend with the pharmacist formulation story, undertone authority and the studio."],
+  ["Currency and import costs","warn","EGP moves beyond 55/USD, or your contract manufacturer raises prices more than 15%.","Dual-source components; quote in EGP with 90-day validity; hold a landed-cost model per SKU, updated monthly."],
+  ["Regulatory","warn","A shipment held at customs, or an EDA notification query on any product file.","Keep every EgyCosm notification current and the technical file complete; use a licensed customs broker; verify tariff codes before each import."],
+  ["Trademark exposure","warn","Any scaling into retail or export with 'Barbie' and 'Marilyn Monroe' as live shade names.","Rename both before the first wholesale contract or Gulf listing. Cheap now, expensive later."],
+  ["Founder concentration","mute","Content output or studio time drops for more than three consecutive weeks.","Build a second on-camera face and a creator programme so the brand is not one person's calendar."]
+];
+
+const ROADMAP = [
+  ["Q4 2026","Fix the machine","Checkout, price ladder, kits, repeat flow, Arabic product pages, lip liner relaunch.","EGP 1.4m/quarter"],
+  ["Q1 2027","Break the Meta habit","TikTok Shop live, 300 creators seeded, SEO compounding, always-on offer running through the old trough.","EGP 1.9m/quarter"],
+  ["Q2 2027","New surface area","Lip-and-cheek stick launch, refillable blush case, undertone system published, Gulf shipping live.","EGP 2.6m/quarter"],
+  ["Q3 2027","Physical proof","30-door pharmacy and salon pilot, one Cairo pop-up, halal certification complete, wholesale price list.","EGP 3.4m/quarter"]
+];
+
+const BOARD = [
+  ["Days 1–30 · Stop the bleeding", [
+    ["Set every liquid blush to EGP 1,500 and every liquid matte lipstick to EGP 980", "One hour of work. Highest-return hour of the quarter."],
+    ["Turn inventory tracking on for Lip Contour and both lip glosses", "Three SKUs are currently invisible or unbuyable."],
+    ["Restore the 15 archived kits, or delete the empty /collections/kits page", "It is a live, empty page collecting traffic right now."],
+    ["Replace the free-text city field with governorate + area dropdowns", "Directly reduces failed COD deliveries."],
+    ["Make phone number required and validated at checkout", "Your customer records have null phones. A courier who cannot call returns the parcel."],
+    ["Start WhatsApp confirmation on every COD order before dispatch", "The single most effective RTO reducer in this market."],
+    ["Fill in product type and tags on all 22 live SKUs", "Google currently sends you 1.7% of traffic."],
+    ["Reorder Candy Rose to 10 weeks of cover", "23.5% of revenue sits on one shade."]
+  ]],
+  ["Days 31–60 · Build the engine", [
+    ["Launch the Lip + Cheek set at EGP 2,400", "Bundles are the highest-converting format in cosmetics."],
+    ["Ship the 30-day post-delivery WhatsApp + email flow", "Repeat share is 16.7% against a 20–30% benchmark."],
+    ["Add a 5% pay-now discount for card and wallet payments", "Cheaper than one failed COD parcel."],
+    ["Publish bilingual product pages with Arabic shade and ingredient copy", "Compounding, and it costs nothing to maintain."],
+    ["Brief and seed the first 100 nano creators", "Egyptian nano rates are USD 50–200 — the cheapest reach available to you."],
+    ["Build the undertone quiz and put it on the homepage", "The asset a competitor cannot buy."],
+    ["Set free shipping at EGP 1,500 to pull orders into the Signature band", "Mix shift pays for the shipping."]
+  ]],
+  ["Days 61–90 · Open new ground", [
+    ["Open TikTok Shop Egypt with the Travel Duo as the entry SKU", "You already pay for TikTok's ad inventory."],
+    ["Turn on international shipping with duties shown at checkout", "4,124 Gulf and diaspora sessions produced one order."],
+    ["Relaunch Lip Contour in three shades with a one-click add-on", "The fastest-growing makeup segment of 2026."],
+    ["Sign the first 5 pharmacy or salon doors as a paid pilot", "Your pharmacist credential is the door-opener."],
+    ["Rename Barbie and Marilyn Monroe", "Cheap now, expensive after the first wholesale contract."],
+    ["Publish a monthly shade-drop calendar through June 2027", "March–June has no plan. Give it one before it arrives."],
+    ["Start the halal certification file", "80% of GCC shoppers pay more for it. Lead times are long."]
+  ]]
+];
+
+const SOURCES = [
+  "Circana / WWD — 2025 prestige &amp; mass beauty results and 2026 outlook; prestige beauty market sizing to 2034.",
+  "Global Cosmetic Industry &amp; Circana — 2026 category momentum: lip liner +34% prestige / +36% mass, blush and bronzer double-digit gains, prestige makeup +3%.",
+  "IMARC / Statista — Egypt beauty &amp; personal care: USD 1,961.1m (2025), 5.43% CAGR 2026–2034.",
+  "Market.us / SkyQuest / IMARC — global luxury cosmetics sizing and share; top-five house concentration; L'Oréal's luxury makeup share.",
+  "NielsenIQ &amp; Personal Care Insights — global beauty +10%; MEA +16% in 2025; Middle East beauty toward USD 20–21bn by 2030.",
+  "Codrocket / Mordor / Euromonitor — Egypt e-commerce USD 9–11bn in 2026, ~25% growth, 78% mobile, Amazon ~11% and Noon ~8% share.",
+  "Egyptian Streets / HPC MEA / SPER — Egyptian homegrown cosmetics: Nefertari 100+ stores and 35% growth in 2024, Beesline 8–10% of the organic sub-segment; Egypt colour cosmetics ~USD 0.98bn.",
+  "RateShips / DutyDecoder / Aramex — Egypt import duties on cosmetics: 30% customs duty, 5% excise, 14% VAT on duty-inclusive CIF; Nafeza and ACI filing.",
+  "Egyptian Drug Authority (EgyCosm) / ChemLinked / Intertek — cosmetic notification requirements; alignment with EU Regulation 1223/2009; Decree 122/2022 exemptions.",
+  "Egrow / EasySell — Egypt COD share of e-commerce and RTO rates of 25–35% versus Saudi 15–25% and UAE 10–18%.",
+  "Daily News Egypt / CBE / The Middle East Insider — inflation 13.4% (Feb 2026), 8–10% forecast for end-2026, CBE target 7% ±2; USD/EGP ~51.8 with a 45–49 forecast range; middle-class income band and income distribution.",
+  "Euromonitor — Egypt beauty and personal care: value growth with volume decline through the 2024 devaluation; mass outperforming premium.",
+  "IndexBox / CIB / ISS African Futures — Egypt as Africa's second-largest cosmetics consumer (81,000 tonnes, 2024); AfCFTA and COMESA access.",
+  "Web Tonic / acceleroi / Prooflytics — Shopify beauty benchmarks 2026: 3.2% median conversion (5.4% top quintile), 20–30% repeat for colour cosmetics, bundles converting 3.4–5.2%, 38.5% email open rate.",
+  "Shopify Admin API — live store data for ayatfahiem.com, pulled 3 September 2026.",
+  "Standard Insights / Arbelle / FMI — the 2026 dupe economy and masstige share gains; mid-mass dupes at USD 4.6bn.",
+  "BeautyMatter / Barclays / Amra &amp; Elma — TikTok Shop at USD 15.8bn US GMV with 79% beauty; AI personalisation lifting conversion 15–18%; AR try-on ~30%.",
+  "Beauty Independent / BoF / 5W Research — indie scaling playbook 2026; creator seeding at 1,000; retail buyers pulling velocity data.",
+  "Valors / Influencer Marketing Hub — Egyptian influencer rates 2026 by tier, and why they sit below UAE rates.",
+  "Capstone Partners / DC Advisory / Eightx — beauty M&amp;A at 14.9× EV/EBITDA YTD 2025; ~3.6× revenue average with 5–8× for breakout brands; 69.4% median gross margin.",
+  "Paymob / Fawry / inai — Egyptian payment gateway pricing; Bosta, Mylerz and Aramex courier and remittance characteristics.",
+  "Pantone / BeautyMatter — Colour of the Year 2026 'Cloud Dancer'; 2026 beauty packaging and EU refill and green-claims timelines."
+];
+
+/* ═══════════════════ RAIL ═══════════════════ */
+const SECTIONS = [["s00","Position"],["s01","The P&L truth"],["s02","Four leaks, priced"],["s03","Catalog X-ray"],
+  ["s04","Who is buying"],["s05","The Egyptian market"],["s06","Global high-end board"],["s07","Trend radar 2026"],
+  ["s08","The strategy"],["s09","Eleven plays"],["s10","Unit economics lab"],["s11","Road to EGP 12m"],
+  ["s12","First ninety days"],["s13","Risk register"],["s14","Method & sources"]];
+(function rail() {
+  const r = $('#rail');
+  SECTIONS.forEach((s, i) => {
+    const a = el('a', i === 0 ? 'on' : '', '<span class="n">' + String(i).padStart(2, '0') + '</span><span>' + s[1] + '</span>');
+    a.href = '#' + s[0]; a.dataset.t = s[0];
+    r.appendChild(a);
+  });
+  const links = Array.from(r.querySelectorAll('a'));
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.toggle('on', l.dataset.t === e.target.id));
+      }
+    });
+  }, {rootMargin: '-15% 0px -70% 0px'});
+  SECTIONS.forEach(s => { const n = document.getElementById(s[0]); if (n) io.observe(n); });
+})();
+
+/* ═══════════════════ SIMPLE ROW LISTS ═══════════════════ */
+function rows(id, items) {
+  const c = $(id); if (!c) return; c.innerHTML = '';
+  items.forEach(it => c.appendChild(el('div', 'row', '<span class="l">' + it[0] + '</span><span class="r">' + it[1] + '</span>')));
+}
+rows('#rows-ttm', [
+  ["Gross sales", egpS(T.gross)],
+  ["Discount codes", '−' + fmt(T.gross - T.net - T.ret)],
+  ["Returns", '−' + fmt(T.ret)],
+  ["Net sales", egpS(T.net)],
+  ["Shipping collected", '+' + fmt(T.ship)],
+  ["<b>Total sales</b>", '<b>' + egpS(T.net + T.ship) + '</b>'],
+  ["Orders", fmt(T.orders)],
+  ["Average order (gross)", egpS(T.aov)],
+  ["Revenue per session", 'EGP ' + (T.gross / T.sessions).toFixed(2)],
+  ["Return rate", pc(T.ret / T.gross, 2)],
+  ["Best month", "Oct 25 · " + egpS(491345)],
+  ["Worst month", "Apr 26 · " + egpS(81405)],
+  ["Peak-to-trough", (491345 / 81405).toFixed(1) + '×']
+]);
+rows('#rows-funnel', [
+  ["Sessions", fmt(T.sessions)],
+  ["Added to cart", fmt(T.cart) + ' · ' + pc(T.cart / T.sessions, 2)],
+  ["Reached checkout", fmt(T.checkout) + ' · ' + pc(T.checkout / T.cart, 1) + ' of carts'],
+  ["Completed checkout", fmt(T.bought) + ' · ' + pc(T.bought / T.checkout, 1) + ' of checkouts'],
+  ["<b>Overall conversion</b>", '<b>' + pc(T.cvr, 2) + '</b>'],
+  ["Beauty median on Shopify", '3.20%'],
+  ["Top-quintile beauty stores", '5.40%'],
+  ["Abandoned at checkout", fmt(T.checkout - T.bought) + ' · ' + egpS((T.checkout - T.bought) * T.aov)]
+]);
+rows('#rows-cust', [
+  ["Customers who bought", fmt(T.customers)],
+  ["First-time buyers", fmt(T.newC) + ' · ' + pc(T.newC / T.customers, 1)],
+  ["Returning buyers", fmt(T.retC) + ' · ' + pc(T.retC / T.customers, 1)],
+  ["Repeat share of orders", pc(T.retC / T.orders, 1)],
+  ["Colour-cosmetics benchmark", '20–30%'],
+  ["Revenue per customer", egpS(T.gross / T.customers)],
+  ["Returning rate, Oct 25 → Aug 26", '13.2% → 19.8%'],
+  ["Top repeat customers", 'EGP 5,030–5,805 over 3–6 orders']
+]);
+
+/* ═══════════════════ LEAK TABLE ═══════════════════ */
+const LEAKS = [
+  ["Landed, never added to cart", fmt(T.sessions - T.cart) + ' sessions',
+   "No shade finder, no customer photos, no Arabic shade or ingredient copy, no reviews. A shopper cannot tell whether the shade is hers.",
+   "Undertone quiz + customer photos on every shade + bilingual product pages.", 560000],
+  ["Added to cart, never reached checkout", fmt(T.cart - T.checkout) + ' carts',
+   "Shipping cost and delivery date only appear late. No free-shipping threshold to push toward.",
+   "Show delivery date and shipping on the product page; free shipping at EGP 1,500.", 320000],
+  ["Reached checkout, never paid", fmt(T.checkout - T.bought) + ' checkouts · ' + egpS((T.checkout - T.bought) * T.aov) + ' of intent',
+   "Free-text address fields, optional phone, no saved details, no COD reassurance. This is your single biggest leak.",
+   "Governorate + area dropdowns, required validated phone, WhatsApp abandoned-checkout recovery inside 30 minutes, 5% pay-now discount.", 300000],
+  ["Bought, then sent it back", egpS(T.ret) + ' recorded',
+   "5.05% of gross, concentrated in your two biggest months — plus refused COD parcels that never get recorded as returns at all.",
+   "Confirm every COD order on WhatsApp before dispatch; set shade expectations with real photos on real skin.", 140000]
+];
+(function () {
+  const tb = $('#tb-leaks'); if (!tb) return;
+  LEAKS.forEach(l => {
+    tb.appendChild(el('tr', '', '<td class="name">' + l[0] + '</td><td class="num">' + l[1] + '</td><td class="wrap">' + l[2] +
+      '</td><td class="wrap">' + l[3] + '</td><td class="num" style="color:var(--good);font-weight:500">+' + fmt(l[4]) + '</td>'));
+  });
+  tb.appendChild(el('tr', '', '<td class="name"><b>Total</b></td><td></td><td></td><td class="wrap" style="color:var(--ink-3)">Overlapping — fixing one helps the next</td>' +
+    '<td class="num" style="color:var(--good);font-weight:600">+' + fmt(LEAKS.reduce((a, l) => a + l[4], 0)) + '</td>'));
+})();
+
+/* ═══════════════════ CHANNELS / RISK / ROADMAP TABLES ═══════════════════ */
+(function () {
+  const tb = $('#tb-channels');
+  CHANNELS.forEach(c => tb.appendChild(el('tr', '', '<td class="name">' + c[0] + '</td><td>' + c[1] + '</td><td class="wrap">' + c[2] + '</td><td class="wrap">' + c[3] + '</td>')));
+  const tr = $('#tb-risk');
+  RISKS.forEach(r => tr.appendChild(el('tr', '', '<td class="name">' + r[0] + '</td><td><span class="pill ' + r[1] + '">' +
+    ({crit: 'Critical', warn: 'Material', mute: 'Watch'})[r[1]] + '</span></td><td class="wrap">' + r[2] + '</td><td class="wrap">' + r[3] + '</td>')));
+  const tm = $('#tb-roadmap');
+  ROADMAP.forEach(r => tm.appendChild(el('tr', '', '<td class="name">' + r[0] + '</td><td>' + r[1] + '</td><td class="wrap">' + r[2] + '</td><td class="num">' + r[3] + '</td>')));
+  const sr = $('#sources');
+  SOURCES.forEach((s, i) => sr.appendChild(el('div', '', '<span class="n">' + String(i + 1).padStart(2, '0') + '</span><span>' + s + '</span>')));
+})();
+
+/* ═══════════════════ SKU TABLE ═══════════════════ */
+let skuSort = {k: 'ttm', dir: -1}, skuCat = 'All';
+function renderSku() {
+  const tb = $('#tbl-sku tbody'); tb.innerHTML = '';
+  const keys = {name: 0, cat: 1, price: 2, ttm: 3, ttmO: 5, d90: 6, inv: 8};
+  let rows2 = PRODUCTS.filter(p => skuCat === 'All' || p[1] === skuCat).slice();
+  rows2.sort((a, b) => {
+    let va, vb;
+    if (skuSort.k === 'share90') { va = a[6] / a[3]; vb = b[6] / b[3]; }
+    else if (skuSort.k === 'disc') { va = 1 - a[4] / a[3]; vb = 1 - b[4] / b[3]; }
+    else { va = a[keys[skuSort.k]]; vb = b[keys[skuSort.k]]; }
+    if (va == null) va = -1; if (vb == null) vb = -1;
+    if (typeof va === 'string') return skuSort.dir * va.localeCompare(vb);
+    return skuSort.dir * (va - vb);
+  });
+  rows2.forEach(p => {
+    const share = p[3] > 0 ? p[6] / p[3] : 0;
+    const disc = p[3] > 0 ? 1 - p[4] / p[3] : 0;
+    const sharePill = share >= 0.25 ? 'good' : share <= 0.15 ? 'crit' : 'mute';
+    const discPill = disc >= 0.12 ? 'crit' : disc >= 0.06 ? 'warn' : 'mute';
+    const inv = p[8] === null ? '<span class="pill warn">untracked</span>' : p[8] === 0 ? '<span class="pill crit">0</span>' : fmt(p[8]);
+    tb.appendChild(el('tr', '',
+      '<td class="name"><span class="dot" style="background:' + p[9] + ';margin-right:7px;vertical-align:middle"></span>' + esc(p[0]) + '</td>' +
+      '<td>' + p[1] + '</td>' +
+      '<td class="num">' + fmt(p[2]) + '</td>' +
+      '<td class="num">' + fmt(p[3]) + '</td>' +
+      '<td class="num">' + fmt(p[5]) + '</td>' +
+      '<td class="num">' + fmt(p[6]) + '</td>' +
+      '<td class="num"><span class="pill ' + sharePill + '">' + pc(share, 0) + '</span></td>' +
+      '<td class="num"><span class="pill ' + discPill + '">' + pc(disc, 1) + '</span></td>' +
+      '<td class="num">' + inv + '</td>' +
+      '<td class="wrap">' + esc(p[10]) + '</td>'));
+  });
+  document.querySelectorAll('#tbl-sku th.sortable').forEach(th => {
+    th.setAttribute('aria-sort', th.dataset.k === skuSort.k ? (skuSort.dir === -1 ? 'descending' : 'ascending') : 'none');
+  });
+}
+(function () {
+  document.querySelectorAll('#tbl-sku th.sortable').forEach(th => {
+    th.tabIndex = 0;
+    const go = () => { if (skuSort.k === th.dataset.k) skuSort.dir *= -1; else { skuSort.k = th.dataset.k; skuSort.dir = -1; } renderSku(); };
+    th.addEventListener('click', go);
+    th.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+  });
+  const cats = ['All'].concat(Array.from(new Set(PRODUCTS.map(p => p[1]))));
+  const box = $('#cat-chips');
+  cats.forEach(c => {
+    const b = el('button', 'chip', c); b.type = 'button';
+    b.setAttribute('aria-pressed', c === 'All');
+    b.addEventListener('click', () => {
+      skuCat = c;
+      box.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x.textContent === c));
+      renderSku();
+    });
+    box.appendChild(b);
+  });
+  renderSku();
+})();
+
+/* ═══════════════════ BRAND TABLE ═══════════════════ */
+let bSort = {k: 'brand', dir: 1}, bTier = 'All';
+function renderBrands() {
+  const tb = $('#tbl-brands tbody'); tb.innerHTML = '';
+  const keys = {brand: 0, house: 1, tier: 2, anchor: 3, eg: 6};
+  let r = BRANDS.filter(b => bTier === 'All' || b[2] === bTier || b[6] === bTier).slice();
+  r.sort((a, b) => bSort.dir * String(a[keys[bSort.k]]).localeCompare(String(b[keys[bSort.k]])));
+  r.forEach(b => tb.appendChild(el('tr', '',
+    '<td class="name">' + b[0] + '</td><td>' + b[1] + '</td><td><span class="pill mute">' + b[2] + '</span></td>' +
+    '<td>' + b[3] + '</td><td class="wrap">' + b[4] + '</td><td class="wrap" style="color:var(--ink)">' + b[5] + '</td>' +
+    '<td><span class="pill ' + (b[6] === 'Parallel' ? 'warn' : 'mute') + '">' + b[6] + '</span></td>')));
+  document.querySelectorAll('#tbl-brands th.sortable').forEach(th => {
+    th.setAttribute('aria-sort', th.dataset.k === bSort.k ? (bSort.dir === -1 ? 'descending' : 'ascending') : 'none');
+  });
+}
+(function () {
+  document.querySelectorAll('#tbl-brands th.sortable').forEach(th => {
+    th.tabIndex = 0;
+    const go = () => { if (bSort.k === th.dataset.k) bSort.dir *= -1; else { bSort.k = th.dataset.k; bSort.dir = 1; } renderBrands(); };
+    th.addEventListener('click', go);
+    th.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+  });
+  const box = $('#brand-chips');
+  ['All', 'Ultra-luxury', 'Luxury', 'Prestige', 'Masstige', 'Parallel'].forEach(t => {
+    const b = el('button', 'chip', t); b.type = 'button';
+    b.setAttribute('aria-pressed', t === 'All');
+    b.addEventListener('click', () => {
+      bTier = t; box.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x.textContent === t)); renderBrands();
+    });
+    box.appendChild(b);
+  });
+  renderBrands();
+})();
+
+/* ═══════════════════ TREND RADAR ═══════════════════ */
+const VERDICT = {act: ['Act now', 'crit'], build: ['Build toward', 'warn'], watch: ['Watch', 'mute'], decline: ['Not yours', 'good']};
+let tFilter = 'all';
+function renderTrends() {
+  const g = $('#trend-grid'); g.innerHTML = '';
+  TRENDS.filter(t => tFilter === 'all' || t[0] === tFilter).forEach(t => {
+    g.appendChild(el('div', 'panel',
+      '<span class="pill ' + VERDICT[t[0]][1] + '">' + VERDICT[t[0]][0] + '</span>' +
+      '<h4 style="font-size:15px;margin:11px 0 7px">' + t[1] + '</h4>' +
+      '<p style="font-size:13.5px;color:var(--ink-2)">' + t[2] + '</p>' +
+      '<p style="font-size:13.5px;margin-top:10px;padding-top:10px;border-top:1px dotted var(--line-strong)"><span class="eyebrow" style="display:block;margin-bottom:4px">What you do</span>' + t[3] + '</p>'));
+  });
+}
+(function () {
+  const box = $('#trend-chips');
+  [['all', 'Everything'], ['act', 'Act now'], ['build', 'Build toward'], ['watch', 'Watch'], ['decline', 'Not yours']].forEach(f => {
+    const b = el('button', 'chip', f[1]); b.type = 'button';
+    b.setAttribute('aria-pressed', f[0] === 'all');
+    b.addEventListener('click', () => {
+      tFilter = f[0]; box.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); renderTrends();
+    });
+    box.appendChild(b);
+  });
+  renderTrends();
+})();
+
+/* ═══════════════════ PLAYS ═══════════════════ */
+(function () {
+  const c = $('#plays');
+  PLAYS.forEach((p, i) => {
+    c.appendChild(el('div', 'play',
+      '<div class="hd"><div class="rank">' + String(i + 1).padStart(2, '0') + '</div><div><h4>' + p[0] + '</h4><div class="sub">' + p[1] + '</div></div></div>' +
+      '<div class="bd"><div><span class="lbl">The move</span>' + p[2] + '</div><div><span class="lbl">Why it works here</span><span style="color:var(--ink-2)">' + p[3] + '</span></div></div>' +
+      '<div class="ft"><div>Cost <b>' + p[4] + '</b></div><div>Effort <b>' + p[5] + '</b></div><div>Time to ship <b>' + p[6] + '</b></div>' +
+      '<div style="margin-left:auto">Modelled impact <b style="color:var(--good)">+EGP ' + fmt(p[7]) + '/yr</b></div></div>'));
+  });
+  const tot = PLAYS.reduce((a, p) => a + p[7], 0);
+  const n = document.getElementById('plays-total');
+  if (n) n.textContent = 'EGP ' + (tot / 1e6).toFixed(1) + 'm';
+})();
+
+/* ═══════════════════ 90-DAY BOARD ═══════════════════ */
+(function () {
+  const c = $('#board');
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem('af90') || '{}') || {}; } catch (e) { saved = {}; }
+  BOARD.forEach((col, ci) => {
+    const p = el('div', 'panel');
+    p.appendChild(el('div', 'eyebrow', col[0]));
+    const list = el('div', '', '');
+    list.style.marginTop = '10px';
+    col[1].forEach((t, ti) => {
+      const id = 'af' + ci + '-' + ti;
+      const row = el('label', 'task');
+      row.innerHTML = '<input type="checkbox"><div><div class="tt">' + t[0] + '</div><div class="tm">' + t[1] + '</div></div>';
+      const cb = row.querySelector('input');
+      cb.checked = !!saved[id];
+      row.classList.toggle('done', cb.checked);
+      cb.addEventListener('change', () => {
+        row.classList.toggle('done', cb.checked);
+        saved[id] = cb.checked;
+        try { localStorage.setItem('af90', JSON.stringify(saved)); } catch (e) {}
+      });
+      list.appendChild(row);
+    });
+    p.appendChild(list);
+    c.appendChild(p);
+  });
+})();
+
+/* ═══════════════════ UNIT ECONOMICS LAB ═══════════════════ */
+const UE_DEF = {aov:1658, cogs:28, pack:35, courier:95, ship:80, cod:85, codFee:1.5, gwFee:2.75, rto:22, recov:70, leak:6.6, cac:250, orders:223, fixed:60000};
+const UE_SPEC = [
+  ["aov","Average order (product value)","EGP",500,4000,10],
+  ["cogs","Cost of goods","% of order",10,60,1],
+  ["pack","Packaging + insert","EGP / order",0,150,5],
+  ["courier","Courier cost you pay","EGP / parcel",40,220,5],
+  ["ship","Shipping you charge","EGP / order",0,250,5],
+  ["cod","Cash-on-delivery share","% of orders",0,100,1],
+  ["codFee","COD collection fee","% of value",0,5,0.1],
+  ["gwFee","Card gateway fee","% + EGP 3",0,5,0.05],
+  ["rto","Return-to-origin on COD","% of COD orders",0,45,1],
+  ["recov","Refused goods you can resell","%",0,100,5],
+  ["leak","Discounts + returns leakage","% of gross",0,25,0.1],
+  ["cac","Acquisition cost","EGP / order",0,1200,10],
+  ["orders","Orders per month","orders",20,1500,1],
+  ["fixed","Fixed monthly costs","EGP",0,400000,5000]
+];
+let UE = Object.assign({}, UE_DEF);
+
+function ueCalc(u) {
+  const N = u.orders;
+  const codN = N * u.cod / 100;
+  const failed = codN * u.rto / 100;
+  const delivered = N - failed;
+  const delCod = codN - failed, delPre = N - codN;
+  const revD = u.aov * (1 - u.leak / 100) + u.ship;
+  const cogsU = u.aov * u.cogs / 100;
+  const feeCod = revD * u.codFee / 100;
+  const feePre = revD * u.gwFee / 100 + 3;
+  const varCod = cogsU + u.pack + u.courier + feeCod;
+  const varPre = cogsU + u.pack + u.courier + feePre;
+  const failCost = u.courier * 2 + u.pack + cogsU * (1 - u.recov / 100);
+  const revenue = delivered * revD;
+  const variable = delCod * varCod + delPre * varPre;
+  const rtoCost = failed * failCost;
+  const cacCost = N * u.cac;
+  const contribution = revenue - variable - rtoCost - cacCost;
+  const profit = contribution - u.fixed;
+  const perDel = delivered > 0 ? contribution / delivered : 0;
+  const grossPerDel = delivered > 0 ? (revenue - variable) / delivered : 0;
+  const avgFee = delivered > 0 ? (delCod * feeCod + delPre * feePre) / delivered : 0;
+  const contribBeforeFixed = delivered > 0 ? contribution / delivered : 0;
+  const breakEven = contribBeforeFixed > 0 ? u.fixed / contribBeforeFixed : Infinity;
+  return {N, failed, delivered, revD, cogsU, avgFee, revenue, variable, rtoCost, cacCost, contribution, profit,
+    perDel, grossPerDel, margin: revD > 0 ? perDel / revD : 0, breakEven, rtoPer: delivered > 0 ? rtoCost / delivered : 0,
+    cacPer: delivered > 0 ? cacCost / delivered : 0};
+}
+
+function ueRender() {
+  const r = ueCalc(UE);
+  const sign = v => (v < 0 ? '−' : '') + fmt(Math.abs(v));
+  rows('#ue-rows', [
+    ["Revenue collected", fmt(r.revD)],
+    ["Cost of goods", '−' + fmt(r.cogsU)],
+    ["Packaging + insert", '−' + fmt(UE.pack)],
+    ["Courier", '−' + fmt(UE.courier)],
+    ["Payment / COD fee", '−' + fmt(r.avgFee)],
+    ["<b>Gross contribution</b>", '<b>' + sign(r.grossPerDel) + '</b>'],
+    ["Failed COD parcels, spread", '−' + fmt(r.rtoPer)],
+    ["Acquisition cost, spread", '−' + fmt(r.cacPer)],
+    ["<b>Net contribution per order</b>", '<b style="color:' + (r.perDel >= 0 ? 'var(--good)' : 'var(--crit)') + '">' + sign(r.perDel) + '</b>'],
+    ["Contribution margin", pc(r.margin, 1)]
+  ]);
+  const ok = r.profit >= 0;
+  $('#ue-summary').innerHTML =
+    '<div class="tiles">' +
+    '<div class="tile"><div class="k">Monthly contribution</div><div class="v">' + (r.contribution < 0 ? '−' : '') + k(Math.abs(r.contribution)) + '<span class="u">EGP</span></div><div class="d">' + fmt(r.delivered) + ' of ' + fmt(r.N) + ' orders delivered</div></div>' +
+    '<div class="tile"><div class="k">Monthly profit</div><div class="v" style="color:' + (ok ? 'var(--good)' : 'var(--crit)') + '">' + (r.profit < 0 ? '−' : '') + k(Math.abs(r.profit)) + '<span class="u">EGP</span></div><div class="d ' + (ok ? 'up' : 'dn') + '">after EGP ' + fmt(UE.fixed) + ' fixed costs</div></div>' +
+    '<div class="tile"><div class="k">Break-even</div><div class="v">' + (isFinite(r.breakEven) ? fmt(r.breakEven) : '∞') + '<span class="u">orders/mo</span></div><div class="d">' + (isFinite(r.breakEven) ? (r.N >= r.breakEven ? 'You are above it' : 'You are ' + fmt(r.breakEven - r.N) + ' short') : 'Negative contribution — never') + '</div></div>' +
+    '<div class="tile"><div class="k">Annualised</div><div class="v">' + (r.profit < 0 ? '−' : '') + k(Math.abs(r.profit * 12)) + '<span class="u">EGP</span></div><div class="d">at this month’s rate</div></div>' +
+    '</div>';
+  ueChart(r);
+}
+
+function ueChart(r) {
+  const id = '#chart-ue', w = W(id, 280);
+  const steps = [
+    ["Revenue collected", r.revD, '--s4', 1],
+    ["Cost of goods", -r.cogsU, '--s1', 0],
+    ["Packaging", -UE.pack, '--s1', 0],
+    ["Courier", -UE.courier, '--s1', 0],
+    ["Payment fee", -r.avgFee, '--s1', 0],
+    ["Failed COD", -r.rtoPer, '--s2', 0],
+    ["Acquisition", -r.cacPer, '--s5', 0],
+    ["Left over", r.perDel, r.perDel >= 0 ? '--good' : '--crit', 1]
+  ];
+  const max = Math.max(r.revD, 1);
+  const rowH = 30, h = steps.length * rowH + 12, labelW = Math.min(132, w * 0.36);
+  const barMax = w - labelW - 74;
+  const s = svg(w, h);
+  s.setAttribute('aria-label', 'Waterfall of costs against an average order.');
+  let run = r.revD;
+  steps.forEach((st, i) => {
+    const y = i * rowH + 6;
+    let x0px, bwpx;
+    if (st[3] === 1) {
+      x0px = 0;
+      bwpx = Math.max(0, st[1]) / max * barMax;
+    } else {
+      const c = Math.abs(st[1]);
+      const from = run, to = run - c;
+      run = to;
+      x0px = Math.max(0, to) / max * barMax;
+      bwpx = (Math.max(0, from) - Math.max(0, to)) / max * barMax;
+    }
+    const g = nd('g', {}); g.style.cursor = 'crosshair';
+    g.appendChild(nd('text', {x: 0, y: y + 15, class: 'val-l', 'font-size': 11.5}, st[0]));
+    g.appendChild(nd('rect', {x: (labelW + x0px).toFixed(1), y: y + 4, width: Math.max(1.5, bwpx).toFixed(1), height: 14, style: 'fill:var(' + st[2] + ')', rx: 2}));
+    g.appendChild(nd('text', {x: w, y: y + 15, class: 'val-l', 'font-size': 11, 'text-anchor': 'end'}, (st[1] < 0 ? '−' : '') + fmt(Math.abs(st[1]))));
+    bindTip(g, '<b>' + st[0] + '</b><br>EGP ' + (st[1] < 0 ? '−' : '') + fmt(Math.abs(st[1])) + ' per delivered order');
+    s.appendChild(g);
+  });
+  mount(id, s);
+}
+
+(function ueInit() {
+  const box = $('#ue-controls');
+  UE_SPEC.forEach(sp => {
+    const d = el('div', 'ctl');
+    d.innerHTML = '<label for="ue-' + sp[0] + '"><span>' + sp[1] + '</span><b id="uev-' + sp[0] + '"></b></label>' +
+      '<input id="ue-' + sp[0] + '" type="range" min="' + sp[3] + '" max="' + sp[4] + '" step="' + sp[5] + '" value="' + UE[sp[0]] + '">' +
+      '<span style="font-size:10px;color:var(--ink-3);font-family:\'IBM Plex Mono\',monospace">' + sp[2] + '</span>';
+    box.appendChild(d);
+    const inp = d.querySelector('input');
+    const out = d.querySelector('b');
+    const sync = () => { out.textContent = sp[5] < 1 ? Number(UE[sp[0]]).toFixed(2).replace(/\.?0+$/, '') : fmt(UE[sp[0]]); };
+    inp.addEventListener('input', () => { UE[sp[0]] = parseFloat(inp.value); sync(); ueRender(); });
+    d._sync = () => { inp.value = UE[sp[0]]; sync(); };
+    d._sync();
+  });
+  $('#ue-reset').addEventListener('click', () => {
+    UE = Object.assign({}, UE_DEF);
+    Array.from(box.children).forEach(c => c._sync && c._sync());
+    ueRender();
+  });
+  ueRender();
+})();
+
+/* ═══════════════════ SCENARIO MODEL ═══════════════════ */
+const SC_DEF = {traffic: 40, cvr: 2.8, aov: 1850, floor: 40};
+const SC_SPEC = [
+  ["traffic", "Traffic growth", "% more sessions than last year", 0, 200, 5, v => '+' + v + '%'],
+  ["cvr", "Conversion rate", "% of sessions that buy · you are at 2.03%, beauty median 3.2%", 2.03, 5, 0.01, v => v.toFixed(2) + '%'],
+  ["aov", "Average order value", "EGP · you are at 1,658", 1658, 3200, 10, v => 'EGP ' + fmt(v)],
+  ["floor", "Trough floor", "% of peak month that the quietest month must hit", 0, 70, 5, v => v + '%']
+];
+let SC = Object.assign({}, SC_DEF);
+const FUTURE = ["Sep 26","Oct 26","Nov 26","Dec 26","Jan 27","Feb 27","Mar 27","Apr 27","May 27","Jun 27","Jul 27","Aug 27"];
+
+function scCalc() {
+  const base = MONTHS.map(m => m[2]);
+  const mult = (1 + SC.traffic / 100) * (SC.cvr / 2.03) * (SC.aov / 1658);
+  let plan = base.map(v => v * mult);
+  const peak = Math.max.apply(null, plan);
+  plan = plan.map(v => Math.max(v, peak * SC.floor / 100));
+  return {base, plan, mult, baseTot: base.reduce((a, b) => a + b, 0), planTot: plan.reduce((a, b) => a + b, 0)};
+}
+
+function scChart() {
+  const r = scCalc();
+  const id = '#chart-scenario', w = W(id, 300), padL = 50, padR = 10, padT = 16, padB = 28, h = 250;
+  const iw = w - padL - padR, ih = h - padT - padB;
+  const max = niceMax(Math.max(Math.max.apply(null, r.plan), Math.max.apply(null, r.base)) * 1.02);
+  const s = svg(w, h);
+  s.setAttribute('aria-label', 'Twelve month projection: plan versus baseline gross sales.');
+  for (let i = 0; i <= 4; i++) {
+    const y = padT + ih - ih * i / 4;
+    s.appendChild(nd('line', {x1: padL, x2: w - padR, y1: y.toFixed(1), y2: y.toFixed(1), class: 'grid-l'}));
+    s.appendChild(nd('text', {x: padL - 7, y: (y + 3.5).toFixed(1), class: 'axis-l', 'text-anchor': 'end'}, k(max * i / 4)));
+  }
+  const X = i => padL + (iw / (FUTURE.length - 1)) * i;
+  const Y = v => padT + ih - (v / max) * ih;
+  const line = (arr, color, dash) => {
+    const d = arr.map((v, i) => (i ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(v).toFixed(1)).join(' ');
+    s.appendChild(nd('path', {d: d, fill: 'none', style: 'stroke:var(' + color + ')', 'stroke-width': 2, 'stroke-linejoin': 'round', 'stroke-dasharray': dash || 'none'}));
+  };
+  line(r.base, '--s3', '5 4');
+  line(r.plan, '--s1');
+  r.plan.forEach((v, i) => {
+    const g = nd('g', {}); g.style.cursor = 'crosshair';
+    g.appendChild(nd('circle', {cx: X(i).toFixed(1), cy: Y(v).toFixed(1), r: 4, style: 'fill:var(--s1);stroke:var(--raised)', 'stroke-width': 2}));
+    g.appendChild(nd('rect', {x: (X(i) - iw / 24).toFixed(1), y: padT, width: (iw / 12).toFixed(1), height: ih, fill: 'transparent'}));
+    bindTip(g, '<b>' + FUTURE[i] + '</b><br>Plan ' + egpS(v) + '<br>Baseline ' + egpS(r.base[i]) + '<br>' + (v / r.base[i]).toFixed(2) + '× the same month last year');
+    s.appendChild(g);
+    if (w > 470 || i % 2 === 0) s.appendChild(nd('text', {x: X(i).toFixed(1), y: h - 8, class: 'axis-l', 'text-anchor': 'middle', 'font-size': w > 470 ? 9.5 : 8.5}, FUTURE[i].split(' ')[0]));
+  });
+  mount(id, s);
+  $('#sc-out').innerHTML =
+    '<div class="tile"><div class="k">Plan · annual gross</div><div class="v">' + k(r.planTot) + '<span class="u">EGP</span></div><div class="d up">' + (r.planTot / r.baseTot).toFixed(2) + '× last twelve months</div></div>' +
+    '<div class="tile"><div class="k">Baseline</div><div class="v">' + k(r.baseTot) + '<span class="u">EGP</span></div><div class="d">your actual last twelve months</div></div>' +
+    '<div class="tile"><div class="k">Implied orders</div><div class="v">' + fmt(r.planTot / SC.aov) + '</div><div class="d">' + fmt(r.planTot / SC.aov / 365) + ' a day</div></div>' +
+    '<div class="tile"><div class="k">Quietest month</div><div class="v">' + k(Math.min.apply(null, r.plan)) + '<span class="u">EGP</span></div><div class="d">against EGP 81,405 in April 2026</div></div>';
+}
+
+(function scInit() {
+  const box = $('#sc-controls');
+  SC_SPEC.forEach(sp => {
+    const d = el('div', 'ctl');
+    d.innerHTML = '<label for="sc-' + sp[0] + '"><span>' + sp[1] + '</span><b></b></label>' +
+      '<input id="sc-' + sp[0] + '" type="range" min="' + sp[3] + '" max="' + sp[4] + '" step="' + sp[5] + '" value="' + SC[sp[0]] + '">' +
+      '<span style="font-size:10px;color:var(--ink-3);font-family:\'IBM Plex Mono\',monospace">' + sp[2] + '</span>';
+    box.appendChild(d);
+    const inp = d.querySelector('input'), out = d.querySelector('b');
+    const sync = () => { out.textContent = sp[6](SC[sp[0]]); };
+    inp.addEventListener('input', () => { SC[sp[0]] = parseFloat(inp.value); sync(); scChart(); });
+    sync();
+  });
+  scChart();
+})();
+
+/* ═══════════════════ RENDER + RESIZE ═══════════════════ */
+function renderAll() {
+  shadeCard();
+  monthlyBars('#chart-rev', 2, 'Gross sales', '--accent', v => k(v));
+  monthlyBars('#chart-ord', 1, 'Orders', '--s3', v => fmt(v));
+  funnel();
+  hbars('#chart-traffic', TRAFFIC.map(t => [t[0], t[2], '<b>' + t[0] + '</b><br>' + fmt(t[2]) + ' sessions<br>' + pc(t[2] / 80133, 1) + ' of traffic',
+    t[1] === 'social' ? cssv('--s1') : t[1] === 'direct' ? cssv('--s3') : t[1] === 'search' ? cssv('--s4') : t[1] === 'paid' ? cssv('--s2') : cssv('--ink-3')]),
+    {labelW: 168, rowH: 25, fmtV: v => fmt(v), aria: 'Sessions by traffic source.'});
+  hbars('#chart-geo', REGIONS.slice().sort((a, b) => b[1] - a[1]).slice(0, 14).map(r => [r[0], r[1],
+    '<b>' + esc(r[0]) + '</b><br>' + egpS(r[1]) + '<br>' + r[2] + ' orders · AOV ' + fmt(r[1] / r[2])]),
+    {labelW: 150, rowH: 25, color: '--accent', fmtV: v => k(v), aria: 'Gross sales by governorate.'});
+  mixChart();
+  dutyChart();
+  ueChart(ueCalc(UE));
+  scChart();
+}
+renderAll();
+let rt;
+addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(renderAll, 160); });
+try {
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', renderAll);
+  new MutationObserver(renderAll).observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
+} catch (e) {}
+})();
+</script>
