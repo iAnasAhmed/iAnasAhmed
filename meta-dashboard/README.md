@@ -5,11 +5,14 @@ A live dashboard and media-buying mentor for the **ayatfahiemcosmetics** Meta ad
 you what changed and what happened next, segments your audiences into a working hierarchy,
 and builds the campaign plan off your own numbers rather than generic benchmarks.
 
-Built on a small, standard Node stack: Express, better-sqlite3, dotenv on the backend; Chart.js
-on the frontend, loaded from a local file rather than a CDN.
+Built on a small, standard Node stack: Express and dotenv on the backend, SQLite for storage;
+Chart.js on the frontend, loaded from a local file rather than a CDN.
+
+**Needs Node 22 LTS or newer** — check with `node -v`, and get it from
+[nodejs.org](https://nodejs.org) if you are behind. Nothing else has to be installed.
 
 ```bash
-npm install                # pulls the four dependencies, copies Chart.js into public/vendor/
+npm install                # pulls the dependencies, copies Chart.js into public/vendor/
 cp .env.example .env       # add your Meta token
 npm start                  # → http://localhost:4300
 ```
@@ -95,7 +98,8 @@ src/
   server.js        Express app — routes, static files, SSE push
   config.js        dotenv-backed config, derived economics
   meta.js          Graph API client — retry, backoff, pagination, action normalisation
-  store.js         better-sqlite3 schema and queries
+  db.js            picks the SQLite engine, normalises bindings, adds transactions
+  store.js         schema and queries
   sync.js          live pull, change detection, seed loader
   api.js           builds one shared context; the six endpoint payloads
   cli.js           `doctor` and `sync` from the terminal
@@ -110,9 +114,9 @@ data/seed.json     baseline history captured from the live account
 ```
 
 **Dependencies, and why each one.** `express` for routing and static files instead of hand-rolled
-`node:http` plumbing. `better-sqlite3` for storage — a synchronous, battle-tested native module
-(Node's own experimental `node:sqlite` was modelled on its API, so the swap was mechanical).
-`dotenv` for `.env` loading. `chart.js` for the line, bar and bubble/scatter charts. Two chart
+`node:http` plumbing. `dotenv` for `.env` loading. `chart.js` for the line, bar and bubble/scatter
+charts. Storage is SQLite, and `src/db.js` picks the engine at boot: `better-sqlite3` when it
+installed, and Node's own built-in `node:sqlite` when it did not. Two chart
 types stay hand-rolled SVG on purpose: the delivery calendar and the inline tile sparklines have
 no clean native Chart.js fit, and forcing them through a chart library would cost more code and
 risk than the SVG they replace.
@@ -178,8 +182,13 @@ top bar on narrow screens, and respects `prefers-reduced-motion`.
 - `?live=0` on the URL disables the push stream — useful for headless screenshots.
 - The second account (`660617751508124`, EGP 33,772, no recorded purchases) is tracked in
   `META_EXTRA_AD_ACCOUNTS` but the dashboard focuses on the primary one.
-- **better-sqlite3 is a native module.** `npm install` fetches a prebuilt binary for common
-  platforms automatically; on an unusual platform/Node combination it falls back to compiling
-  from source, which needs a C++ toolchain (Xcode Command Line Tools on macOS, `build-essential`
-  on Debian/Ubuntu, the "Desktop development with C++" workload on Windows). This is the one step
-  in `npm install` that can fail on a machine with no compiler and no matching prebuilt binary.
+- **You never need a compiler.** `better-sqlite3` is a native module and is listed as an
+  *optional* dependency: npm tries a prebuilt binary, and if there is none for your
+  platform/Node pairing it would have to build from source, which needs Python and a C++
+  toolchain. When that happens npm skips it and the install still succeeds — the dashboard falls
+  back to `node:sqlite`, which ships inside Node itself. The startup banner prints which engine
+  is in use. Both speak the same synchronous API, and `src/db.js` smooths over the two
+  differences that matter: `node:sqlite` has no `db.transaction()` helper, and neither driver
+  will bind `undefined` or a boolean, so those are normalised to NULL and 0/1 for both.
+- **Node 22 or newer is required**, because `node:sqlite` does not exist before it. On an older
+  Node the dashboard says so in one line instead of failing deep inside a build log.

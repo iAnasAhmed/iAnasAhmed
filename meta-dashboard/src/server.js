@@ -120,6 +120,7 @@ const banner = () => {
   console.log(`  Ad account  ${config.accountId}`);
   console.log(`  Mode        ${hasToken() ? `LIVE (Graph ${config.apiVersion}, sync every ${config.syncIntervalMinutes} min)` : 'SEEDED BASELINE — add META_ACCESS_TOKEN to .env to go live'}`);
   console.log(`  History     ${bounds.first || 'none'} → ${bounds.last || 'none'} (${bounds.days} days)`);
+  console.log(`  Storage     ${store.engine}`);
   console.log('');
 };
 

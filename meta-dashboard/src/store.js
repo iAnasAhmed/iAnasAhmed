@@ -1,14 +1,11 @@
-import fs from 'node:fs';
-import Database from 'better-sqlite3';
 import { config } from './config.js';
 import { WINNER_DAYS } from './adlibrary.js';
+import { db, engine } from './db.js';
 
-fs.mkdirSync(config.dataDir, { recursive: true });
-
-// better-sqlite3's synchronous prepare/run/get/all API is what Node's own
-// experimental node:sqlite module modelled itself on, so this is a drop-in
-// swap - every prepared statement and query below is unchanged.
-export const db = new Database(config.dbPath);
+// Storage is better-sqlite3 where it installed, and Node's built-in
+// node:sqlite where it did not. Both speak the same synchronous
+// prepare/run/get/all API, so every statement below is written once.
+export { db, engine };
 
 db.exec(`
 PRAGMA journal_mode = WAL;
@@ -224,9 +221,8 @@ ON CONFLICT(account_id,date,level,entity_id) DO UPDATE SET
   leads=excluded.leads, video_views=excluded.video_views, source=excluded.source
 `);
 
-// better-sqlite3's own transaction wrapper: it begins, commits, and rolls back
-// on a thrown error automatically, and is the idiomatic replacement for the
-// hand-rolled BEGIN/COMMIT/ROLLBACK statements this used to run by hand.
+// db.transaction() begins, commits, and rolls back on a thrown error by
+// itself, so a partial day never lands in the fact table.
 const upsertDailyTx = db.transaction((accountId, level, rows, source) => {
   for (const r of rows) {
     const entityId = level === 'account' ? accountId
@@ -401,8 +397,8 @@ export const getRecentSyncs = (limit = 20) =>
 export const isEmpty = (accountId) =>
   db.prepare('SELECT COUNT(*) AS c FROM daily WHERE account_id=?').get(accountId).c === 0;
 
-// better-sqlite3 recommends an explicit close so the WAL file checkpoints
-// cleanly on shutdown rather than relying on process exit.
+// An explicit close checkpoints the WAL file cleanly on shutdown rather than
+// leaving it to process exit.
 export const closeDb = () => db.close();
 
 // --- Ad Library research ----------------------------------------------------
