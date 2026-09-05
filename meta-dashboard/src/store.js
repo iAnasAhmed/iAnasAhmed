@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import Database from 'better-sqlite3';
 import { config } from './config.js';
+import { WINNER_DAYS } from './adlibrary.js';
 
 fs.mkdirSync(config.dataDir, { recursive: true });
 
@@ -149,6 +150,40 @@ CREATE TABLE IF NOT EXISTS alerts (
   acknowledged INTEGER DEFAULT 0
 );
 CREATE INDEX IF NOT EXISTS idx_alerts_open ON alerts (account_id, resolved_at, severity);
+
+-- Competitor pages we follow in the Ad Library.
+CREATE TABLE IF NOT EXISTS watchlist (
+  page_id TEXT PRIMARY KEY,
+  page_name TEXT,
+  note TEXT,
+  added_at TEXT
+);
+
+-- Every Ad Library ad we have ever observed. Keeping our own first_seen and
+-- last_seen is the point: it lets the dashboard show how long an ad has run
+-- and notice when it disappears, which a browser extension reading one page of
+-- results can never do.
+CREATE TABLE IF NOT EXISTS library_ads (
+  ad_id TEXT PRIMARY KEY,
+  page_id TEXT,
+  page_name TEXT,
+  body TEXT,
+  link_title TEXT,
+  link_description TEXT,
+  creation_time INTEGER,
+  delivery_start INTEGER,
+  delivery_stop INTEGER,
+  days_running INTEGER,
+  still_active INTEGER DEFAULT 1,
+  snapshot_url TEXT,
+  currency TEXT,
+  platforms TEXT,
+  languages TEXT,
+  first_seen TEXT,
+  last_seen TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_library_page ON library_ads (page_id, delivery_start DESC);
+CREATE INDEX IF NOT EXISTS idx_library_days ON library_ads (days_running DESC);
 
 CREATE TABLE IF NOT EXISTS syncs (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -369,3 +404,62 @@ export const isEmpty = (accountId) =>
 // better-sqlite3 recommends an explicit close so the WAL file checkpoints
 // cleanly on shutdown rather than relying on process exit.
 export const closeDb = () => db.close();
+
+// --- Ad Library research ----------------------------------------------------
+const addWatchStmt = db.prepare(`
+INSERT INTO watchlist (page_id,page_name,note,added_at) VALUES (?,?,?,?)
+ON CONFLICT(page_id) DO UPDATE SET page_name=COALESCE(excluded.page_name, watchlist.page_name), note=excluded.note`);
+
+export const addWatchedPage = (pageId, pageName = null, note = null) =>
+  addWatchStmt.run(String(pageId), pageName, note, nowIso());
+
+export const removeWatchedPage = (pageId) =>
+  db.prepare('DELETE FROM watchlist WHERE page_id = ?').run(String(pageId));
+
+export const getWatchlist = () =>
+  db.prepare('SELECT * FROM watchlist ORDER BY page_name COLLATE NOCASE').all();
+
+const upsertLibraryAdStmt = db.prepare(`
+INSERT INTO library_ads (ad_id,page_id,page_name,body,link_title,link_description,creation_time,
+  delivery_start,delivery_stop,days_running,still_active,snapshot_url,currency,platforms,languages,first_seen,last_seen)
+VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+ON CONFLICT(ad_id) DO UPDATE SET
+  page_name=excluded.page_name, body=COALESCE(excluded.body, library_ads.body),
+  link_title=COALESCE(excluded.link_title, library_ads.link_title),
+  link_description=COALESCE(excluded.link_description, library_ads.link_description),
+  delivery_stop=excluded.delivery_stop, days_running=excluded.days_running,
+  still_active=excluded.still_active, snapshot_url=excluded.snapshot_url,
+  platforms=COALESCE(excluded.platforms, library_ads.platforms),
+  last_seen=excluded.last_seen`);
+
+const upsertLibraryAdsTx = db.transaction((ads, ts) => {
+  for (const a of ads) {
+    upsertLibraryAdStmt.run(
+      a.adId, a.pageId, a.pageName, a.body, a.linkTitle, a.linkDescription,
+      a.creationTime, a.deliveryStart, a.deliveryStop, a.daysRunning,
+      a.stillActive ? 1 : 0, a.snapshotUrl, a.currency, a.platforms, a.languages,
+      ts, ts,
+    );
+  }
+});
+
+export function upsertLibraryAds(ads) {
+  upsertLibraryAdsTx(ads, nowIso());
+}
+
+/** Ads we have on record, newest-running first, optionally only the winners. */
+export function getLibraryAds({ pageId = null, minDays = null, limit = 500 } = {}) {
+  let sql = 'SELECT * FROM library_ads WHERE 1=1';
+  const args = [];
+  if (pageId) { sql += ' AND page_id = ?'; args.push(String(pageId)); }
+  if (minDays != null) { sql += ' AND days_running >= ?'; args.push(minDays); }
+  sql += ' ORDER BY days_running DESC, delivery_start DESC LIMIT ?';
+  args.push(limit);
+  return db.prepare(sql).all(...args);
+}
+
+export const getLibraryStats = () =>
+  db.prepare(`SELECT COUNT(*) AS total,
+    SUM(CASE WHEN days_running >= ${WINNER_DAYS} THEN 1 ELSE 0 END) AS winners,
+    SUM(CASE WHEN still_active = 1 THEN 1 ELSE 0 END) AS active,
+    COUNT(DISTINCT page_id) AS pages FROM library_ads`).get();

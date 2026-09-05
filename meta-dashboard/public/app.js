@@ -1,7 +1,7 @@
 import { linePlot, barChart, calendarHeatmap, scatterPlot, sparkArea, palette, fmt, hideTip } from '/charts.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
-const state = { currency: 'EGP', view: 'pulse', days: 28, data: {}, status: null, checks: loadChecks() };
+const state = { currency: 'EGP', view: 'pulse', days: 28, data: {}, status: null, checks: loadChecks(), researchWinnersOnly: true };
 
 function loadChecks() {
   try { return JSON.parse(localStorage.getItem('af-plan-checks') || '{}'); } catch { return {}; }
@@ -587,6 +587,153 @@ function renderHistory(root, d) {
 }
 
 // ---------------------------------------------------------------------------
+// Research — Meta Ad Library
+// ---------------------------------------------------------------------------
+function renderResearch(root, d) {
+  const st = d.stats;
+  const ads = d.ads;
+  const winners = ads.filter((a) => a.days_running >= d.winnerDays);
+  const shown = state.researchWinnersOnly ? winners : ads;
+  const fmtDate = (ms) => (ms ? new Date(ms).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—');
+
+  root.innerHTML = `
+    <div class="tiles">
+      ${tile('Ads on record', String(st.total), `${st.active} still running`)}
+      ${tile(`Winners · ${d.winnerDays}d+`, String(st.winners), st.winners ? '<span class="up">proven, worth copying</span>' : '<span class="muted">none found yet</span>')}
+      ${tile('Pages tracked', String(st.watched), `${st.pages} with ads on record`)}
+      ${tile('Export', 'CSV', '<span class="muted">opens in Excel and Sheets</span>')}
+    </div>
+
+    <div class="card">
+      <header>
+        <h2>Who you're watching</h2>
+        <p class="sub">Add a competitor's Facebook page and the dashboard pulls every ad they are running, with how long each one has been live. Tracking pages beats keyword search — you see a brand's whole roster instead of only the newest ads across everyone.</p>
+      </header>
+      <div class="watchrow">
+        ${d.watchlist.map((w) => `
+          <span class="watchchip">
+            <span>${esc(w.page_name || 'Page')}</span>
+            <span class="pid">${esc(w.page_id)}</span>
+            <button data-unwatch="${esc(w.page_id)}" title="Stop tracking" aria-label="Stop tracking ${esc(w.page_name || w.page_id)}">×</button>
+          </span>`).join('')}
+        ${d.suggested.map((p) => `
+          <span class="watchchip add" data-watch="${esc(p.pageId)}" data-name="${esc(p.pageName)}" role="button" tabindex="0">
+            + ${esc(p.pageName)}
+          </span>`).join('')}
+      </div>
+      <div class="toolbar" style="margin-top:16px">
+        <input type="text" id="pageIdInput" placeholder="Or paste a Facebook page ID…">
+        <button class="btn" id="addPageBtn">Track page</button>
+        <button class="btn btn-primary" id="refreshResearchBtn">Fetch latest ads</button>
+      </div>
+      <p class="sub" style="margin-top:10px">Find a page ID in the Ad Library URL, or open any ad's snapshot link below and read it from there.</p>
+    </div>
+
+    <div class="card">
+      <header style="display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap">
+        <div style="flex:1;min-width:240px">
+          <h2>${state.researchWinnersOnly ? 'Winners' : 'All ads on record'}</h2>
+          <p class="sub">Sorted by how long each ad has been running. An ad still live after ${d.winnerDays} days has survived enough optimisation that the offer, hook and audience are all working.</p>
+        </div>
+        <div class="toolbar" style="margin:0">
+          <div class="segmented" role="group" aria-label="Filter">
+            <button data-winners="1" aria-pressed="${state.researchWinnersOnly}">Winners only</button>
+            <button data-winners="0" aria-pressed="${!state.researchWinnersOnly}">All ads</button>
+          </div>
+          <a class="btn" href="/api/research/export.csv${state.researchWinnersOnly ? `?minDays=${d.winnerDays}` : ''}">Export CSV</a>
+          ${shown.length ? '<button class="btn" id="copyLinksBtn">Copy all links</button>' : ''}
+        </div>
+      </header>
+
+      ${shown.length === 0 ? `
+        <p class="empty-state">
+          ${st.total === 0
+            ? 'Nothing pulled yet. Track a page above, then press <b>Fetch latest ads</b>.'
+            : `No ad has been running ${d.winnerDays} days or more yet. Switch to <b>All ads</b> to see everything on record.`}
+        </p>` : shown.map((a) => `
+        <div class="adcard ${a.days_running >= d.winnerDays ? 'is-winner' : ''}">
+          <div class="days">
+            <b>${a.days_running ?? '—'}</b>
+            <span>days</span>
+          </div>
+          <div style="min-width:0">
+            <div class="who">${esc(a.page_name || 'Unknown page')}</div>
+            <div class="copy">${esc(a.link_title || a.body || 'No ad text returned by the Ad Library')}</div>
+            <div class="meta">
+              ${a.days_running >= d.winnerDays ? '<span class="sev sev-good">winner</span>' : ''}
+              <span class="tag">${a.still_active ? 'running' : 'stopped'}</span>
+              <span class="tag">started ${fmtDate(a.delivery_start)}</span>
+              ${a.platforms ? `<span class="tag">${esc(a.platforms)}</span>` : ''}
+            </div>
+          </div>
+          <a class="btn go" href="${esc(a.snapshot_url)}" target="_blank" rel="noopener noreferrer">Open ad</a>
+        </div>`).join('')}
+    </div>
+
+    <div class="notice"><div>
+      <b>On downloading the creative.</b> ${esc(d.mediaNote)} Open an ad and save what you need from there — and treat what you find as reference for your own work, not artwork to reuse.
+    </div></div>
+  `;
+
+  // watchlist actions
+  root.querySelectorAll('[data-watch]').forEach((el) => {
+    const add = async () => {
+      el.textContent = 'Adding…';
+      await fetch(`/api/research/watch?pageId=${encodeURIComponent(el.dataset.watch)}&pageName=${encodeURIComponent(el.dataset.name)}`, { method: 'POST' });
+      await loadView('research', { force: true });
+    };
+    el.addEventListener('click', add);
+    el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); add(); } });
+  });
+  root.querySelectorAll('[data-unwatch]').forEach((el) => {
+    el.addEventListener('click', async () => {
+      await fetch(`/api/research/watch?pageId=${encodeURIComponent(el.dataset.unwatch)}`, { method: 'DELETE' });
+      await loadView('research', { force: true });
+    });
+  });
+
+  const addBtn = $('#addPageBtn', root);
+  const addInput = $('#pageIdInput', root);
+  const addPage = async () => {
+    const id = addInput.value.trim();
+    if (!id) return;
+    addBtn.disabled = true;
+    await fetch(`/api/research/watch?pageId=${encodeURIComponent(id)}`, { method: 'POST' });
+    await loadView('research', { force: true });
+  };
+  addBtn?.addEventListener('click', addPage);
+  addInput?.addEventListener('keydown', (e) => { if (e.key === 'Enter') addPage(); });
+
+  $('#refreshResearchBtn', root)?.addEventListener('click', async (e) => {
+    const btn = e.currentTarget;
+    btn.disabled = true; btn.textContent = 'Fetching…';
+    try {
+      const res = await fetch('/api/research/refresh', { method: 'POST' });
+      const out = await res.json();
+      if (out.errors?.length) console.warn('[research] some pages failed:', out.errors);
+      delete state.data.research;
+      await loadView('research', { force: true });
+    } finally { btn.disabled = false; }
+  });
+
+  root.querySelectorAll('[data-winners]').forEach((b) => {
+    b.addEventListener('click', () => {
+      state.researchWinnersOnly = b.dataset.winners === '1';
+      renderResearch(root, d);
+    });
+  });
+
+  $('#copyLinksBtn', root)?.addEventListener('click', async (e) => {
+    const links = shown.map((a) => a.snapshot_url).filter(Boolean).join('\n');
+    try {
+      await navigator.clipboard.writeText(links);
+      e.currentTarget.textContent = `Copied ${shown.length}`;
+      setTimeout(() => { e.currentTarget.textContent = 'Copy all links'; }, 1800);
+    } catch { e.currentTarget.textContent = 'Copy failed'; }
+  });
+}
+
+// ---------------------------------------------------------------------------
 // Shell
 // ---------------------------------------------------------------------------
 const VIEWS = {
@@ -614,6 +761,11 @@ const VIEWS = {
     title: 'Planner', ranged: false,
     sub: 'Your unit economics, where the budget belongs, and the next four weeks of work.',
     path: () => '/api/planner', render: renderPlanner,
+  },
+  research: {
+    title: 'Research', ranged: false,
+    sub: 'What your competitors are running, how long each ad has survived, and everything exportable to a spreadsheet.',
+    path: () => '/api/research', render: renderResearch,
   },
   history: {
     title: 'History', ranged: false,

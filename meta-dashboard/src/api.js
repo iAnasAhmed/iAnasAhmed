@@ -4,6 +4,7 @@ import { aggregate, windowRows, compareWindows, detectGaps, seriesWithRates, rol
 import { runMentor, scoreAccount, scoreVerdict, ruleCount } from './engine/mentor.js';
 import { buildAudienceModel, newCustomerPath } from './engine/audiences.js';
 import { deriveEconomics, allocateBudget, buildPlan, scenarios, forecast } from './engine/planner.js';
+import { searchLibrary, SUGGESTED_PAGES, WINNER_DAYS } from './adlibrary.js';
 
 const accountId = () => config.accountId;
 
@@ -294,5 +295,73 @@ export function history() {
       roas: Number(r.spend) ? Number(r.revenue) / Number(r.spend) : 0, source: r.source,
     })),
     lifetime: ctx.aggAll,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Ad Library research
+// ---------------------------------------------------------------------------
+
+/** What the Research tab renders: the watchlist, the ads on record, the winners. */
+export function research({ minDays = null, pageId = null } = {}) {
+  const watchlist = store.getWatchlist();
+  const ads = store.getLibraryAds({ pageId, minDays, limit: 500 });
+  const stats = store.getLibraryStats();
+  return {
+    winnerDays: WINNER_DAYS,
+    watchlist,
+    suggested: SUGGESTED_PAGES.filter((p) => !watchlist.some((w) => w.page_id === p.pageId)),
+    ads,
+    stats: {
+      total: stats?.total ?? 0,
+      winners: stats?.winners ?? 0,
+      active: stats?.active ?? 0,
+      pages: stats?.pages ?? 0,
+      watched: watchlist.length,
+    },
+    // Stated plainly in the payload so the UI never implies a capability the
+    // official Ad Library API does not have.
+    mediaNote: 'The Ad Library API returns ad text, dates and a link — never the image or video files. Bulk-downloading creative means scraping facebook.com, which breaks Meta\'s terms, so this opens each ad instead.',
+  };
+}
+
+/** Pull fresh ads for the whole watchlist (or one keyword search) and store them. */
+export async function refreshResearch({ searchTerms = null, pageIds = null, countries = ['EG'], activeStatus = 'ACTIVE' } = {}) {
+  const targets = pageIds?.length ? pageIds : store.getWatchlist().map((w) => w.page_id);
+  const collected = [];
+  const errors = [];
+
+  if (searchTerms) {
+    try {
+      const { ads } = await searchLibrary({ searchTerms, countries, activeStatus });
+      collected.push(...ads);
+    } catch (e) { errors.push({ scope: `search:${searchTerms}`, message: e.message }); }
+  }
+
+  // One request per page keeps each result set small enough that a page's whole
+  // active roster comes back, rather than only the newest ads across everyone.
+  for (const pageId of targets) {
+    try {
+      const { ads } = await searchLibrary({ pageIds: [pageId], countries, activeStatus });
+      collected.push(...ads);
+    } catch (e) { errors.push({ scope: `page:${pageId}`, message: e.message }); }
+  }
+
+  if (collected.length) {
+    store.upsertLibraryAds(collected);
+    // Learn page names from the results so a page added by id gets a real label.
+    for (const ad of collected) {
+      if (ad.pageId && ad.pageName && targets.includes(ad.pageId)) {
+        store.addWatchedPage(ad.pageId, ad.pageName, null);
+      }
+    }
+  }
+
+  return {
+    ok: errors.length === 0,
+    fetched: collected.length,
+    winners: collected.filter((a) => a.isWinner).length,
+    pagesQueried: targets.length,
+    errors,
   };
 }

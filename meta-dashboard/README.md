@@ -45,6 +45,7 @@ ships in `data/seed.json` and loads on first boot, so every tab has data from th
 | **Campaigns** | Every campaign and ad set against break-even and target, plus an efficiency map of spend versus return. |
 | **Audiences** | What you own, whether it can actually be used, and the ladder you should be running — with the build order for finding new customers. |
 | **Planner** | Your real unit economics, budget split across the funnel, four scenarios for the month, and a week-by-week plan. |
+| **Research** | What your competitors are running in the Meta Ad Library, how long each ad has survived, and a spreadsheet export of the lot. |
 | **History** | Month by month, every delivery gap, every change we detected, Meta's activity log, and when each finding opened and closed. |
 
 ---
@@ -103,6 +104,7 @@ src/
     mentor.js      19 diagnostic rules
     audiences.js   segmentation, the ladder, the new-customer path
     planner.js     unit economics, budget allocation, scenarios, the 4-week plan
+  adlibrary.js     Ad Library search, winner detection, CSV export
 public/            dashboard — vanilla JS modules; charts.js wraps Chart.js
 data/seed.json     baseline history captured from the live account
 ```
@@ -114,6 +116,25 @@ data/seed.json     baseline history captured from the live account
 types stay hand-rolled SVG on purpose: the delivery calendar and the inline tile sparklines have
 no clean native Chart.js fit, and forcing them through a chart library would cost more code and
 risk than the SVG they replace.
+
+**Competitor research.** The Research tab reads the public Meta Ad Library through the
+official `ads_archive` endpoint. You track competitors by their Facebook page, and the dashboard
+shows every ad they are running ranked by how long it has been live — an ad still running after
+30 days has survived enough optimisation that its offer, hook and audience are all working, which
+is the only signal the Ad Library gives you about what is performing. Everything exports to CSV,
+which Excel and Google Sheets both open natively (the file carries a UTF-8 BOM so Excel reads the
+Arabic correctly).
+
+Two deliberate limits. It tracks pages rather than only keywords, because a keyword search
+returns the newest ads across every advertiser while a page search returns one brand's whole
+active roster — which is what you actually need to spot a long-runner. And it does not download
+creative in bulk: `ads_archive` returns ad text, dates and a link, never the image or video files,
+and pulling those would mean scraping facebook.com, which breaks Meta's terms. Each ad opens in
+the Ad Library instead, and "Copy all links" gets you the whole set at once.
+
+Because the dashboard records every ad it has ever seen with its own first-seen and last-seen
+timestamps, it can tell you an ad has since stopped and how long it ultimately ran — something a
+browser extension reading one page of results cannot do.
 
 **History is the point.** Every sync writes daily facts per entity and diffs entity
 configuration against the previous sync, so budget changes, status flips and new objects land in
