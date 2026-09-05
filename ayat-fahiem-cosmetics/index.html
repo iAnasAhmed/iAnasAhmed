@@ -216,6 +216,9 @@ tbody tr:hover td { background: color-mix(in srgb, var(--accent) 4%, transparent
 td.num, th.num { text-align: right; font-family: 'IBM Plex Mono', monospace; }
 td.name { font-weight: 500; white-space: normal; min-width: 150px; }
 td.wrap { white-space: normal; min-width: 220px; color: var(--ink-2); }
+#tbl-sku th, #tbl-sku td { padding: 8px 10px; }
+#tbl-sku td.wrap { min-width: 150px; }
+#tbl-sku td.name { min-width: 132px; }
 th.sortable { cursor: pointer; user-select: none; }
 th.sortable:hover { color: var(--ink); }
 th.sortable[aria-sort="descending"]::after { content: " ↓"; color: var(--accent); }
@@ -237,7 +240,7 @@ th.sortable[aria-sort="ascending"]::after { content: " ↑"; color: var(--accent
 
 /* Split grids */
 .g2 { display: grid; gap: 22px; grid-template-columns: 1fr; }
-@media (min-width: 860px) { .g2 { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 860px) { .g2 { grid-template-columns: 1fr 1fr; align-items: start; } }
 .g3 { display: grid; gap: 14px; grid-template-columns: 1fr; }
 @media (min-width: 700px) { .g3 { grid-template-columns: repeat(3, 1fr); } }
 .g2u { display: grid; gap: 22px; grid-template-columns: 1fr; }
@@ -320,7 +323,7 @@ ul.bul li strong { color: var(--ink); font-weight: 600; }
   <p class="deck" style="margin-top:12px">This dossier is the whole picture: what your own data says, what the global prestige market is doing in 2026, what Egypt specifically will and won't pay for, and eleven costed plays to get from EGP&nbsp;2.8m to EGP&nbsp;12m without raising a round.</p>
 
   <div style="margin-top:30px">
-    <div class="panel-t"><h3>The line, sized by what it actually earns</h3><span class="note">Stripe width = share of trailing-12-month gross sales. Colour is an approximate rendering of each shade — it encodes nothing.</span></div>
+    <div class="panel-t"><h3>The line, sized by what it actually earns</h3><span class="note">Stripe width = each product's share of trailing-12-month gross sales across the live line. Colour is an approximate rendering of each shade — it encodes nothing.</span></div>
     <div id="shadecard"></div>
   </div>
 
@@ -424,11 +427,11 @@ ul.bul li strong { color: var(--ink); font-weight: 600; }
 <!-- ══════════════ 03 ══════════════ -->
 <section id="s03">
   <div class="sec-head"><span class="num">03</span><h2>Catalog X-ray</h2></div>
-  <p class="deck">Twenty-two live SKUs, fifteen archived ones, and a price architecture that contradicts itself. Sort any column.</p>
+  <p class="deck">Twenty-five live SKUs, three of them at zero stock, and a price architecture that contradicts itself. Sort any column.</p>
 
   <div class="stack">
     <div class="g3">
-      <div class="panel"><div class="eyebrow">Revenue concentration</div><div class="tile" style="padding:8px 0 0"><div class="v">55.8<span class="u">% top 5</span></div></div><p style="font-size:13px;color:var(--ink-2);margin-top:8px">Candy Rose alone is <b class="mono">23.5%</b> of the year. One blush shade going out of stock costs you a quarter of the business.</p></div>
+      <div class="panel"><div class="eyebrow">Revenue concentration</div><div class="tile" style="padding:8px 0 0"><div class="v">57.1<span class="u">% top 5</span></div></div><p style="font-size:13px;color:var(--ink-2);margin-top:8px">Candy Rose alone is <b class="mono">24.0%</b> of the live line. One blush shade going out of stock costs you a quarter of the business.</p></div>
       <div class="panel"><div class="eyebrow">Stock on hand</div><div class="tile" style="padding:8px 0 0"><div class="v">683<span class="u">units</span></div></div><p style="font-size:13px;color:var(--ink-2);margin-top:8px">≈ EGP 575k at retail, ≈ 1.8 months of cover at the last 30 days' rate. Lean. Three SKUs are at zero.</p></div>
       <div class="panel"><div class="eyebrow">Dead weight</div><div class="tile" style="padding:8px 0 0"><div class="v">125<span class="u">Travel Duos</span></div></div><p style="font-size:13px;color:var(--ink-2);margin-top:8px">18% of all your units sit in one EGP 400 SKU. It is your best acquisition tool and your worst margin — see section 10.</p></div>
     </div>
@@ -447,7 +450,7 @@ ul.bul li strong { color: var(--ink); font-weight: 600; }
             <th class="sortable num" data-k="ttm">TTM gross</th>
             <th class="sortable num" data-k="ttmO">Orders</th>
             <th class="sortable num" data-k="d90">90d gross</th>
-            <th class="sortable num" data-k="share90">90d share vs TTM</th>
+            <th class="sortable num" data-k="share90">90d share</th>
             <th class="sortable num" data-k="disc">Discount</th>
             <th class="sortable num" data-k="inv">Stock</th>
             <th>Read</th>
@@ -455,7 +458,7 @@ ul.bul li strong { color: var(--ink); font-weight: 600; }
           <tbody></tbody>
         </table>
       </div>
-      <p style="font-size:12.5px;color:var(--ink-3);margin-top:8px">"90d share vs TTM" is the last 90 days' revenue as a share of the full year's — above 25% means the shade is accelerating, below 15% means it is fading. Discount = 1 − (net ÷ gross), so it includes returns as well as codes.</p>
+      <p style="font-size:12.5px;color:var(--ink-3);margin-top:8px">"90d share" is the last 90 days' revenue as a share of that product's full year — above 25% means the shade is accelerating, below 15% means it is fading. Discount = 1 − (net ÷ gross), so it includes returns as well as codes. Figures cover the live catalogue only; discontinued products are excluded, so they will not tie exactly to the EGP 2.78m business total.</p>
     </div>
 
     <div class="g2">
@@ -480,8 +483,8 @@ ul.bul li strong { color: var(--ink); font-weight: 600; }
     </div>
 
     <div class="call crit">
-      <p class="lead">You archived your bundles. Put them back.</p>
-      <p>Fifteen "Kit" SKUs (lipstick + gloss + contour, sealed, EGP 1,267–1,490) were archived in November 2025. They had earned <b class="mono">EGP 63,086</b> at an average of roughly EGP 1,330 per unit — versus your 1,658 average <em>order</em>. Cosmetics bundles are the highest-converting format in the category at <b class="mono">3.4–5.2%</b>.<sup class="ref">14</sup> Worse, the smart collection <span class="mono">/collections/kits</span> is still live and now resolves to an empty page. Two other holes: <strong>Lip Contour has sold nothing in 90 days</strong> despite doing EGP 63k over the year (its inventory is untracked, so it is silently unbuyable), and <strong>both lip glosses are effectively dead</strong> — EGP 750 each in 90 days, one at zero stock.</p>
+      <p class="lead">Three of your five product types are barely for sale</p>
+      <p><strong>Lip Contour has sold nothing in 90 days</strong> despite earning EGP 63k over the year — its inventory is untracked, so it is quietly missing from the storefront. That is happening in the fastest-growing makeup segment of 2026: lip liner rose 34% in prestige and 36% in mass.<sup class="ref">2</sup> <strong>Both lip glosses are effectively dead</strong> — EGP 750 each in the last 90 days, one sitting at zero stock — in a format that is growing globally. And <strong>Nighty is live with zero stock and zero sales all year.</strong> Liner, gloss and one lipstick are all on the site and none of them can really be bought. One loose end while you are in there: the smart collection <span class="mono">/collections/kits</span> is still published and now resolves to an empty page — delete it.</p>
     </div>
   </div>
 </section>
@@ -709,7 +712,7 @@ ul.bul li strong { color: var(--ink); font-weight: 600; }
       <ul class="bul">
         <li><strong>Stop running two prices for one formula.</strong> The 860/980 lipstick split and the 1,125/1,350/1,500 blush split teach customers to wait for the cheap one.</li>
         <li><strong>Stop discounting the newest products.</strong> Sun Kissed at 18.3% and Güzel Travel at 40% off are training your best-margin customers to devalue your launches.</li>
-        <li><strong>Stop launching without a bundle.</strong> Every hero needs a kit at launch, not a kit archived a month later.</li>
+        <li><strong>Stop launching a hero with nothing beside it.</strong> Every launch needs a companion product on the same page, so the second item is one tap away instead of a second visit.</li>
         <li><strong>Stop treating international traffic as noise.</strong> 4,100 Gulf and diaspora sessions with no shipping option is a closed door with people knocking on it.</li>
         <li><strong>Stop letting the trough happen.</strong> March–June has no plan. Build the always-on offer before you build the next launch.</li>
       </ul>
@@ -904,7 +907,7 @@ const PRODUCTS = [
   ["Sunset","Lipstick",860,20304,19874,23,9460,10,38,"#d2604a","Weakest full-size lipstick with the deepest stock. Bundle candidate."],
   ["Güzel – Travel Size","Travel",250,12500,7500,49,6000,24,24,"#b03050","40% discount leakage — the single worst margin line in the catalogue."],
   ["LULU","Lipstick",860,5160,0,2,5160,2,0,"#8b3a52","Net revenue of zero on 5,160 gross. Out of stock and giving product away."],
-  ["Kits (15 SKUs, archived)","Kit",1330,63086,60892,43,0,0,0,"#6b5c57","Archived Nov 2025 after earning EGP 63k. The /collections/kits page is still live and empty."]
+  ["Nighty","Lipstick",860,0,0,0,0,0,0,"#4a2436","Zero sales in twelve months and zero stock, yet still live on the storefront. Retire it or relaunch it — it currently does nothing but absorb clicks."]
 ];
 
 const TRAFFIC = [
@@ -1095,8 +1098,8 @@ function hbars(id, rows, opts) {
 /* ═══════════════════ STACKED MIX ═══════════════════ */
 function mixChart() {
   const id = '#chart-mix', w = W(id, 280);
-  const cats = ['Lipstick', 'Blush', 'Travel', 'Gloss', 'Liner', 'Kit'];
-  const cols = ['--s1', '--s2', '--s3', '--s4', '--s5', '--ink-3'];
+  const cats = ['Lipstick', 'Blush', 'Travel', 'Gloss', 'Liner'];
+  const cols = ['--s1', '--s2', '--s3', '--s4', '--s5'];
   const sum = (i) => cats.map(c => PRODUCTS.filter(p => p[1] === c).reduce((a, p) => a + p[i], 0));
   const ttm = sum(3), d90 = sum(6);
   const tT = ttm.reduce((a, b) => a + b, 0), t9 = d90.reduce((a, b) => a + b, 0);
@@ -1173,7 +1176,7 @@ const BRANDS = [
   ["Rare Beauty","Independent (Selena Gomez)","Prestige","Soft Pinch Liquid Blush · ~$25","The liquid-blush phenomenon; focused assortment, one unmistakable hero, digital-first.","Your Candy Rose is structurally the same product in the same moment. Merchandise it as a movement, not a shade.","Parallel"],
   ["Rhode","e.l.f. Beauty","Masstige","Peptide Lip Tint · ~$18","Acquired by e.l.f. in Aug 2025 for around USD 1bn after leading the 'glazed skin' moment.","Viral product drops with deliberate scarcity. Drops also solve your March–June trough.","Thin"],
   ["Glossier","Independent","Masstige","Cloud Paint · ~$22","Community-built brand; the cream-blush format that everyone now copies.","Customers as the content engine. Your 1,543 customers have never been asked for a photo.","Thin"],
-  ["Merit","Independent","Prestige","Flush Balm · ~$32","Minimalist five-minute-face system; named as one of beauty's next billion-dollar brands.","Sell a routine of 3–4 products, not a catalogue. Your kits were exactly this and you archived them.","Thin"],
+  ["Merit","Independent","Prestige","Flush Balm · ~$32","Minimalist five-minute-face system; named as one of beauty's next billion-dollar brands.","Sell a routine of 3–4 products, not a catalogue. You own the two categories a routine needs — cheek and lip — and sell no set that pairs them.","Thin"],
   ["Haus Labs","Independent (Lady Gaga)","Prestige","Triclone Foundation","Artist-led formulation storytelling with ingredient claims front and centre.","Ingredient-led storytelling. You already have coconut oil, shea butter and vitamin E — and a pharmacist to explain them.","Thin"],
   ["Westman Atelier","Independent","Ultra-luxury","Vital Skin Stick · ~$70","Clean-luxury sticks at a genuinely high price with no discounting, ever.","Never discounting is a positioning tool. Your 18.3% and 40% markdowns are doing the opposite.","Thin"],
   ["Makeup by Mario","Independent","Prestige","Master Mattes · Surreal Concealer","Celebrity-artist brand built on teaching technique on video.","Tutorial-first product design: build the product around a lesson you already teach in the studio.","Thin"],
@@ -1185,7 +1188,7 @@ const BRANDS = [
 const TRENDS = [
   ["act","Blush &amp; bronzer boom","Blush and bronzer posted double-digit gains globally in 2026, and cream/liquid formats lead.","You already own this. Unify blush pricing at 1,500, add two shades for deeper undertones, and build a cheek-first campaign."],
   ["act","Lip liner is the fastest-growing segment","+36% in mass and +34% in prestige — the single fastest-growing makeup segment of the year.","Your Lip Contour has sold nothing in 90 days because its inventory is untracked. Relaunch it in three shades this quarter."],
-  ["act","Bundles convert best in cosmetics","Cosmetics bundle offers convert at 3.4–5.2%, versus a 3.2% category median.","Un-archive the kits, and build one 'Lip + Cheek' set at EGP 2,400 as the hero gifting SKU."],
+  ["act","Bundles convert best in cosmetics","Cosmetics bundle offers convert at 3.4–5.2%, versus a 3.2% category median.","Build one permanent 'Lip + Cheek' set at EGP 2,400 as the hero gifting SKU — a real product with its own page and photography, not a promotion."],
   ["act","Creator volume over creator spend","The 2026 standard moved from seeding 100 creators to 1,000. Egyptian nano rates run USD 50–200.","300 Egyptian nano/micro creators is roughly USD 30–60k of product and fees — the cheapest reach in this market."],
   ["act","TikTok Shop is a beauty retailer now","TikTok Shop is doing USD 15.8bn in the US with 79% of it beauty; it became the UK's fourth-largest beauty retailer.","You already buy Pangle (TikTok network) traffic. Open the shop, seed it with the Travel Duo, and let creators sell."],
   ["build","Hybrid / multitasking formats","Lip-and-cheek, tinted SPF, skin tints and stick multitaskers are where 2026 innovation concentrates.","A lip-and-cheek stick is your obvious next hero: one SKU, two of your proven categories, travel-friendly."],
@@ -1206,16 +1209,16 @@ const PLAYS = [
    "One price per formula: every liquid blush at EGP 1,500, every liquid matte lipstick at EGP 980. Kill the 860 and 1,125 tiers. No sitewide codes; promotional value goes into bundles and gifts-with-purchase instead.",
    "Candy Rose at 1,500 outsells the two 1,125 blushes combined at full price. Sun Kissed is carrying 18.3% leakage and Güzel Travel 40%. Gross margin is what an acquirer buys, at a 14.9× multiple.",
    "Free","Low","1 week",360000],
-  ["Un-archive the kits, build the Lip + Cheek set","AOV · ship in 2 weeks",
-   "Restore the fifteen archived kits (the /collections/kits page is live and empty). Add one hero set: Candy Rose blush + a matched 980 lipstick + Lip Contour, EGP 2,400, in giftable packaging.",
-   "Cosmetics bundles convert at 3.4–5.2% versus your 2.03%. The kits earned EGP 63k before you archived them, at ~EGP 1,330 each.",
+  ["Build the Lip + Cheek set","AOV · ship in 2 weeks",
+   "One hero set: Candy Rose blush + a matched EGP 980 lipstick + Lip Contour, priced at EGP 2,400 in giftable packaging. Build it as a permanent SKU with its own product page and photography — not a promotion, and not a repeat of anything you have retired.",
+   "Cosmetics bundles convert at 3.4–5.2% against your 2.03%, and a 2,400 set moves a 1,658 average order straight into the Signature band. Your two best sellers already sit in different categories, so the cross-sell is proven by your own data rather than assumed.",
    "Packaging tooling, ~EGP 60k","Low","2 weeks",520000],
   ["Build the repeat engine","Retention · ship in 4 weeks",
    "A 30-day post-delivery WhatsApp and email flow: 'how did it wear?', a shade-matched second product, and a named loyalty tier at 3 orders. Collect and use the phone numbers you are currently not storing.",
    "Repeat orders are 16.7% of your total against a 20–30% colour-cosmetics benchmark; beauty email opens at 38.5%, the highest of any vertical. Your best repeat customers already spend EGP 5,000–5,800 across 3–6 orders.",
    "~EGP 3k/month in tooling","Low","4 weeks",470000],
   ["Kill the March–June trough","Baseline · plan now, run from Feb",
-   "An always-on offer that does not need a launch: a monthly shade drop, a Ramadan and Eid gifting calendar, a summer 'North Coast kit', and a standing creator programme so there is content in the quiet months.",
+   "An always-on offer that does not need a launch: a monthly shade drop, a Ramadan and Eid gifting calendar, a summer 'North Coast set', and a standing creator programme so there is content in the quiet months.",
    "March–June 2026 ran 67–79 orders a month against 270 in July. Four months at a 150-order floor is +288 orders a year at today's average order value.",
    "Creator seeding, ~EGP 150k/yr","Medium","Ongoing",480000],
   ["Open TikTok Shop and seed 300 creators","Channel · ship in 6 weeks",
@@ -1268,7 +1271,7 @@ const RISKS = [
 ];
 
 const ROADMAP = [
-  ["Q4 2026","Fix the machine","Checkout, price ladder, kits, repeat flow, Arabic product pages, lip liner relaunch.","EGP 1.4m/quarter"],
+  ["Q4 2026","Fix the machine","Checkout, price ladder, the Lip + Cheek set, repeat flow, Arabic product pages, lip liner relaunch.","EGP 1.4m/quarter"],
   ["Q1 2027","Break the Meta habit","TikTok Shop live, 300 creators seeded, SEO compounding, always-on offer running through the old trough.","EGP 1.9m/quarter"],
   ["Q2 2027","New surface area","Lip-and-cheek stick launch, refillable blush case, undertone system published, Gulf shipping live.","EGP 2.6m/quarter"],
   ["Q3 2027","Physical proof","30-door pharmacy and salon pilot, one Cairo pop-up, halal certification complete, wholesale price list.","EGP 3.4m/quarter"]
@@ -1278,11 +1281,12 @@ const BOARD = [
   ["Days 1–30 · Stop the bleeding", [
     ["Set every liquid blush to EGP 1,500 and every liquid matte lipstick to EGP 980", "One hour of work. Highest-return hour of the quarter."],
     ["Turn inventory tracking on for Lip Contour and both lip glosses", "Three SKUs are currently invisible or unbuyable."],
-    ["Restore the 15 archived kits, or delete the empty /collections/kits page", "It is a live, empty page collecting traffic right now."],
+    ["Delete the empty /collections/kits collection", "It is still published and resolves to nothing."],
+    ["Retire or relaunch Nighty", "Live on the storefront with zero stock and zero sales all year."],
     ["Replace the free-text city field with governorate + area dropdowns", "Directly reduces failed COD deliveries."],
     ["Make phone number required and validated at checkout", "Your customer records have null phones. A courier who cannot call returns the parcel."],
     ["Start WhatsApp confirmation on every COD order before dispatch", "The single most effective RTO reducer in this market."],
-    ["Fill in product type and tags on all 22 live SKUs", "Google currently sends you 1.7% of traffic."],
+    ["Fill in product type and tags on all 25 live SKUs", "Google currently sends you 1.7% of traffic."],
     ["Reorder Candy Rose to 10 weeks of cover", "23.5% of revenue sits on one shade."]
   ]],
   ["Days 31–60 · Build the engine", [
