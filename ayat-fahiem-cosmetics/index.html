@@ -217,8 +217,8 @@ td.num, th.num { text-align: right; font-family: 'IBM Plex Mono', monospace; }
 td.name { font-weight: 500; white-space: normal; min-width: 150px; }
 td.wrap { white-space: normal; min-width: 220px; color: var(--ink-2); }
 #tbl-sku th, #tbl-sku td { padding: 8px 10px; }
-#tbl-sku td.wrap { min-width: 150px; }
-#tbl-sku td.name { min-width: 132px; }
+#tbl-sku td.wrap { min-width: 118px; }
+#tbl-sku td.name { min-width: 120px; }
 th.sortable { cursor: pointer; user-select: none; }
 th.sortable:hover { color: var(--ink); }
 th.sortable[aria-sort="descending"]::after { content: " ↓"; color: var(--accent); }
@@ -338,7 +338,7 @@ ul.bul li strong { color: var(--ink); font-weight: 600; }
 
   <div class="call" style="margin-top:26px">
     <p class="lead">The one number that decides the next twelve months</p>
-    <p>Your store converts <b class="mono">2.03%</b> of sessions and <b class="mono">57.3%</b> of started checkouts. Beauty's Shopify median is 3.2% conversion.<sup class="ref">14</sup> You already bought the traffic — 79,535 sessions in a year. Closing the gap to 3.2% at today's average order is <b class="mono">EGP 1.55m of additional gross sales a year with zero extra ad spend</b>. That is more than doubling revenue by fixing the checkout, the shade-finder and the delivery promise. Every play in section 09 is ranked against that number.</p>
+    <p>Your store converts <b class="mono">2.03%</b> of sessions and <b class="mono">57.3%</b> of started checkouts. Beauty's Shopify median is 3.2% conversion.<sup class="ref">14</sup> You already bought the traffic — 79,535 sessions in a year. Closing the gap to 3.2% at today's average order is <b class="mono">EGP 1.55m of additional gross sales a year with zero extra ad spend</b>. That is more than doubling revenue by fixing the checkout, the shade-finder and the delivery promise. Every play in section 10 is ranked against that number.</p>
   </div>
 </section>
 
@@ -432,8 +432,8 @@ ul.bul li strong { color: var(--ink); font-weight: 600; }
   <div class="stack">
     <div class="g3">
       <div class="panel"><div class="eyebrow">Revenue concentration</div><div class="tile" style="padding:8px 0 0"><div class="v">57.1<span class="u">% top 5</span></div></div><p style="font-size:13px;color:var(--ink-2);margin-top:8px">Candy Rose alone is <b class="mono">24.0%</b> of the live line. One blush shade going out of stock costs you a quarter of the business.</p></div>
-      <div class="panel"><div class="eyebrow">Stock on hand</div><div class="tile" style="padding:8px 0 0"><div class="v">683<span class="u">units</span></div></div><p style="font-size:13px;color:var(--ink-2);margin-top:8px">≈ EGP 575k at retail, ≈ 1.8 months of cover at the last 30 days' rate. Lean. Three SKUs are at zero.</p></div>
-      <div class="panel"><div class="eyebrow">Dead weight</div><div class="tile" style="padding:8px 0 0"><div class="v">125<span class="u">Travel Duos</span></div></div><p style="font-size:13px;color:var(--ink-2);margin-top:8px">18% of all your units sit in one EGP 400 SKU. It is your best acquisition tool and your worst margin — see section 10.</p></div>
+      <div class="panel"><div class="eyebrow">Stock on hand</div><div class="tile" style="padding:8px 0 0"><div class="v">608<span class="u">units</span></div></div><p style="font-size:13px;color:var(--ink-2);margin-top:8px">≈ EGP 538k at retail, across 25 active SKUs. Three are at zero and two are untracked. <b style="color:var(--crit)">Candy has about 16 days of cover left.</b></p></div>
+      <div class="panel"><div class="eyebrow">Dead weight</div><div class="tile" style="padding:8px 0 0"><div class="v">111<span class="u">Travel Duos</span></div></div><p style="font-size:13px;color:var(--ink-2);margin-top:8px">18% of all your units sit in one EGP 400 SKU. It is your best acquisition tool and your worst margin — see section 11.</p></div>
     </div>
 
     <div>
@@ -453,12 +453,13 @@ ul.bul li strong { color: var(--ink); font-weight: 600; }
             <th class="sortable num" data-k="share90">90d share</th>
             <th class="sortable num" data-k="disc">Discount</th>
             <th class="sortable num" data-k="inv">Stock</th>
+            <th class="sortable num" data-k="cover">Cover</th>
             <th>Read</th>
           </tr></thead>
           <tbody></tbody>
         </table>
       </div>
-      <p style="font-size:12.5px;color:var(--ink-3);margin-top:8px">"90d share" is the last 90 days' revenue as a share of that product's full year — above 25% means the shade is accelerating, below 15% means it is fading. Discount = 1 − (net ÷ gross), so it includes returns as well as codes. Figures cover the live catalogue only; discontinued products are excluded, so they will not tie exactly to the EGP 2.78m business total.</p>
+      <p style="font-size:12.5px;color:var(--ink-3);margin-top:8px">"90d share" is the last 90 days' revenue as a share of that product's full year — above 25% means the shade is accelerating, below 15% means it is fading. Discount = 1 − (net ÷ gross), so it includes returns as well as codes. "Days cover" is current stock divided by the last 90 days' order-line rate — under 21 days is a reorder emergency, over 150 is dead money. Figures cover the live catalogue only; discontinued products are excluded, so they will not tie exactly to the EGP 2.78m business total.</p>
     </div>
 
     <div class="g2">
@@ -591,7 +592,67 @@ ul.bul li strong { color: var(--ink); font-weight: 600; }
 
 <!-- ══════════════ 06 ══════════════ -->
 <section id="s06">
-  <div class="sec-head"><span class="num">06</span><h2>The global high-end board</h2></div>
+  <div class="sec-head"><span class="num">06</span><h2>Who you actually compete with</h2></div>
+  <p class="deck">Your live line is <strong>25 active SKUs across five product types</strong> — all of it lip and cheek, nothing else. That makes the competitive question narrow and answerable: who else sells a liquid lipstick, a liquid blush, a gloss, a liner or a mini into Egypt, and at what price. Every figure below is a real Egyptian shelf price checked in September 2026.<sup class="ref">23</sup></p>
+
+  <div class="stack">
+    <div class="panel">
+      <div class="panel-t"><h3>The Egyptian lip &amp; cheek price ladder</h3><span class="note">EGP · verified retail prices, Sep 2026</span></div>
+      <div id="chart-ladder"></div>
+      <div class="legend">
+        <span><span class="dot" style="background:var(--accent)"></span>Ayat Fahiem</span>
+        <span><span class="dot" style="background:var(--ink-3)"></span>Competitor product</span>
+      </div>
+    </div>
+
+    <div class="call">
+      <p class="lead">Nobody else is standing where you are standing</p>
+      <p>Egyptian lip and cheek retail splits cleanly into two worlds: local and international mass under <b class="mono">EGP 600</b>, and parallel-imported global prestige above <b class="mono">EGP 1,500</b>. The band in between is almost empty. Your entire line sits in it — lipstick at 860–980, blush at 1,125–1,500. That is not an accident of pricing, it is the most valuable thing about the business, and it is the reason the EGP 1,500 blush outsells the EGP 1,125 ones: at 1,500 you read as prestige-adjacent value; at 1,125 you drift toward a mass shelf you can never win on.</p>
+    </div>
+
+    <div class="g3">
+      <div class="panel"><div class="eyebrow">Your blush vs the category leader</div><div class="tile" style="padding:8px 0 0"><div class="v">51–75<span class="u">%</span></div></div><p style="font-size:13px;color:var(--ink-2);margin-top:8px">Candy Rose at EGP 1,500 against Rare Beauty Soft Pinch at <b class="mono">EGP 2,000–2,916</b> in Egypt. Locally made, in stock, delivered cash-on-delivery. That is the entire pitch, and you are not making it anywhere on the site.</p></div>
+      <div class="panel"><div class="eyebrow">Your lipstick vs MAC</div><div class="tile" style="padding:8px 0 0"><div class="v">43–65<span class="u">%</span></div></div><p style="font-size:13px;color:var(--ink-2);margin-top:8px">EGP 980 against MAC lipstick at <b class="mono">EGP 1,499–2,299</b> on Jumia and Amazon.eg. There is more headroom above your lipstick than you have been pricing for.</p></div>
+      <div class="panel"><div class="eyebrow">Your blush vs the local floor</div><div class="tile" style="padding:8px 0 0"><div class="v">15<span class="u">×</span></div></div><p style="font-size:13px;color:var(--ink-2);margin-top:8px">Sandra sells a liquid blush <em>with</em> a blending brush for <b class="mono">EGP 100</b>. You will never answer that on price. You answer it on formula, shade and who made it.</p></div>
+    </div>
+
+    <div>
+      <div class="panel-t" style="margin-bottom:10px">
+        <h3>The competitive set, by tier</h3>
+        <div class="chips" id="comp-chips"></div>
+      </div>
+      <div class="tw" style="max-height:520px;overflow-y:auto">
+        <table id="tbl-comp">
+          <thead><tr>
+            <th class="sortable" data-k="brand">Brand</th>
+            <th class="sortable" data-k="origin">Origin</th>
+            <th class="sortable" data-k="tier">Tier</th>
+            <th>Comparable product</th>
+            <th class="num">Price EGP</th>
+            <th>How they beat you</th>
+            <th>How you beat them</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p style="font-size:12.5px;color:var(--ink-3);margin-top:8px">Prices are the range observed across Jumia Egypt, Noon Egypt, Amazon.eg and the independent Egyptian beauty e-tailers in September 2026; they move with promotions. Where a brand reaches Egypt through parallel import rather than an authorised distributor, the price reflects what a shopper actually pays here, not the brand's home-market price.</p>
+    </div>
+
+    <div>
+      <div class="panel-t" style="margin-bottom:10px"><h3>Line by line — every active product type</h3></div>
+      <div class="stack" id="lines"></div>
+    </div>
+
+    <div class="call warn">
+      <p class="lead">The parallel e-tailers are competitors today and your distribution tomorrow</p>
+      <p>Ramfa Beauty, GoMyz, Maven, Havenly, Loolia Closet, Cosmetics EG, Cosmo Store and The Boutique Store are where Egyptians actually buy Rare Beauty, MAC, Huda and Charlotte Tilbury. They compete with you for the same customer and the same basket — and they discount 30–75% while claiming "100% original". You cannot out-discount them. But they are also the only prestige-beauty retail network in a country with no Sephora, they carry no Egyptian brand at your quality tier, and they need margin. <strong>Every one of them is a wholesale conversation you have not had.</strong> A locally made line at 40–50% below the imported prestige they stock is a better margin for them than another shipment of Soft Pinch.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 07 ══════════════ -->
+<section id="s07">
+  <div class="sec-head"><span class="num">07</span><h2>The global high-end board</h2></div>
   <p class="deck">Five houses own roughly half of global premium beauty.<sup class="ref">4</sup> Below them sits the layer that actually matters to you: founder-led brands that went from nothing to acquisition in under eight years using mechanics you can copy this quarter.</p>
 
   <div class="stack">
@@ -653,9 +714,9 @@ ul.bul li strong { color: var(--ink); font-weight: 600; }
   </div>
 </section>
 
-<!-- ══════════════ 07 ══════════════ -->
-<section id="s07">
-  <div class="sec-head"><span class="num">07</span><h2>Trend radar, 2026</h2></div>
+<!-- ══════════════ 08 ══════════════ -->
+<section id="s08">
+  <div class="sec-head"><span class="num">08</span><h2>Trend radar, 2026</h2></div>
   <p class="deck">Every trend below is real. Most of them are not yours. Filter by what you should actually do about it.</p>
 
   <div class="stack">
@@ -665,9 +726,9 @@ ul.bul li strong { color: var(--ink); font-weight: 600; }
   </div>
 </section>
 
-<!-- ══════════════ 08 ══════════════ -->
-<section id="s08">
-  <div class="sec-head"><span class="num">08</span><h2>The strategy, in one page</h2></div>
+<!-- ══════════════ 09 ══════════════ -->
+<section id="s09">
+  <div class="sec-head"><span class="num">09</span><h2>The strategy, in one page</h2></div>
   <p class="deck">Everything above narrows to a single choice about what kind of company this is.</p>
 
   <div class="stack">
@@ -720,20 +781,20 @@ ul.bul li strong { color: var(--ink); font-weight: 600; }
   </div>
 </section>
 
-<!-- ══════════════ 09 ══════════════ -->
-<section id="s09">
-  <div class="sec-head"><span class="num">09</span><h2>Eleven plays, ranked by EGP</h2></div>
+<!-- ══════════════ 10 ══════════════ -->
+<section id="s10">
+  <div class="sec-head"><span class="num">10</span><h2>Eleven plays, ranked by EGP</h2></div>
   <p class="deck">Ordered by expected annual gross-sales impact against effort. Every estimate is built from your own trailing-twelve-month traffic, conversion and average order value — the uplift assumptions are the conservative end of published 2026 benchmarks, and each one is stated so you can argue with it.</p>
   <div class="stack" id="plays"></div>
   <div class="call" style="margin-top:22px">
     <p class="lead">Total modelled upside: <span id="plays-total">—</span> of additional annual gross sales</p>
-    <p>That is not a forecast — plays overlap and none of them are free. Treat it as a ranked queue: the first four are cheap, fast and compounding, and together they carry more than half the number. Section 11 lets you model what actually happens when you only do some of them.</p>
+    <p>That is not a forecast — plays overlap and none of them are free. Treat it as a ranked queue: the first four are cheap, fast and compounding, and together they carry more than half the number. Section 12 lets you model what actually happens when you only do some of them.</p>
   </div>
 </section>
 
-<!-- ══════════════ 10 ══════════════ -->
-<section id="s10">
-  <div class="sec-head"><span class="num">10</span><h2>Unit economics lab</h2></div>
+<!-- ══════════════ 11 ══════════════ -->
+<section id="s11">
+  <div class="sec-head"><span class="num">11</span><h2>Unit economics lab</h2></div>
   <p class="deck">Your Shopify data shows revenue, not profit — it has no cost of goods in it. So this is a model, and every input is yours to change. The defaults are realistic Egyptian DTC cosmetics assumptions; the order volume and average order value are your real numbers. <strong>Change the inputs until they match your invoices, then read the bottom line.</strong></p>
 
   <div class="stack">
@@ -776,10 +837,10 @@ ul.bul li strong { color: var(--ink); font-weight: 600; }
   </div>
 </section>
 
-<!-- ══════════════ 11 ══════════════ -->
-<section id="s11">
-  <div class="sec-head"><span class="num">11</span><h2>The road to EGP 12m</h2></div>
-  <p class="deck">Four levers, one chart. Baseline is your actual last twelve months, repeated. Move the levers to see what the same store does with the plays from section 09 applied.</p>
+<!-- ══════════════ 12 ══════════════ -->
+<section id="s12">
+  <div class="sec-head"><span class="num">12</span><h2>The road to EGP 12m</h2></div>
+  <p class="deck">Four levers, one chart. Baseline is your actual last twelve months, repeated. Move the levers to see what the same store does with the plays from section 10 applied.</p>
 
   <div class="stack">
     <div class="panel">
@@ -796,9 +857,9 @@ ul.bul li strong { color: var(--ink); font-weight: 600; }
   </div>
 </section>
 
-<!-- ══════════════ 12 ══════════════ -->
-<section id="s12">
-  <div class="sec-head"><span class="num">12</span><h2>The first ninety days</h2></div>
+<!-- ══════════════ 13 ══════════════ -->
+<section id="s13">
+  <div class="sec-head"><span class="num">13</span><h2>The first ninety days</h2></div>
   <p class="deck">Sequenced so that nothing depends on something later in the list. Ticks are saved in this browser.</p>
 
   <div class="stack">
@@ -815,9 +876,9 @@ ul.bul li strong { color: var(--ink); font-weight: 600; }
   </div>
 </section>
 
-<!-- ══════════════ 13 ══════════════ -->
-<section id="s13">
-  <div class="sec-head"><span class="num">13</span><h2>Risk register</h2></div>
+<!-- ══════════════ 14 ══════════════ -->
+<section id="s14">
+  <div class="sec-head"><span class="num">14</span><h2>Risk register</h2></div>
   <p class="deck">What kills this business, in order of likelihood × damage. Each one has a trigger you can actually watch.</p>
   <div class="stack">
     <div class="tw">
@@ -829,9 +890,9 @@ ul.bul li strong { color: var(--ink); font-weight: 600; }
   </div>
 </section>
 
-<!-- ══════════════ 14 ══════════════ -->
-<section id="s14">
-  <div class="sec-head"><span class="num">14</span><h2>Method &amp; sources</h2></div>
+<!-- ══════════════ 15 ══════════════ -->
+<section id="s15">
+  <div class="sec-head"><span class="num">15</span><h2>Method &amp; sources</h2></div>
   <p class="deck">Two kinds of number appear in this dossier and they are not equal.</p>
   <div class="stack">
     <div class="g2">
@@ -842,7 +903,7 @@ ul.bul li strong { color: var(--ink); font-weight: 600; }
       </div>
       <div class="panel">
         <div class="eyebrow">Modelled figures</div>
-        <p style="font-size:14px;color:var(--ink-2);margin-top:8px">Everything in sections 10 and 11, and the "recoverable EGP" column in section 02, is a <strong>model</strong>. Your Shopify data contains no cost of goods, no ad spend and no courier invoices, so those inputs are assumptions — set at realistic Egyptian DTC cosmetics levels and exposed as sliders precisely so you can replace them with your real figures. Uplift assumptions use the conservative end of the published 2026 benchmarks cited below.</p>
+        <p style="font-size:14px;color:var(--ink-2);margin-top:8px">Everything in sections 11 and 12, and the "recoverable EGP" column in section 02, is a <strong>model</strong>. Your Shopify data contains no cost of goods, no ad spend and no courier invoices, so those inputs are assumptions — set at realistic Egyptian DTC cosmetics levels and exposed as sliders precisely so you can replace them with your real figures. Uplift assumptions use the conservative end of the published 2026 benchmarks cited below.</p>
         <p style="font-size:14px;color:var(--ink-2);margin-top:10px">Market figures from different research houses use different scopes and definitions and do not always agree; where they conflict, both framings are shown rather than averaged.</p>
       </div>
     </div>
@@ -883,29 +944,29 @@ const MONTHS = [
 
 // name, category, price, ttmGross, ttmNet, ttmOrders, d90Gross, d90Orders, inventory(null=untracked), swatch, note
 const PRODUCTS = [
-  ["Candy Rose","Blush",1500,658371,607728,501,143700,91,28,"#e58ba0","Your #1 SKU and 23.5% of the year. Highest price in the line — and it wins anyway."],
-  ["Golden Hour","Blush",1350,316572,282252,259,72090,53,28,"#e0a24f","Strong second blush. Middle price, middle result."],
-  ["Candy","Lipstick",980,230509,225306,254,103880,104,22,"#d6455f","Accelerating: 45% of its whole year came in the last 90 days."],
-  ["Cinnamon","Lipstick",980,183479,177790,190,101920,97,38,"#a8452f","Accelerating hard — 56% of its year in 90 days. Deepest stock. Push it."],
-  ["Travel Duo – Mon Amour & Güzel","Travel",400,178250,174800,423,96400,235,125,"#8e3350","Most-ordered item in the store and the thinnest margin. Treat it as acquisition, not product."],
-  ["Guzel","Lipstick",980,148879,145096,156,57820,54,29,"#b03050","Steady core. A named shade with a Turkish-drama association you have never merchandised."],
-  ["Mon Amour","Lipstick",980,133293,127549,146,69580,70,27,"#c02840","Accelerating. It is also your travel-size hero — the ladder already exists here."],
-  ["Sun Kissed","Blush",1125,116683,95296,107,34875,29,29,"#e8896b","18.3% discount leakage — the worst in the line. Stop discounting it, reprice to 1,500."],
-  ["Blossom","Lipstick",860,99283,95843,124,37670,43,28,"#d77289","Priced at 860 for no formulation reason. Move to 980."],
+  ["Candy Rose","Blush",1500,658371,607728,501,143700,91,27,"#e58ba0","Your #1 SKU and 23.5% of the year. Highest price in the line — and it wins anyway."],
+  ["Golden Hour","Blush",1350,316572,282252,259,72090,53,27,"#e0a24f","Strong second blush. Middle price, middle result."],
+  ["Candy","Lipstick",980,230509,225306,254,103880,104,18,"#d6455f","Accelerating: 45% of its whole year came in the last 90 days."],
+  ["Cinnamon","Lipstick",980,183479,177790,190,101920,97,28,"#a8452f","Accelerating hard — 56% of its year in 90 days. Deepest stock. Push it."],
+  ["Travel Duo – Mon Amour & Güzel","Travel",400,178250,174800,423,96400,235,111,"#8e3350","Most-ordered item in the store and the thinnest margin. Treat it as acquisition, not product."],
+  ["Guzel","Lipstick",980,148879,145096,156,57820,54,27,"#b03050","Steady core. A named shade with a Turkish-drama association you have never merchandised."],
+  ["Mon Amour","Lipstick",980,133293,127549,146,69580,70,25,"#c02840","Accelerating. It is also your travel-size hero — the ladder already exists here."],
+  ["Sun Kissed","Blush",1125,116683,95296,107,34875,29,27,"#e8896b","18.3% discount leakage — the worst in the line. Stop discounting it, reprice to 1,500."],
+  ["Blossom","Lipstick",860,99283,95843,124,37670,43,26,"#d77289","Priced at 860 for no formulation reason. Move to 980."],
   ["Pinky Winky","Blush",1125,94334,82803,84,13500,12,32,"#e077a0","Collapsed: 14% of its year in the last 90 days, and 32 units sitting. Bundle it or retire it."],
   ["Best Friends","Lipstick",860,92460,88631,112,51600,58,28,"#c4566b","Strong performer trapped in the wrong price band."],
-  ["Caramel","Lipstick",980,71698,67064,79,28420,28,30,"#a96a48","Mid-pack. Nude-brown is a growth shade family globally — merchandise it with Mocha."],
+  ["Caramel","Lipstick",980,71698,67064,79,28420,28,27,"#a96a48","Mid-pack. Nude-brown is a growth shade family globally — merchandise it with Mocha."],
   ["Lip Contour","Liner",499,63244,61249,127,0,0,null,"#7a4436","Zero sales in 90 days on untracked inventory. Lip liner was the fastest-growing makeup segment of 2026. Fix this first."],
-  ["Wine Night","Lipstick",980,59172,57260,64,20580,20,29,"#6e1f35","Seasonal (autumn/winter). Plan a Q4 relaunch around it."],
+  ["Wine Night","Lipstick",980,59172,57260,64,20580,20,28,"#6e1f35","Seasonal (autumn/winter). Plan a Q4 relaunch around it."],
   ["Mocha","Lipstick",980,58752,56747,66,19600,20,31,"#8a5340","Under-performing a globally hot shade family."],
-  ["Barbie","Lipstick",860,40399,39195,47,16340,17,31,"#e0537f","Trademark-adjacent name. Rename before you scale into retail or export."],
-  ["Marilyn Monroe","Lipstick",980,35545,33427,40,9800,10,31,"#b81c2c","Slowing. Classic red is a permanent category — this is a merchandising failure, not a shade failure."],
+  ["Barbie","Lipstick",860,40399,39195,47,16340,17,29,"#e0537f","Trademark-adjacent name. Rename before you scale into retail or export."],
+  ["Marilyn Monroe","Lipstick",980,35545,33427,40,9800,10,30,"#b81c2c","Slowing. Classic red is a permanent category — this is a merchandising failure, not a shade failure."],
   ["Girlhood","Lipstick",860,34846,32307,40,19780,22,28,"#de7c93","Accelerating from a small base. The name is the most ownable in the line."],
   ["Bad Girl Lipgloss","Gloss",750,33540,32260,47,750,1,null,"#c98fa0","Effectively dead — one order in 90 days, inventory untracked."],
   ["Sexy Lady Lipgloss","Gloss",750,31086,28675,42,750,1,0,"#d9a0ac","Out of stock. Gloss is a growth format globally and you are absent from it."],
-  ["Mon Amour – Travel Size","Travel",250,25250,20500,87,10500,40,27,"#c02840","18.8% discount leakage on a 250 EGP item. That is negative contribution territory."],
+  ["Mon Amour – Travel Size","Travel",250,25250,20500,87,10500,40,25,"#c02840","18.8% discount leakage on a 250 EGP item. That is negative contribution territory."],
   ["Sunset","Lipstick",860,20304,19874,23,9460,10,38,"#d2604a","Weakest full-size lipstick with the deepest stock. Bundle candidate."],
-  ["Güzel – Travel Size","Travel",250,12500,7500,49,6000,24,24,"#b03050","40% discount leakage — the single worst margin line in the catalogue."],
+  ["Güzel – Travel Size","Travel",250,12500,7500,49,6000,24,23,"#b03050","40% discount leakage — the single worst margin line in the catalogue."],
   ["LULU","Lipstick",860,5160,0,2,5160,2,0,"#8b3a52","Net revenue of zero on 5,160 gross. Out of stock and giving product away."],
   ["Nighty","Lipstick",860,0,0,0,0,0,0,"#4a2436","Zero sales in twelve months and zero stock, yet still live on the storefront. Retire it or relaunch it — it currently does nothing but absorb clicks."]
 ];
@@ -1331,14 +1392,99 @@ const SOURCES = [
   "Valors / Influencer Marketing Hub — Egyptian influencer rates 2026 by tier, and why they sit below UAE rates.",
   "Capstone Partners / DC Advisory / Eightx — beauty M&amp;A at 14.9× EV/EBITDA YTD 2025; ~3.6× revenue average with 5–8× for breakout brands; 69.4% median gross margin.",
   "Paymob / Fawry / inai — Egyptian payment gateway pricing; Bosta, Mylerz and Aramex courier and remittance characteristics.",
-  "Pantone / BeautyMatter — Colour of the Year 2026 'Cloud Dancer'; 2026 beauty packaging and EU refill and green-claims timelines."
+  "Pantone / BeautyMatter — Colour of the Year 2026 'Cloud Dancer'; 2026 beauty packaging and EU refill and green-claims timelines.",
+  "Retail price check, September 2026 — Jumia Egypt, Noon Egypt, Amazon.eg, Pricena Egypt and the independent Egyptian beauty e-tailers: Amanda Milano Moist Matte Lipstick EGP 165–229; Sandra liquid blush with brush EGP 100; Maybelline SuperStay Matte Ink EGP 468–600; lip liners EGP 175–350; SheGlam Hydra Jelly EGP 60–435; MAC lipstick EGP 1,499–2,299; Rare Beauty Soft Pinch Liquid Blush EGP 2,000–2,916.",
+  "This is Cairo / Cairo Gossip / Euromonitor — Egyptian homegrown colour-cosmetics brands: Amanda Milano (founded 1984, Egypt&rsquo;s leading local makeup brand), Sandra Cosmetics, Dorella, Glaze by KG, Base Beauty."
 ];
 
 /* ═══════════════════ RAIL ═══════════════════ */
+const LADDER = [
+  ["Liquid matte lipstick","14 active shades",[860,980],[
+    ["Amanda Milano Moist Matte",165,229,"Egypt · local mass · since 1984"],
+    ["Maybelline SuperStay Matte Ink",468,600,"International mass · the benchmark"],
+    ["MAC lipstick (bullet)",1499,2299,"Prestige · parallel import"]]],
+  ["Liquid blush","4 active shades · 42% of revenue",[1125,1500],[
+    ["Sandra liquid blush + brush",100,100,"Egypt · local mass"],
+    ["Rare Beauty Soft Pinch",2000,2916,"Prestige · parallel import"]]],
+  ["Lip liner","1 active SKU · currently unbuyable",[499,499],[
+    ["Lip liners on Jumia, typical band",175,350,"Mixed mass brands"]]],
+  ["Lip gloss","2 active SKUs · one at zero stock",[750,750],[
+    ["SheGlam Hydra Jelly lip",60,435,"China (SHEIN) · online mass"]]],
+  ["Travel / mini","3 active SKUs · your most-ordered item",[250,400],[]]
+];
+
+const COMPETITORS = [
+  ["Amanda Milano","Egypt, 1984","Local mass","Moist Matte Lipstick; also a Liquid Blush Silky Matte","165–229",
+   "Forty-two years of trust, national distribution through pharmacies and every marketplace, and a price no Egyptian has to think about. Euromonitor ranks it the leading local makeup brand.",
+   "You are not chasing the same purchase — but they set what &lsquo;a lipstick costs&rsquo; in your customer&rsquo;s head. Beat them on pigment, packaging and the pharmacist story, never on price."],
+  ["Sandra Cosmetics","Egypt","Local mass","Liquid blush with blending brush, vitamin E + panthenol","100",
+   "The same product category as your single biggest SKU, at one-fifteenth the price, and it ships with an applicator.",
+   "Formula credibility, shade curation and a professional who can prove the difference on camera. A EGP 100 blush has no answer to that."],
+  ["Dorella Cosmetics","Egypt","Local mass","Lipsticks, highlighters, shimmer","mass",
+   "Local production, nationwide delivery, low price.",
+   "Broad and unfocused. You own one look and one category — that is worth more than a wide catalogue here."],
+  ["Glaze by KG","Egypt","Local indie","Hydrating lip products","mass–mid",
+   "The closest Egyptian brand to your lip-care angle, and it is founder-led like yours.",
+   "You have the blush hero, the studio, and a clinical-pharmacist credential they cannot claim."],
+  ["Base Beauty","Egypt","Local indie","Clean multipurpose lip-and-cheek sticks and tints","mid",
+   "Clean positioning plus the lip-and-cheek multitasking format that 2026 is rewarding — a format you do not sell.",
+   "They are sheer and minimal; you are high pigment. Their best format is the product you should launch next."],
+  ["Golden Rose · Flormar · Note · Topface","Türkiye","Local mass import","Liquid lipsticks, liners, glosses","175–350 typical",
+   "The volume default in Egyptian pharmacies and on Jumia, with wide shade ranges and constant promotion.",
+   "They compete on assortment and price. You compete on being the one brand that can say a pharmacist formulated it for Egyptian skin."],
+  ["SheGlam","China (SHEIN)","Online mass","Hydra Jelly lip, blush, tints","60–435",
+   "TikTok-native, trend-fast, and unbeatable on price. They ship the viral format before anyone else.",
+   "They cannot make a formulation or safety claim and have no local presence. You can, and you have EDA notification."],
+  ["Maybelline","L&rsquo;Oréal (US)","International mass","SuperStay Matte Ink liquid lipstick","468–600",
+   "The long-wear liquid lipstick every Egyptian shopper has already tried, at roughly half your price, available everywhere.",
+   "This is your real reference point, not MAC. At EGP 980 you must be visibly better than SuperStay on wear, comfort and pigment — and prove it on the product page."],
+  ["L&rsquo;Oréal Paris · Bourjois · Essence · Catrice","International","International mass","Liquid lipsticks, blushes, liners","300–700",
+   "Pharmacy and supermarket distribution, constant price promotion, familiar names.",
+   "Generic shade ranges built on Western undertone maps. Your undertone authority is the gap they leave open."],
+  ["MAC Cosmetics","Estée Lauder","Prestige (parallel)","Lipstick","1,499–2,299",
+   "The most recognised prestige lipstick name in Egypt and decades of artist authority.",
+   "You sell at 43–65% of their Egyptian price with local stock and cash-on-delivery. There is more headroom above your EGP 980 than you have been pricing for."],
+  ["Rare Beauty","Independent","Prestige (parallel)","Soft Pinch Liquid Blush","2,000–2,916",
+   "It created the liquid-blush moment you are riding, and it has global creator gravity behind it.",
+   "Candy Rose is 51–75% of their Egyptian price, made locally, in stock, and delivered COD. You are not making this argument anywhere on your site."],
+  ["Huda Beauty","Independent (Dubai)","Prestige (parallel)","Liquid Matte Lipstick","parallel band",
+   "MENA founder credibility plus global scale — the proof that a regional founder-led brand can go worldwide.",
+   "Your closest structural analogue rather than your enemy. Study their first three years: region-first, lip-led, creator-built."],
+  ["Charlotte Tilbury · NARS · Fenty","Global","Prestige (parallel)","Lipsticks, liquid blushes","parallel band",
+   "Named looks, category-defining heroes and shade-range credibility.",
+   "None of them holds Egyptian stock reliably or ships COD. Availability is a competitive weapon here and you already have it."],
+  ["Ramfa · GoMyz · Maven · Havenly · Loolia · Cosmetics EG","Egypt","Retailer","Every prestige brand above","30–75% off list",
+   "They own the &lsquo;100% original&rsquo; trust claim and aggregate the entire prestige shelf in a country with no Sephora.",
+   "You cannot out-discount them — but they carry no Egyptian brand at your quality tier and they need margin. Every one is a wholesale conversation you have not had."]
+];
+
+const LINES = [
+  ["Liquid matte lipstick","14 active shades at EGP 860 and 980 · 44% of the live line",
+   "Maybelline SuperStay Matte Ink at EGP 468–600 — half your price, in every pharmacy, making the same long-wear claim.",
+   "MAC at EGP 1,499–2,299 sets the ceiling. You sit at 43–65% of it.",
+   "Unify every shade at EGP 980, publish a wear test against the mass benchmark, and put the coconut-oil, shea and vitamin-E story in Arabic on every page. Right now nothing on the site explains why you cost twice a SuperStay."],
+  ["Liquid blush","4 active shades at EGP 1,125–1,500 · your biggest earner",
+   "Sandra at EGP 100 with a brush, and Amanda Milano&rsquo;s own liquid blush — local, cheap, everywhere.",
+   "Rare Beauty Soft Pinch at EGP 2,000–2,916 through parallel importers.",
+   "Price the whole line at EGP 1,500. Your own sales already proved it: the 1,500 shade outsells both 1,125 shades combined at full price. Then say out loud, on the page, that you are half the price of the blush everyone is chasing."],
+  ["Lip liner","1 active SKU at EGP 499 · untracked inventory, zero sales in 90 days",
+   "Jumia&rsquo;s liner shelf at EGP 175–350 across Golden Rose, Flormar, Note and Topface.",
+   "Prestige liners reach Egypt only through parallel import, thinly.",
+   "This is the fastest-growing makeup segment of 2026 (+34% prestige, +36% mass) and yours is switched off. Track the inventory, add two shades, and make it a one-click add-on on every lipstick page."],
+  ["Lip gloss","2 active SKUs at EGP 750 · one at zero stock, one untracked",
+   "SheGlam Hydra Jelly at EGP 60–435 plus the entire Turkish gloss shelf.",
+   "Prestige gloss sits above EGP 1,500 through importers.",
+   "EGP 750 is a hard sell against a EGP 435 ceiling unless the product is visibly different. Either relaunch with a real claim — plumping, treatment, overnight — or retire the line and move the working capital into blush."],
+  ["Travel / mini","3 active SKUs at EGP 250–400 · 423 orders in twelve months",
+   "No verified Egyptian competitor at this size and price. Minis are rare in this market.",
+   "Global prestige sells minis, but they do not reach Egypt reliably.",
+   "This is genuine white space and your most-ordered item — but it is an acquisition channel, not a product. Every box must carry a shade-matched offer into the EGP 980 and EGP 1,500 tiers, or it is a loss leader with nothing behind it."]
+];
+
 const SECTIONS = [["s00","Position"],["s01","The P&L truth"],["s02","Four leaks, priced"],["s03","Catalog X-ray"],
-  ["s04","Who is buying"],["s05","The Egyptian market"],["s06","Global high-end board"],["s07","Trend radar 2026"],
-  ["s08","The strategy"],["s09","Eleven plays"],["s10","Unit economics lab"],["s11","Road to EGP 12m"],
-  ["s12","First ninety days"],["s13","Risk register"],["s14","Method & sources"]];
+  ["s04","Who is buying"],["s05","The Egyptian market"],["s06","Who you compete with"],["s07","Global high-end board"],
+  ["s08","Trend radar 2026"],["s09","The strategy"],["s10","Eleven plays"],["s11","Unit economics lab"],
+  ["s12","Road to EGP 12m"],["s13","First ninety days"],["s14","Risk register"],["s15","Method & sources"]];
 (function rail() {
   const r = $('#rail');
   SECTIONS.forEach((s, i) => {
@@ -1438,6 +1584,7 @@ const LEAKS = [
 
 /* ═══════════════════ SKU TABLE ═══════════════════ */
 let skuSort = {k: 'ttm', dir: -1}, skuCat = 'All';
+function cover(p) { return (p[8] && p[7] > 0) ? p[8] / (p[7] / 90) : null; }
 function renderSku() {
   const tb = $('#tbl-sku tbody'); tb.innerHTML = '';
   const keys = {name: 0, cat: 1, price: 2, ttm: 3, ttmO: 5, d90: 6, inv: 8};
@@ -1446,6 +1593,7 @@ function renderSku() {
     let va, vb;
     if (skuSort.k === 'share90') { va = a[6] / a[3]; vb = b[6] / b[3]; }
     else if (skuSort.k === 'disc') { va = 1 - a[4] / a[3]; vb = 1 - b[4] / b[3]; }
+    else if (skuSort.k === 'cover') { va = cover(a); vb = cover(b); if (va === null) va = 1e9; if (vb === null) vb = 1e9; }
     else { va = a[keys[skuSort.k]]; vb = b[keys[skuSort.k]]; }
     if (va == null) va = -1; if (vb == null) vb = -1;
     if (typeof va === 'string') return skuSort.dir * va.localeCompare(vb);
@@ -1467,6 +1615,12 @@ function renderSku() {
       '<td class="num"><span class="pill ' + sharePill + '">' + pc(share, 0) + '</span></td>' +
       '<td class="num"><span class="pill ' + discPill + '">' + pc(disc, 1) + '</span></td>' +
       '<td class="num">' + inv + '</td>' +
+      '<td class="num">' + (function () {
+        const c = cover(p);
+        if (c === null) return '<span class="pill mute">—</span>';
+        const cls = c < 21 ? 'crit' : c < 45 ? 'warn' : c > 150 ? 'mute' : 'good';
+        return '<span class="pill ' + cls + '">' + Math.round(c) + 'd</span>';
+      })() + '</td>' +
       '<td class="wrap">' + esc(p[10]) + '</td>'));
   });
   document.querySelectorAll('#tbl-sku th.sortable').forEach(th => {
@@ -1553,6 +1707,93 @@ function renderTrends() {
     box.appendChild(b);
   });
   renderTrends();
+})();
+
+/* ═══════════════════ PRICE LADDER ═══════════════════ */
+function ladderChart() {
+  const id = '#chart-ladder', w = W(id, 280);
+  const MAX = 3000, plot = w - 4;
+  const headH = 30, barH = 34, axisH = 26;
+  let h = axisH + 6;
+  LADDER.forEach(l => { h += headH + barH * (l[3].length + 1); });
+  const s = svg(w, h);
+  s.setAttribute('aria-label', 'Egyptian retail price ladder for lip and cheek products: Ayat Fahiem against verified competitor prices.');
+  const X = v => (v / MAX) * plot;
+  const tk = t => t >= 1000 ? (t / 1000).toFixed(1).replace('.0', '') + 'k' : String(t);
+  for (let t = 0; t <= MAX; t += 500) {
+    s.appendChild(nd('line', {x1: X(t).toFixed(1), x2: X(t).toFixed(1), y1: axisH - 9, y2: h, class: 'grid-l'}));
+    s.appendChild(nd('text', {x: X(t).toFixed(1), y: 11, class: 'axis-l',
+      'text-anchor': t === 0 ? 'start' : t === MAX ? 'end' : 'middle'}, tk(t)));
+  }
+  let y = axisH + 6;
+  LADDER.forEach(l => {
+    s.appendChild(nd('text', {x: 0, y: y + 17, class: 'val-l', 'font-size': 12.5, 'font-weight': 600}, l[0]));
+    if (w > 520) s.appendChild(nd('text', {x: plot, y: y + 17, class: 'axis-l', 'text-anchor': 'end'}, l[1]));
+    y += headH;
+    const rows = [['Ayat Fahiem', l[2][0], l[2][1], 'Your price', true]]
+      .concat(l[3].map(c => [c[0], c[1], c[2], c[3], false]));
+    rows.forEach(r => {
+      const g = nd('g', {}); g.style.cursor = 'crosshair';
+      const x0 = X(r[1]), bw = Math.max(5, X(r[2]) - x0);
+      const price = r[1] === r[2] ? fmt(r[1]) : fmt(r[1]) + '–' + fmt(r[2]);
+      g.appendChild(nd('text', {x: 9, y: y + 12, class: 'val-l', 'font-size': 11.5, 'font-weight': r[4] ? 600 : 400}, r[0]));
+      g.appendChild(nd('text', {x: plot, y: y + 12, class: 'val-l', 'font-size': 11, 'text-anchor': 'end'}, price));
+      g.appendChild(nd('rect', {x: x0.toFixed(1), y: y + 18, width: bw.toFixed(1), height: 10,
+        style: 'fill:var(' + (r[4] ? '--accent' : '--ink-3') + ')', rx: 2}));
+      g.appendChild(nd('rect', {x: 0, y: y, width: w, height: barH - 2, fill: 'transparent'}));
+      bindTip(g, '<b>' + esc(r[0]) + '</b><br>EGP ' + price + '<br>' + esc(r[3]));
+      s.appendChild(g);
+      y += barH;
+    });
+  });
+  mount(id, s);
+}
+
+/* ═══════════════════ COMPETITOR TABLE + LINE CARDS ═══════════════════ */
+let cSort = {k: 'tier', dir: 1}, cTier = 'All';
+function renderComp() {
+  const tb = $('#tbl-comp tbody'); tb.innerHTML = '';
+  const keys = {brand: 0, origin: 1, tier: 2};
+  const rank = {'Local mass': 1, 'Local indie': 2, 'Local mass import': 3, 'International mass': 4, 'Prestige (parallel)': 5, 'Retailer': 6};
+  let r = COMPETITORS.filter(c => cTier === 'All' || c[2] === cTier).slice();
+  r.sort((a, b) => {
+    if (cSort.k === 'tier') return cSort.dir * ((rank[a[2]] || 9) - (rank[b[2]] || 9));
+    return cSort.dir * String(a[keys[cSort.k]]).localeCompare(String(b[keys[cSort.k]]));
+  });
+  r.forEach(c => tb.appendChild(el('tr', '',
+    '<td class="name">' + c[0] + '</td><td>' + c[1] + '</td>' +
+    '<td><span class="pill ' + (c[2].indexOf('Prestige') === 0 ? 'warn' : c[2].indexOf('Local') === 0 ? 'crit' : 'mute') + '">' + c[2] + '</span></td>' +
+    '<td class="wrap">' + c[3] + '</td><td class="num">' + c[4] + '</td>' +
+    '<td class="wrap">' + c[5] + '</td><td class="wrap" style="color:var(--ink)">' + c[6] + '</td>')));
+  document.querySelectorAll('#tbl-comp th.sortable').forEach(th => {
+    th.setAttribute('aria-sort', th.dataset.k === cSort.k ? (cSort.dir === -1 ? 'descending' : 'ascending') : 'none');
+  });
+}
+(function () {
+  document.querySelectorAll('#tbl-comp th.sortable').forEach(th => {
+    th.tabIndex = 0;
+    const go = () => { if (cSort.k === th.dataset.k) cSort.dir *= -1; else { cSort.k = th.dataset.k; cSort.dir = 1; } renderComp(); };
+    th.addEventListener('click', go);
+    th.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+  });
+  const box = $('#comp-chips');
+  ['All'].concat(Array.from(new Set(COMPETITORS.map(c => c[2])))).forEach(t => {
+    const b = el('button', 'chip', t); b.type = 'button';
+    b.setAttribute('aria-pressed', t === 'All');
+    b.addEventListener('click', () => {
+      cTier = t; box.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); renderComp();
+    });
+    box.appendChild(b);
+  });
+  renderComp();
+
+  const lc = $('#lines');
+  LINES.forEach(l => lc.appendChild(el('div', 'play',
+    '<div class="hd"><div><h4>' + l[0] + '</h4><div class="sub">' + l[1] + '</div></div></div>' +
+    '<div class="bd">' +
+    '<div><span class="lbl">Direct threat</span><span style="color:var(--ink-2)">' + l[2] + '</span></div>' +
+    '<div><span class="lbl">The ceiling above you</span><span style="color:var(--ink-2)">' + l[3] + '</span></div>' +
+    '<div><span class="lbl">The move</span>' + l[4] + '</div></div>')));
 })();
 
 /* ═══════════════════ PLAYS ═══════════════════ */
@@ -1824,6 +2065,7 @@ function renderAll() {
     {labelW: 150, rowH: 25, color: '--accent', fmtV: v => k(v), aria: 'Gross sales by governorate.'});
   mixChart();
   dutyChart();
+  ladderChart();
   ueChart(ueCalc(UE));
   scChart();
 }
